@@ -1,0 +1,6 @@
+.particle-heart {
+    position: absolute;
+    font-size: 18px;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
