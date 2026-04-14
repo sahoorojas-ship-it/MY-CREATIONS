@@ -33,13 +33,26 @@ async function handleApi() {
 
 handleApi();
 
-function deleteRow(button) {
-    const row = button.parentElement.parentElement;
-    row.remove();
-}
+// function deleteRow(button) {
+//     const row = button.parentElement.parentElement;
+//     row.remove();
+// }
+// or -
 
-const password = prompt("Enter password to view:"); if (password ==="JK FAN") { 
+let table = document.getElementById("collection");
+table.addEventListener("click", (e) => {
+    // console.dir(e.target);
+    if (e.target.tagName === "BUTTON") {
+        const row = e.target.parentElement.parentElement;
+        row.remove();
 
+    }
+    alert("You have deleted a row!");
+});
+const password = prompt("Enter password to view:"); 
+if (password ==="JK FAN"){
+     alert("Welcome to the page!"); 
 } else 
 { document.body.innerHTML = 
     "<h1 style='color: red; text-align: center; margin-top: 50px;'>Access Denied</h1><p style='color: red; text-align: center;'>The password you've entered is incorrect. Please try again</p>"; }
+    alert("Incorrect Password!");

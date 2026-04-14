@@ -22,10 +22,13 @@ app.listen(3000, () => {
 });
 
 const password = prompt("Enter password to view:");
-if (password === "admin123@") {
- 
-} else {
-  document.body.innerHTML = "<h1 style='color: red; text-align: center; margin-top: 50px;'>Access Denied</h1><p style='color: red; text-align: center;'>The password you've entered is incorrect. Please try again</p>";
-}
 
+if (password === "admin123@") {
+    alert("Welcome to the page!");
+} else {
+    alert("Incorrect Password!");
+    document.body.innerHTML =
+        "<h1 style='color: red; text-align: center; margin-top: 50px;'>Access Denied</h1>" +
+        "<p style='color: red; text-align: center;'>The password you've entered is incorrect. Please try again</p>";
+}
  
