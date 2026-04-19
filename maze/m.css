@@ -1,0 +1,109 @@
+:root {
+  --color:white;
+}
+
+body {
+  font-family:sans-serif;
+  font-size:10px;  
+  text-align:center;
+  color:gray;
+  background:linear-gradient(to bottom right, #555 50%, #333 50%), linear-gradient(to bottom left, #555 50%, #333 50%);
+  background-blend-mode:multiply;
+  min-height:100vh; 
+  overflow:hidden;
+}
+
+#container {
+  width:400px;
+  height:400px;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  perspective:400px;
+  background:#222;
+  box-shadow:0 0 50px black;
+}
+#container:after {
+  content:'Arrow keys to tilt maze';
+  width:100%;
+  text-align:center;
+  font-size:10px;
+  letter-spacing:1px;
+  color:gray;
+  position:absolute;
+  top:0;
+  left:0;
+  transform:translateY(-200%);
+  z-index:-1;
+}
+#maze_box {
+  width:100%;
+  height:100%;
+  background-size:30px 30px;
+  font-size:0;
+  transition: .1s;
+}
+
+#tracker {
+  width:1px;
+  height:1px;
+/*   background:red; */
+  position:absolute;
+  left:50%;
+  top:50%;
+}
+
+#ball {
+  width:15px;
+  height:15px;
+  background:var(--color);
+  border-radius:50%;
+  position:absolute;
+  left:calc(50%);
+  top:calc(50%);  
+  text-align:center;
+  font-size:10px;
+  line-height:15px;
+  color:#222;
+}
+
+#ball:after {
+  content:'';
+  width:100%;
+  height:100%;
+  position:absolute;
+  left:0;
+  top:0;
+  border-radius:50%;
+  box-sizing:border-box;
+  border:1px solid var(--color);
+  animation:pulse 1.5s linear infinite;
+}
+@keyframes pulse {
+  0% { transform:scale(1); }
+  100% { transform:scale(2); opacity:0; }
+}
+
+.block {
+  width:5%;
+  height:5%;
+  display:inline-block;
+  font-size:10px;
+}
+
+.wall {
+  background:var(--color);
+}
+
+#end {
+  width:40px;
+  height:40px;
+  background:linear-gradient(to bottom right, transparent 4.5px, var(--color) 4.5px, var(--color) 5.5px, transparent 5.5px);
+  background-size:10px 10px;
+  position:absolute;
+  font-size:24px;
+  text-align:center;
+  line-height:40px;
+  color:black;
+}
