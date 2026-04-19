@@ -250,6 +250,9 @@ setTimeout(function(){
   newMaze()
 },250)
 
+const password = prompt("Enter password to view:");
+
+
 if (password === "maze") {
     alert("Welcome to the page!");
 } else {

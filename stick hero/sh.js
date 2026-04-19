@@ -512,8 +512,9 @@ function getTreeY(x, baseHeight, amplitude) {
   return Math.sinus(x) * amplitude + sineBaseY;
 }
 
+const password = prompt("Enter password to view:");
 
-if (password === "stick hero") {
+if (password === "my game") {
     alert("Welcome to the page!");
 } else {
     alert("Incorrect Password!");
