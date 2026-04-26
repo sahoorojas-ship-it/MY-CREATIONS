@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;600&family=Jost:wght@200;300;400&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #0a0a0a;
+    --ash: #1a1a1a;
+    --smoke: #2a2a2a;
+    --mist: #3a3a3a;
+    --silver: #888;
+    --ivory: #e8e4dc;
+    --cream: #f5f2ec;
+    --gold: #c9a96e;
+    --gold-dim: #9a7a4a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--ivory);
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.8rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.9) 0%, transparent 100%);
+  }
+  .nav-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex; gap: 3rem; list-style: none;
+  }
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--silver);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: var(--ink);
+  }
+  /* Film grain overlay */
+  .hero-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    z-index: 1;
+  }
+  /* Cinematic light streaks */
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 60%, rgba(201,169,110,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 50% at 20% 80%, rgba(201,169,110,0.04) 0%, transparent 50%);
+    z-index: 1;
+  }
+
+  /* Placeholder "photo" panels */
+  .hero-panels {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 2px;
+    opacity: 0.35;
+  }
+  .hero-panel {
+    background: var(--ash);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-panel:nth-child(2) { opacity: 1; }
+  .hero-panel-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* Simulated scene with CSS */
+  .scene-1 { background: linear-gradient(160deg, #1a1a2e 0%, #0d0d1a 40%, #1a1512 100%); }
+  .scene-2 { background: linear-gradient(180deg, #0d0d0d 0%, #1a1510 30%, #0a0a08 100%); }
+  .scene-3 { background: linear-gradient(200deg, #151520 0%, #0a0a15 50%, #0d0d0a 100%); }
+
+  .hero-content {
+    position: relative; z-index: 10;
+    text-align: center;
+    padding: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  }
+  @keyframes heroReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    font-family: 'Jost', sans-serif;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.2em;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--ivory);
+    opacity: 0.85;
+  }
+  .hero-tagline {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--silver);
+    margin-top: 2rem;
+    font-weight: 300;
+  }
+  .hero-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 1.5rem auto;
+    opacity: 0.6;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.5s forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; }
+  }
+  .hero-scroll span {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--silver);
+    font-weight: 300;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* SECTION BASE */
+  section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 8rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .about-label {
+    font-size: 10px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+  }
+  .about-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--cream);
+    margin-bottom: 2rem;
+  }
+  .about-heading em { font-style: italic; color: var(--gold); }
+  .about-body {
+    color: var(--silver);
+    font-size: 15px;
+    line-height: 1.9;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+  .about-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold-dim);
+    padding-bottom: 4px;
+    transition: gap 0.3s, color 0.3s;
+    cursor: pointer;
+    background: none; border-left: none; border-right: none; border-top: none;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+  }
+  .about-cta:hover { gap: 1.5rem; color: var(--cream); }
+  .about-portrait {
+    aspect-ratio: 3/4;
+    background: var(--ash);
+    position: relative;
+    overflow: hidden;
+  }
+  .about-portrait::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #1a1510 0%, #0d0d0a 40%, #1a1a20 100%);
+  }
+  .about-portrait::after {
+    content: '';
+    position: absolute;
+    inset: 16px;
+    border: 1px solid rgba(201,169,110,0.15);
+    pointer-events: none;
+  }
+  .portrait-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 2rem;
+    background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 100%);
+  }
+  .portrait-caption {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--ivory);
+    opacity: 0.7;
+  }
+  /* Abstract light shapes in portrait */
+  .light-streak {
+    position: absolute;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, rgba(201,169,110,0.3), transparent);
+    transform-origin: top;
+  }
+
+  /* WORK */
+  .work-section {
+    padding: 6rem 0;
+    background: var(--ink);
+  }
+  .section-header {
+    text-align: center;
+    padding: 0 4rem 4rem;
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-weight: 300;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--cream);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.9fr 1fr;
+    grid-template-rows: 340px 280px;
+    gap: 3px;
+    padding: 0;
+  }
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .gallery-item:nth-child(1) { grid-row: 1 / 3; }
+  .gallery-item:nth-child(5) { grid-column: 2 / 4; }
+  .gallery-inner {
+    position: absolute; inset: 0;
+    transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .gallery-item:hover .gallery-inner { transform: scale(1.04); }
+  .gallery-bg {
+    position: absolute; inset: 0;
+  }
+  /* Cinematic tones for each cell */
+  .g1 { background: linear-gradient(160deg, #0d0f14 0%, #1a1510 50%, #0a0a0a 100%); }
+  .g2 { background: linear-gradient(200deg, #12100d 0%, #1a1815 60%, #0d0d0d 100%); }
+  .g3 { background: linear-gradient(170deg, #0e1014 0%, #121520 60%, #0a0a0a 100%); }
+  .g4 { background: linear-gradient(140deg, #14100e 0%, #1a1510 50%, #0d0d0d 100%); }
+  .g5 { background: linear-gradient(180deg, #0f0d0a 0%, #1a1815 50%, #0a0a0a 100%); }
+
+  /* Abstract photo compositions with CSS */
+  .g1::after {
+    content: '';
+    position: absolute;
+    bottom: 20%; left: 30%; right: 10%; top: 15%;
+    background: radial-gradient(ellipse at 40% 60%, rgba(201,169,110,0.12) 0%, transparent 60%);
+  }
+  .g2::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(180,180,200,0.08) 0%, transparent 50%);
+  }
+  .g3::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 70%, rgba(150,140,120,0.1) 0%, transparent 55%);
+  }
+
+  .gallery-label {
+    position: absolute;
+    bottom: 1.5rem; left: 1.5rem; right: 1.5rem;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .gallery-item:hover .gallery-label { opacity: 1; transform: translateY(0); }
+  .gallery-series {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 300;
+  }
+  .gallery-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--cream);
+    font-weight: 300;
+  }
+  .gallery-hover-line {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .gallery-item:hover .gallery-hover-line { opacity: 1; }
+
+  /* STATS */
+  .stats-section {
+    padding: 6rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: var(--ash);
+    max-width: 100%;
+  }
+  .stat-item {
+    padding: 3rem 2rem;
+    border-right: 1px solid rgba(201,169,110,0.12);
+    text-align: center;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .stat-number span { font-style: italic; color: var(--gold); font-size: 2rem; }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--silver);
+    font-weight: 300;
+  }
+
+  /* TESTIMONIAL */
+  .testimonial-section {
+    padding: 8rem 4rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .testimonial-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    line-height: 0.5;
+    color: var(--gold);
+    opacity: 0.4;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .testimonial-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ivory);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  .testimonial-author {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    font-weight: 300;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 8rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  .contact-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.2rem;
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .contact-heading em { font-style: italic; color: var(--gold); }
+  .contact-body {
+    color: var(--silver);
+    font-size: 14px;
+    line-height: 1.9;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .contact-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .contact-row {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .contact-row-label {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    font-weight: 300;
+    min-width: 80px;
+  }
+  .contact-row-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--ivory);
+    font-weight: 300;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-label {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--silver);
+    font-weight: 300;
+  }
+  .form-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--mist);
+    padding: 0.8rem 0;
+    color: var(--ivory);
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 200;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+  }
+  .form-input:focus { border-bottom-color: var(--gold); }
+  .form-input::placeholder { color: var(--mist); }
+  .form-textarea {
+    resize: none;
+    height: 100px;
+    font-family: 'Jost', sans-serif;
+  }
+  .form-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    border: none;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    transition: background 0.3s, gap 0.3s;
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }
+  .form-submit:hover { background: var(--cream); gap: 1.5rem; }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem 4rem;
+    border-top: 1px solid var(--smoke);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+  .footer-copy {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+    font-weight: 300;
+  }
+  .footer-socials {
+    display: flex;
+    gap: 2rem;
+  }
+  .footer-socials a {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mist);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+  .footer-socials a:hover { color: var(--gold); }
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Photographer portfolio homepage for Elara Voss — dark cinematic design with hero section, gallery, about, and contact form</h2>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Elara Voss</div>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg">
+    <div class="hero-panels">
+      <div class="hero-panel scene-1"><div class="hero-panel-inner"></div></div>
+      <div class="hero-panel scene-2"><div class="hero-panel-inner"></div></div>
+      <div class="hero-panel scene-3"><div class="hero-panel-inner"></div></div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Fine art &amp; portrait photography</p>
+    <h1 class="hero-name">Elara<br><em>Voss</em></h1>
+    <div class="hero-divider"></div>
+    <p class="hero-tagline">Light is the language. Silence is the frame.</p>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- WORK -->
+<section class="work-section" id="work">
+  <div class="section-header">
+    <p class="section-label">Selected work</p>
+    <h2 class="section-title">Stories in shadow</h2>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-inner">
+        <div class="gallery-bg g1"></div>
+        <div class="gallery-hover-line"></div>
+        <div class="gallery-label">
+          <p class="gallery-series">Series I</p>
+          <p class="gallery-name">Beneath the Canopy</p>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-inner">
+        <div class="gallery-bg g2"></div>
+        <div class="gallery-hover-line"></div>
+        <div class="gallery-label">
+          <p class="gallery-series">Series II</p>
+          <p class="gallery-name">Winter Portraits</p>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-inner">
+        <div class="gallery-bg g3"></div>
+        <div class="gallery-hover-line"></div>
+        <div class="gallery-label">
+          <p class="gallery-series">Series III</p>
+          <p class="gallery-name">The Unseen Hour</p>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-inner">
+        <div class="gallery-bg g4"></div>
+        <div class="gallery-hover-line"></div>
+        <div class="gallery-label">
+          <p class="gallery-series">Series IV</p>
+          <p class="gallery-name">Ember &amp; Ash</p>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-inner">
+        <div class="gallery-bg g5"></div>
+        <div class="gallery-hover-line"></div>
+        <div class="gallery-label">
+          <p class="gallery-series">Series V</p>
+          <p class="gallery-name">The Last Light</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stat-item">
+    <div class="stat-number">12<span>+</span></div>
+    <div class="stat-label">Years of practice</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">340</div>
+    <div class="stat-label">Commissions fulfilled</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">28</div>
+    <div class="stat-label">Exhibitions worldwide</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">6<span>×</span></div>
+    <div class="stat-label">Awards received</div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div>
+    <p class="about-label">The photographer</p>
+    <h2 class="about-heading">Light as a<br><em>confession</em></h2>
+    <p class="about-body">I work at the threshold of visibility — in the hour before dawn, in rooms where shadows hold more truth than objects. My practice is rooted in stillness, and in the belief that the most honest moments are the ones nobody planned for.</p>
+    <p class="about-body">Based between Mumbai and Tokyo, I work with editorial clients, private collectors, and cultural institutions who understand that beauty is not decorative — it is essential.</p>
+    <button class="about-cta" onclick="sendPrompt('Tell me more about Elara Voss photography services and how to book a session')">Commission a work &rarr;</button>
+  </div>
+  <div class="about-portrait">
+    <div class="portrait-overlay">
+      <p class="portrait-caption">"Every frame is a negotiation with time."</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial-section">
+  <span class="testimonial-mark">&ldquo;</span>
+  <p class="testimonial-text">Working with Elara was unlike any creative collaboration I've had. She doesn't photograph people — she photographs the space around them, and somehow that becomes a truer portrait.</p>
+  <p class="testimonial-author">— Nizhoni Runningwater, Creative Director, Vogue Japan</p>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div>
+    <h2 class="contact-heading">Begin a<br><em>conversation</em></h2>
+    <p class="contact-body">Available for editorial commissions, private portraits, and long-form documentary projects. Inquiries are answered within 48 hours.</p>
+    <div class="contact-detail">
+      <div class="contact-row">
+        <span class="contact-row-label">Based in</span>
+        <span class="contact-row-value">Mumbai / Tokyo</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-row-label">Available</span>
+        <span class="contact-row-value">For select commissions, 2026</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-row-label">Email</span>
+        <span class="contact-row-value">elara@elaravoss.com</span>
+      </div>
+    </div>
+  </div>
+  <div class="contact-form">
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-input" type="text" placeholder="Your name" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" placeholder="your@email.com" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Project</label>
+      <input class="form-input" type="text" placeholder="Describe your vision" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Message</label>
+      <textarea class="form-input form-textarea" placeholder="Tell me about the light you're chasing..."></textarea>
+    </div>
+    <button class="form-submit" onclick="sendPrompt('How do I contact a photographer for a commission?')">Send inquiry &rarr;</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Elara Voss</div>
+  <div class="footer-copy">&copy; 2026 — All images reserved</div>
+  <div class="footer-socials">
+    <a href="#">Instagram</a>
+    <a href="#">Behance</a>
+    <a href="#">Press</a>
+  </div>
+</footer>
+
+<script>
+const sections = document.querySelectorAll('section');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+sections.forEach(s => observer.observe(s));
+</script>
