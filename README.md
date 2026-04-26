@@ -1,3 +1,4 @@
+<img width="1536" height="1024" alt="banner" src="https://github.com/user-attachments/assets/28eab8e0-a408-4af2-9053-fe5c196e11f1" />
 # 🚀 PHANTOM PROJECTS — The Grand Launch
 
 <img width="1536" height="1024" alt="coming soon" src="https://github.com/user-attachments/assets/f93c81a2-2090-47ce-adfd-09fd46e9187a" />
@@ -85,6 +86,6 @@ This is a **pre-release (v0.1.0)** — expect rapid updates, improvements, and n
   🚧 <b>FULL RELEASE COMING SOON — STAY TUNED</b> 🚧
 </p>
 
-<img width="1536" height="1024" alt="PHANTOM PROJECTS" src="https://github.com/user-attachments/assets/cad9cbdd-50e7-417e-84f2-c297a10a4f82" />
+<img width="1536" height="1024" alt="banner" src="https://github.com/user-attachments/assets/29c03c2e-36e1-4d99-8d2d-142679c2b9d5" />
 
 
