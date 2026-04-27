@@ -88,15 +88,15 @@ This is a **pre-release (v0.1.0)** — expect rapid updates, improvements, and n
 
 <img width="1536" height="1024" alt="banner" src="https://github.com/user-attachments/assets/29c03c2e-36e1-4d99-8d2d-142679c2b9d5" />
 
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/Stick Hero
-/)
+[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/stickhero/sh.html)
 
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/2048/)
 
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/WHACK-A-MOLE/)
+[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/2048/2048.html)
 
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/maze/)
+[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/WHACK-A-MOLE/wam.html)
 
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/TiltingMaze/)
+[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/maze/m.html)
 
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/code-diner/)
+[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/TiltingMaze/tm.html)
+
+[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/code-diner/index.html)
