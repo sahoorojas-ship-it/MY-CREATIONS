@@ -68,6 +68,22 @@ Each project will have a **live demo link** so you can try it instantly.
 * 🕹️ More interactive games
 * ⚙️ Backend + full-stack projects
 
+  ## 🪧LIVE DEMO
+  You can find the Live Demo of all the Games in this section👇🏻
+
+   STICK HERO - [![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/stickhero/sh.html) **PASSWORD:my game**
+
+
+2048 - [![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/2048/2048.html)**PASSWORD:gojo is limitless**
+
+ WHACK-A-MOLE - [![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/WHACK-A-MOLE/wam.html) **PASSWORD:i am best123@**
+
+MAZE - [![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/maze/m.html)**PASSWORD:maze**
+
+Tilting Maze - [![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/TiltingMaze/tm.html)**PASSWORD:esan123#@**
+
+Code Diner - [![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/code-diner/game.html)**PASSWORD:admin123@**
+
 ---
 
 ## ⚠️ Note
@@ -88,15 +104,4 @@ This is a **pre-release (v0.1.0)** — expect rapid updates, improvements, and n
 
 <img width="1536" height="1024" alt="banner" src="https://github.com/user-attachments/assets/29c03c2e-36e1-4d99-8d2d-142679c2b9d5" />
 
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/stickhero/sh.html) **PASSWORD:my game**
 
-
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/2048/2048.html)**PASSWORD:gojo is limitless**
-
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/WHACK-A-MOLE/wam.html) **PASSWORD:i am best123@**
-
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/maze/m.html)**PASSWORD:maze**
-
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/TiltingMaze/tm.html)**PASSWORD:esan123#@**
-
-[![Live Demo](https://img.shields.io/badge/demo-online-green.svg?style=for-the-badge&logo=vercel)](https://sahoorojas-ship-it.github.io/MY-CREATIONS/code-diner/index.html)**PASSWORD:admin123@**
