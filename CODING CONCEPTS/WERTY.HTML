@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Magnifying Glass Demo</title>
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1>Magnifying Glass Demo</h1>
+
+      <p class="lead">Hover or move pointer over the image to see the magnifier. Tap on touch devices to toggle magnification.</p>
+
+      <figure class="demo">
+        <!-- Example image: replace `assets/sample.svg` with your own image if desired -->
+        <img src="assets/sample.svg" alt="Example landscape" class="magnifiable" data-zoom="2.5" data-lens-size="180" tabindex="0" aria-label="Magnifiable image" />
+        <figcaption>Example image with magnifier (use mouse or touch).</figcaption>
+      </figure>
+
+      <p class="notes">Configuration: set <code>data-zoom</code> and <code>data-lens-size</code> on the <code>&lt;img&gt;</code>.</p>
+    </main>
+
+    <script src="assets/magnify.js" defer></script>
+  </body>
+</html>

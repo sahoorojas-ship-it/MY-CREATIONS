@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charades Game - Fixed Timer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .game-container {
+            background-color: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        h1 { color: #333; margin-bottom: 20px; }
+
+        #timer {
+            font-size: 3em;
+            color: #d9534f;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        #word-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 30px;
+            min-height: 1.5em;
+            display: none;
+        }
+
+        #score-display {
+            display: none;
+            margin-top: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        #category-select, .action-btn {
+            padding: 12px 20px;
+            font-size: 1em;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #start-btn { background-color: #5cb85c; color: white; }
+        #start-btn:hover { background-color: #4cae4c; }
+
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            display: none;
+        }
+
+        .controls button {
+            flex-grow: 1; /* Make buttons expand */
+            padding: 20px 0;
+            font-size: 1.2em;
+            margin: 0 5px;
+        }
+
+        #pass-btn { background-color: #f0ad4e; color: white; }
+        #pass-btn:hover { background-color: #ec971f; }
+
+        #correct-btn { background-color: #5cb85c; color: white; }
+        #correct-btn:hover { background-color: #4cae4c; }
+
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Charades Game</h1>
+        <div id="timer">02:30</div>
+        <div id="word-display"></div>
+        <div id="score-display">Score: 0</div>
+
+        <div id="setup-area">
+            <p>Select a category to start:</p>
+            <select id="category-select">
+                <option value="bollywood">Bollywood</option>
+                <option value="movies">Movies</option>
+                <option value="animes">Animes</option>
+                <option value="avengers">Avengers/Marvel</option>
+                <option value="cartoons">Cartoons</option>
+                <option value="singers">Singers</option>
+            </select>
+            <button id="start-btn" onclick="startGame()">Start Game</button>
+        </div>
+        
+        <div class="controls">
+            <button id="pass-btn" onclick="getNextWord()">PASS</button>
+            <button id="correct-btn" onclick="registerCorrect()">GOT IT!</button>
+        </div>
+    </div>
+
+    <script>
+        const wordData = {
+            bollywood: ["Sholay", "Lagaan", "Dangal", "Pathaan", "RRR", "3 Idiots", "Bahubali", "Gabbar Singh", "Piku", "Krrish", "Devdas", "Dilwale Dulhania Le Jayenge", "ZNMD", "Gully Boy", "PK", "Bajrangi Bhaijaan"],
+            movies: ["Inception", "Titanic", "Avatar", "The Matrix", "Joker", "Parasite", "Gladiator", "Finding Nemo", "The Lion King", "Jurassic Park", "Star Wars", "E.T."],
+            animes: ["Naruto", "Dragon Ball Z", "Attack on Titan", "Demon Slayer", "Pokémon", "Death Note", "One Piece", "Fullmetal Alchemist", "Jujutsu Kaisen", "My Hero Academia"],
+            avengers: ["Iron Man", "Captain America", "Thor", "Hulk", "Black Widow", "Hawkeye", "Thanos", "Avengers Endgame", "Black Panther", "Doctor Strange", "Spider-Man", "Guardians of the Galaxy"],
+            cartoons: ["SpongeBob", "Tom and Jerry", "Mickey Mouse", "The Simpsons", "Scooby-Doo", "Looney Tunes", "Ben 10", "Doraemon", "Chota Bheem", "Teen Titans"],
+            singers: ["Michael Jackson", "Beyoncé", "Taylor Swift", "Ed Sheeran", "Justin Bieber", "Ariana Grande", "Lata Mangeshkar", "Arijit Singh", "Shreya Ghoshal", "Adele", "Rihanna", "Elvis Presley"]
+        };
+
+        const timerDisplay = document.getElementById('timer');
+        const wordDisplay = document.getElementById('word-display');
+        const setupArea = document.getElementById('setup-area');
+        const scoreDisplay = document.getElementById('score-display');
+        const controls = document.querySelector('.controls');
+        const categorySelect = document.getElementById('category-select');
+
+        let currentCategory = [];
+        let timeInSeconds = 150; // 2 minutes 30 seconds
+        let timerInterval;
+        let score = 0;
+
+        function startGame() {
+            const selectedCategory = categorySelect.value;
+            if (!wordData[selectedCategory] || wordData[selectedCategory].length === 0) {
+                alert("Please select a valid category.");
+                return;
+            }
+            
+            currentCategory = [...wordData[selectedCategory]]; 
+            score = 0;
+            timeInSeconds = 150; // Reset time
+            
+            setupArea.style.display = 'none';
+            timerDisplay.style.display = 'block';
+            wordDisplay.style.display = 'block';
+            scoreDisplay.style.display = 'block';
+            controls.style.display = 'flex'; // Show controls
+            
+            updateScoreDisplay();
+            getNextWord();
+            // Clear any existing interval before starting a new one
+            if (timerInterval) clearInterval(timerInterval); 
+            startTimer();
+        }
+
+        function getNextWord() {
+            if (currentCategory.length === 0) {
+                wordDisplay.innerText = "Category finished! Waiting for timer...";
+                return;
+            }
+            const randomIndex = Math.floor(Math.random() * currentCategory.length);
+            const word = currentCategory.splice(randomIndex, 1);
+            wordDisplay.innerText = word;
+        }
+
+        function registerCorrect() {
+            score++;
+            updateScoreDisplay();
+            getNextWord();
+        }
+        
+        function updateScoreDisplay() {
+            scoreDisplay.innerText = `Score: ${score}`;
+        }
+
+        function startTimer() {
+            // This function now just calls updateTimer every second
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (timeInSeconds <= 0) {
+                clearInterval(timerInterval);
+                endGame();
+                return;
+            }
+            timeInSeconds--;
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = timeInSeconds % 60;
+            timerDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function endGame() {
+            wordDisplay.innerText = `Time is up! Final Score: ${score}`;
+            controls.style.display = 'none'; // Hide buttons
+            setupArea.style.display = 'block'; // Show setup screen
+        }
+
+    </script>
+</body>
+</html>

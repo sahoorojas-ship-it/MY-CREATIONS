@@ -1,0 +1,72 @@
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+}
+
+.ball {
+    width: 100px;
+    height: 100px;
+    background-color: #ff5722;
+    border-radius: 100%;
+    position: relative; /* Essential for transform translateY */
+    animation-duration: 2s; /* Base duration */
+    animation-iteration-count: infinite; /* Continuous loop */
+    animation-fill-mode: both;
+    margin-bottom: 0.1px;
+}
+
+/* 
+  General realistic bounce keyframes:
+  Hits the ground at 0% and 100% (translateY(0)), goes up in the middle.
+  Use cubic-bezier for a natural feel: slow at the peak, fast when falling/rising near the ground.
+*/
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* ease-out for the rise */
+    }
+    50% {
+        transform: translateY(-150px); /* Adjust height as needed */
+        animation-timing-function: cubic-bezier(0.895, 0.03, 0.685, 0.22); /* ease-in for the fall */
+    }
+}
+
+.light {
+    background-color: #4CAF50;
+    animation-name: bounce;
+    animation-duration: 1.5s;
+}
+.medium {
+    background-color: #FFEB3B;
+    animation-name: bounce;
+    animation-duration: 2s;
+}
+.heavy {
+    background-color: #9C27B0;
+    animation-name: bounce;
+    animation-duration: 2.5s;
+}
+.super-bouncy {
+    background-color: #2196F3;
+    animation-name: bounce;
+    animation-duration: 1.8s;
+    /* More pronounced spring effect */
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+.dampening {
+    background-color: #F44336;
+    animation-name: bounce;
+    animation-duration: 1.2s; /* Faster animation cycle */
+    animation-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045); /* Very quick ease-in/out */
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>50 Level Maze Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        #game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 300px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #game-container {
+            border: 5px solid #333;
+            background-color: #fff;
+            display: grid;
+            touch-action: none; /* Prevent default touch behavior on mobile */
+        }
+
+        .cell {
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        .wall {
+            background-color: #333;
+        }
+
+        .player {
+            background-color: #e63946; /* Red player */
+            border-radius: 50%;
+        }
+
+        .start {
+            background-color: #5cb85c; /* Green start */
+        }
+
+        .end {
+            background-color: #007bff; /* Blue end */
+        }
+        
+        #message-area {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-info">
+        <div id="level-display">Level: 1</div>
+        <div id="timer-display">Time: 1:00</div>
+    </div>
+    <div id="game-container"></div>
+    <div id="message-area">Use arrow keys (or swipe) to move.</div>
+
+    <script>
+        const container = document.getElementById('game-container');
+        const levelDisplay = document.getElementById('level-display');
+        const timerDisplay = document.getElementById('timer-display');
+        const messageArea = document.getElementById('message-area');
+
+        let currentLevel = 1;
+        let playerPos = { x: 0, y: 0 };
+        let mazeMap = [];
+        let timeInSeconds = 60;
+        let timerInterval;
+        let gridSize = 10; // Starting grid size
+
+        // --- Maze Generation (Randomized DFS) ---
+        // A simple function to generate a new random maze each level
+        function generateMaze(size) {
+            const maze = Array(size).fill().map(() => Array(size).fill(1)); // All walls initially
+            function carve(x, y) {
+                const directions = [[0, -2], [0, 2], [-2, 0], [2, 0]];
+                // Shuffle directions randomly
+                directions.sort(() => Math.random() - 0.5);
+
+                for (const [dx, dy] of directions) {
+                    const nx = x + dx;
+                    const ny = y + dy;
+                    if (nx >= 0 && nx < size && ny >= 0 && ny < size && maze[ny][nx] === 1) {
+                        maze[y + dy / 2][x + dx / 2] = 0; // carve path
+                        maze[ny][nx] = 0; // carve cell
+                        carve(nx, ny);
+                    }
+                }
+            }
+            // Start carving from top-left (must be odd coordinates)
+            maze[1][1] = 0;
+            carve(1, 1);
+
+            // Set Start (top left path) and End (bottom right path) points
+            maze[1][1] = 2; // Start
+            maze[size - 2][size - 2] = 3; // End
+            return maze;
+        }
+        // ----------------------------------------
+
+        function setupLevel() {
+            // Difficulty increases by increasing maze size
+            // Level 1-10: 11x11 grid, 11-20: 15x15, 21-30: 19x19, 31-40: 23x23, 41-50: 27x27
+            if (currentLevel <= 10) gridSize = 11;
+            else if (currentLevel <= 20) gridSize = 15;
+            else if (currentLevel <= 30) gridSize = 19;
+            else if (currentLevel <= 40) gridSize = 23;
+            else gridSize = 27;
+
+            mazeMap = generateMaze(gridSize);
+            playerPos = { x: 1, y: 1 }; // Reset player to start
+            timeInSeconds = 60; // Reset timer for new level
+            
+            // Adjust CSS grid for new size and cell size
+            const cellSize = Math.floor(300 / gridSize); // Keep overall size roughly same
+            container.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`;
+            container.style.gridTemplateRows = `repeat(${gridSize}, ${cellSize}px)`;
+            
+            drawMaze(cellSize);
+            clearInterval(timerInterval);
+            startTimer();
+            levelDisplay.innerText = `Level: ${currentLevel}`;
+            messageArea.innerText = `Level ${currentLevel} started. Find the blue exit!`;
+        }
+
+        function drawMaze(cellSize) {
+            container.innerHTML = '';
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+                    
+                    if (mazeMap[y][x] === 1) cell.classList.add('wall');
+                    else if (mazeMap[y][x] === 2) cell.classList.add('start');
+                    else if (mazeMap[y][x] === 3) cell.classList.add('end');
+
+                    if (playerPos.x === x && playerPos.y === y) cell.classList.add('player');
+                    
+                    container.appendChild(cell);
+                }
+            }
+        }
+
+        function movePlayer(dx, dy) {
+            const newX = playerPos.x + dx;
+            const newY = playerPos.y + dy;
+
+            if (newX >= 0 && newX < gridSize && newY >= 0 && newY < gridSize && mazeMap[newY][newX] !== 1) {
+                playerPos.x = newX;
+                playerPos.y = newY;
+                drawMaze(Math.floor(300 / gridSize)); // Redraw maze with new player pos
+
+                if (mazeMap[newY][newX] === 3) {
+                    levelComplete();
+                }
+            }
+        }
+
+        function levelComplete() {
+            clearInterval(timerInterval);
+            if (currentLevel < 50) {
+                currentLevel++;
+                messageArea.innerText = `Level ${currentLevel-1} complete! Proceeding to level ${currentLevel}...`;
+                setTimeout(setupLevel, 2000); // Load next level after 2 seconds
+            } else {
+                messageArea.innerText = "You beat all 50 levels! Great job!";
+                // End of game
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (timeInSeconds <= 0) {
+                clearInterval(timerInterval);
+                gameOver();
+                return;
+            }
+            timeInSeconds--;
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = timeInSeconds % 60;
+            timerDisplay.innerText = `Time: ${minutes.toString()}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function gameOver() {
+            messageArea.innerText = `Time is up! Game Over. You reached Level ${currentLevel}. Refresh to try again.`;
+            clearInterval(timerInterval);
+            // Disable movement or stop interaction here
+        }
+
+        // Handle keyboard input (Arrow keys)
+        document.addEventListener('keydown', (e) => {
+            if (timeInSeconds <= 0) return;
+            switch (e.key) {
+                case 'ArrowUp': movePlayer(0, -1); break;
+                case 'ArrowDown': movePlayer(0, 1); break;
+                case 'ArrowLeft': movePlayer(-1, 0); break;
+                case 'ArrowRight': movePlayer(1, 0); break;
+            }
+        });
+
+        // Initialize the first level
+        setupLevel();
+    </script>
+</body>
+</html>
+

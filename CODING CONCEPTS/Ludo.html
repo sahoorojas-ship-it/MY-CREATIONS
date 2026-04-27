@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: blue;
+        }
+
+        /* 1. The Main Layout (2 on top, 2 on bottom) */
+        .board-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 Horizontal columns */
+            gap: 20px;
+            width: 500px;
+            height: 500px;
+        }
+
+        /* 2. The 4 Main Squares */
+        .square-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 Circles horizontal */
+            grid-template-rows: repeat(2, 1fr);    /* 2 Circles vertical */
+            padding: 25px;
+            gap: 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        /* 3. The 4 Circles inside each square */
+        .circle {
+            background-color: whitesmoke;
+            border-radius: 100%;
+            aspect-ratio: 1 / 1; /* Keeps them perfectly round */
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            border: 10px solid #f1c40f;
+
+        }
+
+        /* Individual Square Colors */
+        .red    { background-color: #e74c3c; } 
+        .green  { background-color: #2ecc71; }
+        .blue   { background-color: #3498db; }
+        .yellow { background-color: black; }
+    </style>
+</head>
+<body>
+
+    <div class="board-layout">
+        <!-- Upper Side: 2 Horizontal Squares -->
+        <div class="square-container red">
+            <div class="circle"></div><div class="circle"></div>
+            <div class="circle"></div><div class="circle"></div>
+        </div>
+        <div class="square-container green">
+            <div class="circle"></div><div class="circle"></div>
+            <div class="circle"></div><div class="circle"></div>
+        </div>
+
+        <!-- Lower Side: 2 Horizontal Squares -->
+        <div class="square-container blue">
+            <div class="circle"></div><div class="circle"></div>
+            <div class="circle"></div><div class="circle"></div>
+        </div>
+        <div class="square-container yellow">
+            <div class="circle"></div><div class="circle"></div>
+            <div class="circle"></div><div class="circle"></div>
+        </div>
+    </div>
+
+</body>
+</html>

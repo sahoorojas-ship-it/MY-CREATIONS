@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+    <h1>ROAD SAFETY</h1>
+    <p>Road safety refers to the measures and practices implemented to prevent accidents and ensure the safety of all road users, including drivers, passengers, pedestrians, and cyclists. It encompasses a wide range of strategies, from infrastructure design and traffic regulations to public awareness campaigns and vehicle safety standards.</p>
+    </main>
+    <section>
+
+
+    <h2>Key Aspects of Road Safety</h2>
+    <ul>
+        <li><strong>Infrastructure:</strong> Well-designed roads, proper signage, pedestrian crossings, and adequate lighting are crucial for safe travel.</li>
+        <li><strong>Traffic Laws:</strong> Enforcing speed limits, seat belt use, and regulations against driving under the influence of alcohol or drugs helps reduce accidents.</li>
+        <li><strong>Vehicle Safety:</strong> Regular maintenance and safety features like airbags, anti-lock brakes, and electronic stability control enhance vehicle safety.</li>
+        <li><strong>Education and Awareness:</strong> Public campaigns and driver education programs promote safe driving behaviors and awareness of road hazards.</li>
+        <li><strong>Emergency Response:</strong> Efficient emergency services and medical care can significantly reduce fatalities and injuries resulting from road accidents.</li>
+    </ul>
+</section>
+<article>
+    <h3>Importance of Road Safety</h3>
+    <p>Improving road safety is essential for reducing the number of accidents, injuries,
+    and fatalities on the roads. It also has economic benefits, as accidents can lead to significant costs related to healthcare, property damage, and lost productivity. By prioritizing road safety, communities can create safer environments for all road users.</p>
+    </article>
+    <H4>PLEASE DRIVE SAFELY!</H4>
+           <div class="road-container">
+  <!-- The base road image -->
+  <img src="https://static.vecteezy.com/system/resources/thumbnails/021/917/564/small/winding-road-on-a-transparent-backgroundte-vector.jpg" class="road-img" alt="Road">
+
+  <!-- Overlapping signs -->
+  <img src="https://static.vecteezy.com/system/resources/thumbnails/000/550/395/small/traffic_light_006.jpg" class="sign traffic-light" alt="Traffic Light">
+  <img src="https://static.vecteezy.com/system/resources/thumbnails/002/301/014/small/red-stop-sign-free-vector.jpg" class="sign stop-sign" alt="Stop Sign">
+  <img src="https://img.freepik.com/premium-vector/pedestrian-crossing-sign-warning-sign-red-triangle-caution-unregulated-pedestrian-crossing_546559-2218.jpg?semt=ais_hybrid&w=740&q=80" class="sign crossing" alt="Pedestrian Crossing">
+</div>
+    <style>
+        h1{
+            position: sticky;
+            top: 0;
+            background-color:black;
+            color: darkgray;
+        }
+        h2{
+            color:green;
+        }
+        h3{
+            color:red;
+        }
+        h4{
+            color: blue;
+        }
+ 
+
+
+.road-container {
+  position: relative; /* Essential for containing absolute children */
+  width: 100%;
+  max-width: 800px;
+}
+
+.road-img {
+  width: 100%;
+  display: block;
+}
+
+.sign {
+  position: absolute; /* Allows manual positioning over the road */
+  width: 200px;       /* Set uniform size or adjust per sign */
+}
+
+.traffic-light {
+  top: 20%;
+  left: 30%;
+  z-index: 5; /* Top layer */
+}
+
+.stop-sign {
+  top: 50%;
+  left: 40%;
+  z-index: 2; /* Middle layer */
+}
+
+.crossing {
+  bottom: 10%;
+  right: 15%;
+  z-index: 2; /* Bottom sign layer */
+}
+</style>
+
+    
+
+    
+</body>
+</html>

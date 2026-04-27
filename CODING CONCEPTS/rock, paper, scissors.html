@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2-Player Rock Paper Scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .choice-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .choice-btn:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 25px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #status-message {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        #play-again-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Hidden initially */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>2-Player Rock Paper Scissors</h1>
+        <div id="game-area">
+            <div id="status-message">Player 1: Choose your move secretly.</div>
+            <div class="choices">
+                <button class="choice-btn" onclick="makeChoice('rock')">Rock ✊</button>
+                <button class="choice-btn" onclick="makeChoice('paper')">Paper ✋</button>
+                <button class="choice-btn" onclick="makeChoice('scissors')">Scissors ✌️</button>
+            </div>
+        </div>
+        <div id="result"></div>
+        <button id="play-again-btn" onclick="resetGame()">Play Again</button>
+    </div>
+
+    <script>
+        let player1Choice = '';
+        let player2Choice = '';
+        const statusMessage = document.getElementById('status-message');
+        const resultDisplay = document.getElementById('result');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+
+        function makeChoice(choice) {
+            if (player1Choice === '') {
+                // Player 1 makes a choice
+                player1Choice = choice;
+                statusMessage.innerText = "Player 2: Choose your move secretly.";
+                // Disable buttons temporarily to make it feel 'secret' (visually)
+                choiceButtons.forEach(btn => btn.style.backgroundColor = '#cccccc'); 
+            } else {
+                // Player 2 makes a choice
+                player2Choice = choice;
+                evaluateGame();
+            }
+        }
+
+        function evaluateGame() {
+            // Re-enable/restyling buttons after choices are made
+            choiceButtons.forEach(btn => {
+                btn.disabled = true; // Disable buttons for the result screen
+                btn.style.backgroundColor = '#007bff';
+            });
+            
+            const p1 = player1Choice;
+            const p2 = player2Choice;
+            let result = '';
+
+            if (p1 === p2) {
+                result = "It's a draw!";
+            } else if (
+                (p1 === 'rock' && p2 === 'scissors') ||
+                (p1 === 'paper' && p2 === 'rock') ||
+                (p1 === 'scissors' && p2 === 'paper')
+            ) {
+                result = "Player 1 wins!";
+            } else {
+                result = "Player 2 wins!";
+            }
+
+            resultDisplay.innerHTML = `
+                <p>Player 1 chose: <strong>${capitalize(p1)}</strong></p>
+                <p>Player 2 chose: <strong>${capitalize(p2)}</strong></p>
+                <p><strong>${result}</strong></p>
+            `;
+            playAgainBtn.style.display = 'block';
+            statusMessage.style.display = 'none';
+        }
+
+        function resetGame() {
+            player1Choice = '';
+            player2Choice = '';
+            statusMessage.innerText = "Player 1: Choose your move secretly.";
+            statusMessage.style.display = 'block';
+            resultDisplay.innerHTML = '';
+            playAgainBtn.style.display = 'none';
+            choiceButtons.forEach(btn => {
+                btn.disabled = false;
+                btn.style.backgroundColor = '#007bff';
+            });
+        }
+
+        function capitalize(s) {
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+    </script>
+</body>
+</html>

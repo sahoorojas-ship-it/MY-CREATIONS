@@ -1,0 +1,63 @@
+#animation-container {
+    background-color:gold;
+    width:100px;
+    height: 100px;
+    display:flex;
+    justify-content: center;
+    border-radius: 100px;
+    color: white;
+    align-items: center;
+    position: relative;
+    animation: animation-container 10s;
+    animation-iteration-count: infinite;
+    animation-delay: 2s;
+    animation-direction: alternate-reverse;
+}
+
+
+
+
+
+@keyframes animation-container {
+    0%{
+        background-color:gold;
+        transform: scale(1);
+        left: 90px;
+        top: 50px;
+     
+    }
+
+    25%{
+        background-color:orange;
+        transform: scale(2);
+      
+        
+    }
+
+    50%{
+        background-color:red;
+        transform: scale(2.5);
+    }
+
+    75%{
+        background-color:purple;
+        transform: scale(2.8S);
+        left: 900px;
+        top: 50px;
+       
+    }
+
+    100%{
+        background-color:yellow;
+        transform:scale(1);
+        left: 90px;
+        top: 50px;
+    }
+   
+    
+}
+#animation-container:hover {
+    animation-play-state: paused;
+    cursor: pointer;
+    size: 500px;
+}

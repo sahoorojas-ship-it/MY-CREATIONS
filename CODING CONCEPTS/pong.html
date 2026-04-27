@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #333;
+            margin: 0;
+            color: white;
+            font-family: monospace;
+        }
+
+        #game-board {
+            width: 600px;
+            height: 400px;
+            background-color: #000;
+            position: relative;
+            border: 2px solid white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #scoreboard {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+        }
+
+        .paddle {
+            width: 10px;
+            height: 80px;
+            background-color: white;
+            position: absolute;
+        }
+
+        #left-paddle { left: 10px; }
+        #right-paddle { right: 10px; }
+
+        #ball {
+            width: 15px;
+            height: 15px;
+            background-color: white;
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        #center-line {
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background-color: #555;
+            transform: translateX(-50%);
+        }
+
+        #start-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1em;
+            text-align: center;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pong Game</h1>
+    <div id="game-board">
+        <div id="center-line"></div>
+        <div id="scoreboard">0 - 0</div>
+        <div id="left-paddle" class="paddle"></div>
+        <div id="right-paddle" class="paddle"></div>
+        <div id="ball"></div>
+        <div id="start-message">Press Spacebar to start a new game</div>
+    </div>
+
+    <script>
+        const board = document.getElementById('game-board');
+        const leftPaddle = document.getElementById('left-paddle');
+        const rightPaddle = document.getElementById('right-paddle');
+        const ball = document.getElementById('ball');
+        const scoreboard = document.getElementById('scoreboard');
+        const startMessage = document.getElementById('start-message');
+
+        const boardWidth = 600;
+        const boardHeight = 400;
+        const paddleHeight = 80;
+        const paddleWidth = 10;
+        const ballSize = 15;
+
+        let player1Score = 0;
+        let player2Score = 0;
+        let ballX, ballY;
+        let ballSpeedX, ballSpeedY;
+        let gameRunning = false;
+        let animationId;
+
+        // Key tracking for smooth movement
+        const keysPressed = {};
+        document.addEventListener('keydown', (e) => {
+            keysPressed[e.key] = true;
+            if (e.key === ' ') {
+                e.preventDefault(); // Prevent scrolling with spacebar
+                if (!gameRunning) startGame();
+            }
+        });
+        document.addEventListener('keyup', (e) => {
+            keysPressed[e.key] = false;
+        });
+
+        function resetBall() {
+            ballX = boardWidth / 2 - ballSize / 2;
+            ballY = boardHeight / 2 - ballSize / 2;
+            // Start ball moving randomly left or right
+            ballSpeedX = (Math.random() > 0.5 ? 4 : -4);
+            ballSpeedY = (Math.random() - 0.5) * 4; // Random vertical speed
+        }
+
+        function startGame() {
+            if (gameRunning) return;
+            gameRunning = true;
+            startMessage.style.display = 'none';
+            player1Score = 0;
+            player2Score = 0;
+            scoreboard.innerText = '0 - 0';
+            resetBall();
+            gameLoop();
+        }
+
+        function updatePaddles() {
+            // Player 1 (W/S)
+            if (keysPressed['w'] || keysPressed['W']) {
+                let newY = leftPaddle.offsetTop - 5;
+                if (newY >= 0) leftPaddle.style.top = newY + 'px';
+            }
+            if (keysPressed['s'] || keysPressed['S']) {
+                let newY = leftPaddle.offsetTop + 5;
+                if (newY <= boardHeight - paddleHeight) leftPaddle.style.top = newY + 'px';
+            }
+
+            // Player 2 (ArrowUp/ArrowDown)
+            if (keysPressed['ArrowUp']) {
+                let newY = rightPaddle.offsetTop - 5;
+                if (newY >= 0) rightPaddle.style.top = newY + 'px';
+            }
+            if (keysPressed['ArrowDown']) {
+                let newY = rightPaddle.offsetTop + 5;
+                if (newY <= boardHeight - paddleHeight) rightPaddle.style.top = newY + 'px';
+            }
+        }
+
+        function updateBall() {
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            // Wall collision (top and bottom)
+            if (ballY <= 0 || ballY + ballSize >= boardHeight) {
+                ballSpeedY *= -1;
+            }
+
+            // Paddle collision
+            const ballTop = ballY;
+            const ballBottom = ballY + ballSize;
+            const ballLeft = ballX;
+            const ballRight = ballX + ballSize;
+
+            // Left Paddle Collision
+            const leftPaddleTop = leftPaddle.offsetTop;
+            const leftPaddleBottom = leftPaddle.offsetTop + paddleHeight;
+            const leftPaddleRight = leftPaddle.offsetLeft + paddleWidth;
+            
+            if (ballLeft <= leftPaddleRight && ballTop < leftPaddleBottom && ballBottom > leftPaddleTop) {
+                ballSpeedX *= -1;
+                // Add slight speed boost on hit
+                if (Math.abs(ballSpeedX) < 10) ballSpeedX *= 1.05; 
+            }
+
+            // Right Paddle Collision
+            const rightPaddleTop = rightPaddle.offsetTop;
+            const rightPaddleBottom = rightPaddle.offsetTop + paddleHeight;
+            const rightPaddleLeft = rightPaddle.offsetLeft;
+
+            if (ballRight >= rightPaddleLeft && ballTop < rightPaddleBottom && ballBottom > rightPaddleTop) {
+                ballSpeedX *= -1;
+                 if (Math.abs(ballSpeedX) < 10) ballSpeedX *= 1.05;
+            }
+
+            // Scoring
+            if (ballX < 0) {
+                player2Score++;
+                scoreboard.innerText = `${player1Score} - ${player2Score}`;
+                resetBall();
+            } else if (ballX + ballSize > boardWidth) {
+                player1Score++;
+                scoreboard.innerText = `${player1Score} - ${player2Score}`;
+                resetBall();
+            }
+
+            ball.style.left = ballX + 'px';
+            ball.style.top = ballY + 'px';
+        }
+
+        function gameLoop() {
+            updatePaddles();
+            updateBall();
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        // Initialize paddles to the center
+        leftPaddle.style.top = (boardHeight / 2 - paddleHeight / 2) + 'px';
+        rightPaddle.style.top = (boardHeight / 2 - paddleHeight / 2) + 'px';
+
+    </script>
+</body>
+</html>

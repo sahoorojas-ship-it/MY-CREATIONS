@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Portal | 2025</title>
+    <!-- Font Awesome CDN for the Eye Icon -->
+    <link rel="stylesheet" href="cdnjs.cloudflare.com">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #10b981;
+            --bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo { width: 120px; margin-bottom: 20px; }
+
+        /* Hide classes for toggling */
+        .hidden { display: none; }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        .password-wrapper { position: relative; }
+
+        .toggle-eye {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-signup { background: var(--primary); }
+        .btn-signup:hover { background: #1d4ed8; }
+
+        .btn-login { background: var(--secondary); }
+        .btn-login:hover { background: #059669; }
+
+        .switch-text {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .switch-text span {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #aaa;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Company Logo -->
+    <img src="https://cdn.logojoy.com/wp-content/uploads/2018/05/01104846/1952-768x591.png" alt="Logo" class="logo" WIDTH="200" HEIGHT="100" LENGTH="200">
+
+    <!-- SIGN UP FORM -->
+    <div id="signup-box">
+        <h2>Join the Team</h2>
+        <p>Create your 2025 company account</p>
+        <form>
+            <div class="form-group">
+                <input type="text" placeholder="Full Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="Email Address" required>
+            </div>
+            <div class="form-group password-wrapper">
+                <input type="password" class="pass-input" placeholder="Create Password" required>
+                <i class="fa-solid fa-eye toggle-eye"></i>
+            </div>
+            <button type="submit" class="btn-signup">Create Account</button>
+        </form>
+        <div class="switch-text">
+            Already signed up? <span onclick="toggleForms()">Log In</span>
+        </div>
+    </div>
+
+    <!-- LOG IN FORM (Hidden by default) -->
+    <div id="login-box" class="hidden">
+        <h2>Welcome Back</h2>
+        <p>Log in to your dashboard</p>
+        <form>
+            <div class="form-group">
+                <input type="email" placeholder="Email Address" required>
+            </div>
+            <div class="form-group password-wrapper">
+                <input type="password" class="pass-input" placeholder="Password" required>
+                <i class="fa-solid fa-eye toggle-eye"></i>
+            </div>
+            <button type="submit" class="btn-login">Log In</button>
+        </form>
+        <div class="switch-text">
+            New here? <span onclick="toggleForms()">Join Us</span>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 All Rights Reserved.
+    </footer>
+</div>
+
+<script>
+    // Toggle between Sign Up and Login
+    function toggleForms() {
+        document.getElementById('signup-box').classList.toggle('hidden');
+        document.getElementById('login-box').classList.toggle('hidden');
+    }
+
+    // Password Visibility Logic for all password fields
+    const eyes = document.querySelectorAll('.toggle-eye');
+    eyes.forEach(eye => {
+        eye.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('.pass-input');
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    });
+</script>
+
+</body>
+</html>

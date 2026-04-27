@@ -1,0 +1,14 @@
+* {
+    position: sticky;
+    background-color: blue;
+    color:white;
+    top: 0px; 
+}
+div {
+    position: sticky;
+    background-color: green;
+    color:white;
+    top:0px; 
+    text-align: center;
+    font-size: 40px;
+}

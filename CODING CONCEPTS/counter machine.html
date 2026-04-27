@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter Machine (Default Buttons)</title>
+    <style>
+        /* Minimal CSS for centering and basic layout */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+        #count {
+            font-size: 4rem;
+            margin: 20px 0;
+        }
+        .button-container button {
+            /* These styles are default browser behaviors */
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Counter</h1>
+        <p id="count">0</p>
+        <div class="button-container">
+            <!-- These are standard HTML buttons -->
+            <button id="decrease">Decrease</button>
+            <button id="reset">Reset</button>
+            <button id="increase">Increase</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript logic for the counter functionality
+        let count = 0;
+        const countDisplay = document.getElementById("count");
+        const decreaseButton = document.getElementById("decrease");
+        const increaseButton = document.getElementById("increase");
+        const resetButton = document.getElementById("reset");
+
+        function updateDisplay() {
+            countDisplay.textContent = count;
+            // Change color based on the count value (optional)
+            if (count > 0) {
+                countDisplay.style.color = "green";
+            } else if (count < 0) {
+                countDisplay.style.color = "red";
+            } else {
+                countDisplay.style.color = "black";
+            }
+        }
+
+        // Add event listeners to the buttons
+        increaseButton.addEventListener("click", () => {
+            count++;
+            updateDisplay();
+        });
+
+        decreaseButton.addEventListener("click", () => {
+            count--;
+            updateDisplay();
+        });
+
+        resetButton.addEventListener("click", () => {
+            count = 0;
+            updateDisplay();
+        });
+
+        // Initialize display on page load
+        updateDisplay();
+    </script>
+
+</body>
+</html>

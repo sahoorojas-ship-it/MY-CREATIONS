@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | 2025</title>
+    <link rel="stylesheet" href="MYSELF.CSS">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --text-dark: #1f2937;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* The Main Container */
+        .profile-container {
+            background: white;
+            display: flex; /* This puts the image and text side-by-side */
+            flex-direction: row;
+            max-width: 800px;
+            width: 90%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Image Side */
+        .profile-image-box {
+            flex: 1; /* Takes up 50% of the space */
+            background-color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .profile-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures your photo doesn't look stretched */
+        }
+
+        /* Information Side */
+        .profile-info {
+            flex: 1; /* Takes up the other 50% of the space */
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .profile-info h1 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 2rem;
+        }
+
+        .profile-info .job-title {
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .profile-info p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .details-list {
+            margin-top: 20px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .details-list li {
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .details-list i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        /* Responsive: Stack them on top of each other on mobile */
+        @media (max-width: 900px) {
+            .profile-container {
+                flex-direction: column;
+            }
+            .profile-image-box {
+                min-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="profile-container">
+        <!-- LEFT SIDE: Your Photo -->
+        <div class="profile-image-box">
+            <!-- REPLACE THIS URL WITH YOUR PHOTO -->
+            <img src="u.jpg">
+        </div>
+
+        <!-- RIGHT SIDE: Your Information -->
+        <div class="profile-info">
+            <span class="job-title">full stack  Development learner</span>
+            <hr>
+            <h1>Myself: Esan Sahoo</h1>
+            
+            <p>
+               Hello! I'm Esan Sahoo, a 6th grader student from Odisha, India. I have a passion for web development and love creating beautiful and functional websites. In my free time, I enjoy coding, reading tech blogs, and exploring new technologies.
+            </p>
+
+            <ul class="details-list">
+                <li><i class="fas fa-map-marker-alt"></i> Odisha, India</li>
+                <li><i class="fas fa-envelope"></i> esansahoo@gmail.com</li>
+                <li><i class="fas fa-phone"></i> +91 9876543210</li>
+        </div>
+    </div>
+
+</body>
+</html>

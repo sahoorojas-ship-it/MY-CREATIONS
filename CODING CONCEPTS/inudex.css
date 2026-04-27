@@ -1,0 +1,48 @@
+#grid_container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+div:nth-child(1){
+    background-color:crimson;
+    color:white;
+    
+    width: 100px;
+    height: 100px;
+}
+div:nth-child(2){
+    background-color:blue;
+    color:white;
+    
+    width: 100px;
+    height: 100px;
+}
+div:nth-child(3){
+    background-color:crimson;
+    color:white;
+   
+    
+    width: 100px;
+    height: 100px;
+}
+div:nth-child(4){
+    background-color:yellowgreen;
+    color:white;
+    
+    width: 100px;
+    height: 100px;
+}
+div:nth-child(5){
+    background-color:green;
+    color:white;
+    
+    width: 100px;
+    height: 100px;
+}
+div:nth-child(6){
+    background-color:blueviolet;
+    color:white;
+    width: 100px;
+    height: 100px;
+}

@@ -1,0 +1,195 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #f1f3f6; /* Flipkart light gray background */
+}
+
+/* Header Styling */
+.header {
+    background-color: #2874f0; /* Flipkart blue */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px 0;
+    height: 60px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo a {
+    text-decoration: none;
+    color: white;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    font-style: italic; /* Flipkart logo style */
+    display: block;
+}
+
+.explore-plus {
+    font-size: 11px;
+    font-style: normal;
+    display: block;
+    margin-top: -5px;
+    text-align: right;
+}
+
+.plus-color {
+    color: #ffe500; /* Yellow plus color */
+}
+
+/* Search Container Styling */
+.search-container {
+    background-color: white;
+    border-radius: 2px;
+    width: 450px;
+    display: flex;
+    align-items: center;
+}
+
+.search-container input {
+    padding: 8px 10px;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+}
+
+.search-icon {
+    color: #2874f0;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+/* Right Nav Styling */
+.header-right nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.header-right nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 0 20px;
+    font-weight: 500;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.header-right nav ul li a i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+/* Main Content Area */
+main {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+/* Categories Bar Styling */
+.categories-bar {
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+}
+
+.category-item {
+    text-align: center;
+    cursor: pointer;
+}
+
+.category-item img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+.category-item p {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+/* Banner Styling */
+.main-banner img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+/* Product Section */
+.product-section {
+    background-color: white;
+    padding: 20px;
+    margin-top: 10px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.product-section h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.product-grid {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.product-card {
+    text-align: center;
+    padding: 15px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.product-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.product-card h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.product-card .price {
+    color: #388e3c; /* Green color for price/offers */
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.product-card .offer {
+    font-size: 12px;
+    color: #878787;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #172337; /* Dark blue footer */
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 20px;
+}
