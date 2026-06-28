@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<iframe width=1 height=1 src="https://s.ad.smaato.net/c/?dspId=1234&dspCookie=2be61ac2-7dff-4292-b90c-7b1a34db1e09&gdpr=0&gdpr_consent="></iframe>
+
+<iframe width=1 height=1 src="https://image8.pubmatic.com/AdServer/ImgSync?p=157577&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&pu=https%3A%2F%2Fimage4.pubmatic.com%2FAdServer%2FSPug%3Fp%3D157577%26pmc%3DPM_PMC%26pr%3Dhttps%253A%252F%252Fcookies.nextmillmedia.com%252Fsetuid%253Fbidder%253Dpubmatic%2526nmuid%253D2be61ac2-7dff-4292-b90c-7b1a34db1e09%2526gdpr%253D0%2526gdpr_consent%253D%2526us_privacy%253D%257B%257B.USPrivacy%257D%257D%2526uid%253D%2523PMUID"></iframe>
+
+<iframe width=1 height=1 src="https://rtb.openx.net/sync/prebid?gdpr=0&gdpr_consent=&r=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dopenx%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24%7BUID%7D"></iframe>
+
+<iframe width=1 height=1 src="https://sync.1rx.io/usersync2/rmphb?gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&redir=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dunruly%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%5BRX_UUID%5D"></iframe>
+
+<iframe width=1 height=1 src="https://ads.yieldmo.com/pbsync?gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&gpp=&gpp_sid=&redirectUri=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dyieldmo%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24UID"></iframe>
+
+<iframe width=1 height=1 src="https://sync.cootlogix.com/api/user/html/pbs_sync?gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&redirect=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dvidazoo%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24%7BuserId%7D"></iframe>
+
+<iframe width=1 height=1 src="https://pbs-cs.yellowblue.io/pbs-iframe?gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&gpp=&gpp_sid=&redirect=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Drise%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%5BPBS_UID%5D"></iframe>
+
+<iframe width=1 height=1 src="https://ssc-cms.33across.com/ps/?m=xch&rt=html&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&ru=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3D33across%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D33XUSERID33X&id=zzz000000000002zzz"></iframe>
+
+<iframe width=1 height=1 src="https://ap.lijit.com/pixel?redir=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dsovrn%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24UID"></iframe>
+
+<iframe width=1 height=1 src="https://sync.adkernel.com/user-sync?t=image&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&gpp=&gpp_sid=&r=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dadkernel%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%7BUID%7D"></iframe>
+
+<iframe width=1 height=1 src="https://usync.ingage.tech?gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&redirect=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dinsticator%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24UID"></iframe>
+
+<iframe width=1 height=1 src="https://ssp.disqus.com/redirectuser?sid=950&r=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dzeta_global_ssp%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3DBUYERUID&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&gpp=&gpp_sid="></iframe>
+
+<iframe width=1 height=1 src="https://s.seedtag.com/cs/cookiesync/prebid?gdpr=0&gdpr_consent=&usp_consent={{.USPrivacy}}&redirect=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dseedtag%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24UID"></iframe>
+
+<iframe width=1 height=1 src="https://hbx.media.net/cksync.php?cs=1&type=pbs&ovsid=setstatuscode&bidder=medianet&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&redirect=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dmedianet%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%3Cvsid%3E&gpp=&gpp_sid="></iframe>
+
+<iframe width=1 height=1 src="https://s.ad.smaato.net/c/?adExInit=millennium&gdpr=0&gdpr_consent=&redir=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dverve1%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24UID"></iframe>
+
+<iframe width=1 height=1 src="https://pixel-sync.sitescout.com/dmp/pixelSync?nid=152&gdpr=0&gdpr_consent=&redir=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dbasis%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3DBUYERUID"></iframe>
+
+<iframe width=1 height=1 src="https://ad.360yield.com/user_sync?rt=html&partner_id=2006&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&gpp=&gpp_sid=&r=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dimprovedigital%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%7BPUB_USER_ID%7D"></iframe>
+
+<iframe width=1 height=1 src="https://prebid-match.dotomi.com/match/bounce/current?version=1&networkId=72582&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&gpp=&gpp_sid=&rurl=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dconversant%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D"></iframe>
+
+<iframe width=1 height=1 src="http://sync.pmbmonetize.live/psync?t=s&e=247&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&gpp=&gpp_sid=&cb=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dadipolo%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%25USER_ID%25"></iframe>
+
+<iframe width=1 height=1 src="https://ib.adnxs.com/getuid?https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dappnexus%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24UID"></iframe>
+
+<iframe width=1 height=1 src="https://secure-assets.rubiconproject.com/utils/xapi/multi-sync.html?p=17322&endpoint=us-east"></iframe>
+
+<iframe width=1 height=1 src="https://ssbsync-global.smartadserver.com/api/sync?callerId=5&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&redirectUri=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dsmartadserver%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%5Bssb_sync_pid%5D"></iframe>
+
+<iframe width=1 height=1 src="https://sync.technoratimedia.com/services?srv=cs&gdpr=0&consent=&us_privacy={{.USPrivacy}}&gpp=&gppsid=&cb=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dimds%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%5BUSER_ID%5D"></iframe>
+
+<iframe width=1 height=1 src="https://csync.smilewanted.com/getuid?source=prebid-server&gdpr=0&gdpr_consent=&us_privacy={{.USPrivacy}}&redirect=https%3A%2F%2Fcookies.nextmillmedia.com%2Fsetuid%3Fbidder%3Dsmilewanted%26nmuid%3D2be61ac2-7dff-4292-b90c-7b1a34db1e09%26gdpr%3D0%26gdpr_consent%3D%26us_privacy%3D%7B%7B.USPrivacy%7D%7D%26uid%3D%24UID"></iframe>
+
+</body>
+</html>

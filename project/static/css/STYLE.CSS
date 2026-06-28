@@ -1,0 +1,30 @@
+body {
+    margin:0;
+    background:#1e1e1e;
+    color:white;
+    font-family:sans-serif;
+}
+
+.toolbar {
+    background:#333;
+    padding:10px;
+}
+
+.topbar {
+    background:#444;
+    padding:10px;
+}
+
+button {
+    margin:5px;
+    padding:8px;
+    background:#555;
+    border:none;
+    color:white;
+}
+
+canvas {
+    display:block;
+    margin:20px auto;
+    background:white;
+}

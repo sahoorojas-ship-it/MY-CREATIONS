@@ -1,0 +1,13 @@
+$kind: http-request
+name: express
+url: http://localhost:3000
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: graphql
+  content:
+    query: ""
+auth:
+  type: noauth
+order: 1782624113139

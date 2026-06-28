@@ -1,3 +1,21 @@
 {
-    "livePreview.defaultPreviewPath": "/maakelaadlemeow.html"
+    "livePreview.defaultPreviewPath": "/maakelaadlemeow.html",
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "SQL",
+            "group": "SQL",
+            "database": "MyFirstFile",
+            "username": "ESAN SAHOO"
+        }
+    ]
 }

@@ -1,0 +1,59 @@
+.password-container {
+  position: relative;
+  width: 300px; /* Adjust as needed */
+}
+
+.password-container input {
+  width: 100%;
+  padding: 10px;
+  padding-right: 40px; /* Extra padding on the right so text doesn't overlap the icon */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.password-container i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%); /* Perfectly centers the icon vertically */
+  cursor: pointer;
+  color: #666;
+}
+
+.password-container i:hover {
+  color: #333; /* Darkens icon on hover */
+}
+
+
+.password-container {
+  position: relative;
+  width: 300px;
+}
+
+.password-container input {
+  width: 100%;
+  padding: 10px;
+  padding-right: 40px; /* Leaves space for the icon */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.password-container i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  
+  /* CRITICAL FIXES FOR CLICKING */
+  cursor: pointer !important; /* Forces the mouse cursor to become a hand pointer */
+  z-index: 10;                /* Forces the icon to sit on TOP of the input field */
+  color: #666;
+  pointer-events: auto;       /* Ensures the mouse actually interacts with it */
+}
+
+/* This will prove to you if hover is working */
+.password-container i:hover {
+  color: #ff0000 !important;  /* It will turn bright RED on hover now */
+}

@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TILT — 50 Levels</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --hue: 160;
+  --color: hsl(var(--hue),100%,62%);
+  --color-dim: hsl(var(--hue),80%,35%);
+  --color-glow: hsla(var(--hue),100%,62%,0.5);
+  --bg: #0a0a10;
+  --wall-hue: var(--hue);
+  --ball-color: hsl(var(--hue),100%,62%);
+  --wall-color: hsl(var(--hue),65%,50%);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Share Tech Mono',monospace;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:background 1s ease;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025)1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.7)100%);pointer-events:none;}
+
+/* ── HUD ── */
+#hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;z-index:100;background:linear-gradient(to bottom,rgba(0,0,0,0.7),transparent);}
+#hud-left{display:flex;flex-direction:column;gap:2px;}
+#hud-level{font-family:'Orbitron',monospace;font-size:clamp(13px,2.5vw,19px);font-weight:900;color:var(--color);text-shadow:0 0 16px var(--color-glow);letter-spacing:3px;transition:color .8s,text-shadow .8s;}
+#hud-clicks{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.55);}
+#hud-hint{font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.25);text-transform:uppercase;}
+#hud-right{display:flex;align-items:center;gap:10px;}
+#hud-timer{font-size:clamp(11px,1.8vw,14px);color:rgba(255,255,255,0.45);letter-spacing:2px;}
+
+/* HUD icon buttons */
+.hud-btn{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;padding:6px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);cursor:pointer;border-radius:3px;text-transform:uppercase;transition:all .2s;white-space:nowrap;}
+.hud-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.hud-btn.active{border-color:var(--color);color:var(--color);background:rgba(0,255,180,0.08);}
+
+/* Progress */
+#progress{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.05);z-index:200;}
+#progress-fill{height:100%;background:var(--color);box-shadow:0 0 8px var(--color-glow);transition:width .6s ease,background 1s ease;}
+
+/* Scene */
+#scene{perspective:600px;perspective-origin:50% 50%;}
+#container{width:min(400px,88vw);height:min(400px,88vw);position:relative;transform-style:preserve-3d;}
+#maze-box{width:100%;height:100%;position:relative;transform-style:preserve-3d;filter:drop-shadow(0 30px 60px rgba(0,0,0,0.9));}
+canvas#maze-canvas{width:100%;height:100%;border-radius:4px;display:block;}
+
+/* Ball */
+#ball{width:18px;height:18px;position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 35%,white,var(--ball-color));box-shadow:0 0 12px var(--color-glow),0 0 30px var(--color-glow),inset 0 0 6px rgba(255,255,255,0.3);pointer-events:none;z-index:10;transition:background .3s,box-shadow .3s;will-change:transform;}
+#ball::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1.5px solid var(--ball-color);opacity:.5;animation:ring-pulse 1.5s ease-out infinite;}
+@keyframes ring-pulse{0%{transform:scale(1);opacity:.5}100%{transform:scale(2.2);opacity:0}}
+
+/* End */
+#end-marker{position:absolute;width:20px;height:20px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;}
+#end-marker::before{content:'';width:12px;height:12px;background:var(--color);border-radius:50%;box-shadow:0 0 16px var(--color-glow),0 0 32px var(--color-glow);animation:end-pulse 1s ease-in-out infinite alternate;transition:background 1s,box-shadow 1s;}
+@keyframes end-pulse{from{transform:scale(.85);opacity:.8}to{transform:scale(1.15);opacity:1}}
+#end-marker::after{content:'';position:absolute;width:30px;height:30px;border:1px solid var(--color);border-radius:50%;opacity:.3;animation:end-ring 1.5s linear infinite;}
+@keyframes end-ring{from{transform:scale(.8);opacity:.4}to{transform:scale(1.6);opacity:0}}
+
+/* Flash */
+#flash{position:fixed;inset:0;pointer-events:none;z-index:250;opacity:0;background:var(--color);transition:opacity .05s;}
+
+/* ══════════════════════════════════════════════
+   STORE PANEL
+══════════════════════════════════════════════ */
+#store-panel{position:fixed;right:0;top:0;bottom:0;width:min(340px,95vw);background:rgba(5,5,12,0.97);border-left:1px solid rgba(255,255,255,0.08);z-index:400;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;backdrop-filter:blur(12px);}
+#store-panel.open{transform:translateX(0);}
+.panel-header{padding:20px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(5,5,12,0.98);z-index:2;}
+.panel-header h2{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--color);letter-spacing:3px;text-transform:uppercase;}
+.panel-close{background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;line-height:1;padding:2px 6px;transition:color .2s;}
+.panel-close:hover{color:#fff;}
+.panel-currency{padding:10px 20px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.5);}
+.panel-currency span{color:var(--color);font-size:16px;font-weight:700;}
+
+/* Store items */
+.store-section{padding:14px 20px 4px;}
+.store-section h3{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.25);text-transform:uppercase;margin-bottom:10px;}
+.store-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;margin-bottom:8px;transition:border-color .2s,background .2s;}
+.store-item:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.14);}
+.store-item.owned{border-color:rgba(100,255,180,0.25);background:rgba(100,255,180,0.04);}
+.store-item.cant-afford{opacity:.45;}
+.si-icon{font-size:22px;width:34px;text-align:center;flex-shrink:0;}
+.si-info{flex:1;min-width:0;}
+.si-name{font-size:12px;letter-spacing:1px;color:#e0e0ff;margin-bottom:2px;}
+.si-desc{font-size:9px;letter-spacing:.5px;color:rgba(255,255,255,0.35);line-height:1.4;}
+.si-badge{font-size:9px;letter-spacing:1px;color:#69f0ae;margin-top:2px;}
+.si-buy{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:1px;padding:6px 10px;background:transparent;border:1px solid var(--color);color:var(--color);cursor:pointer;border-radius:3px;white-space:nowrap;flex-shrink:0;transition:background .15s,color .15s;}
+.si-buy:hover:not(:disabled){background:var(--color);color:#000;}
+.si-buy:disabled{opacity:.35;cursor:not-allowed;border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.3);}
+.si-buy.owned-btn{border-color:#69f0ae;color:#69f0ae;cursor:default;}
+
+/* Stack count badge */
+.stack-badge{font-size:9px;background:var(--color);color:#000;border-radius:999px;padding:1px 6px;font-weight:700;margin-left:4px;}
+
+/* ══════════════════════════════════════════════
+   ADMIN PANEL
+══════════════════════════════════════════════ */
+#admin-panel{position:fixed;left:0;top:0;bottom:0;width:min(360px,95vw);background:rgba(4,4,10,0.98);border-right:1px solid rgba(255,100,100,0.15);z-index:400;transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;backdrop-filter:blur(12px);}
+#admin-panel.open{transform:translateX(0);}
+#admin-panel .panel-header h2{color:#ff6b6b;}
+.admin-pw-gate{padding:24px 20px;}
+.admin-pw-gate p{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:12px;}
+.admin-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;font-family:'Share Tech Mono',monospace;font-size:13px;padding:10px 12px;border-radius:4px;outline:none;letter-spacing:2px;}
+.admin-input:focus{border-color:#ff6b6b;}
+.admin-btn{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;padding:9px 20px;background:transparent;border:1px solid #ff6b6b;color:#ff6b6b;cursor:pointer;border-radius:3px;text-transform:uppercase;transition:background .2s,color .2s;margin-top:10px;}
+.admin-btn:hover{background:#ff6b6b;color:#000;}
+.admin-btn.green{border-color:#69f0ae;color:#69f0ae;}
+.admin-btn.green:hover{background:#69f0ae;color:#000;}
+.admin-btn.blue{border-color:#40c4ff;color:#40c4ff;}
+.admin-btn.blue:hover{background:#40c4ff;color:#000;}
+.admin-section{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.admin-section h3{font-size:9px;letter-spacing:3px;color:rgba(255,100,100,0.6);text-transform:uppercase;margin-bottom:12px;}
+.admin-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.admin-row label{font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.45);flex-shrink:0;min-width:80px;}
+.admin-row input[type=range]{flex:1;accent-color:#ff6b6b;min-width:80px;}
+.admin-row input[type=number]{width:70px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 8px;border-radius:3px;outline:none;}
+.admin-row input[type=color]{width:44px;height:30px;background:none;border:1px solid rgba(255,255,255,0.15);border-radius:3px;cursor:pointer;padding:2px;}
+.admin-row span{font-size:11px;color:var(--color);min-width:32px;text-align:right;}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;}
+
+/* Maze editor */
+#maze-editor-wrap{margin-top:10px;}
+#maze-grid-editor{display:inline-grid;gap:1px;background:rgba(255,255,255,0.06);padding:3px;border-radius:3px;cursor:crosshair;}
+.me-cell{width:14px;height:14px;background:rgba(255,255,255,0.05);border-radius:1px;transition:background .1s;}
+.me-cell.wall{background:#ff6b6b;}
+.me-cell:hover{opacity:.75;}
+.admin-notice{font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.25);margin-top:6px;line-height:1.5;}
+
+/* Toast notification */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(10,10,20,0.95);border:1px solid var(--color);color:var(--color);font-size:11px;letter-spacing:2px;padding:10px 24px;border-radius:4px;z-index:600;transition:transform .3s ease,opacity .3s;opacity:0;white-space:nowrap;box-shadow:0 0 20px var(--color-glow);}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+/* Click counter ripple */
+.click-ripple{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--color);pointer-events:none;z-index:50;transform:translate(-50%,-50%) scale(1);animation:ripple-out .6s ease forwards;}
+@keyframes ripple-out{to{transform:translate(-50%,-50%) scale(6);opacity:0;}}
+
+/* ── Overlay (start / win / end) ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:300;gap:18px;backdrop-filter:blur(8px);}
+.overlay h1{font-family:'Orbitron',monospace;font-size:clamp(30px,8vw,60px);font-weight:900;color:var(--color);text-shadow:0 0 40px var(--color-glow),0 0 80px var(--color-glow);letter-spacing:6px;text-align:center;transition:color 1s,text-shadow 1s;}
+.overlay h2{font-family:'Orbitron',monospace;font-size:clamp(18px,5vw,32px);font-weight:700;color:var(--color);text-shadow:0 0 24px var(--color-glow);letter-spacing:4px;text-align:center;transition:color 1s;}
+.overlay p{font-size:clamp(10px,2vw,13px);color:rgba(255,255,255,0.4);letter-spacing:2px;text-align:center;max-width:320px;line-height:1.8;}
+.overlay button{font-family:'Orbitron',monospace;font-size:clamp(11px,2vw,13px);font-weight:700;letter-spacing:3px;padding:13px 38px;background:transparent;border:1px solid var(--color);color:var(--color);cursor:pointer;border-radius:2px;text-transform:uppercase;transition:background .2s,color .2s,box-shadow .2s;margin-top:4px;}
+.overlay button:hover{background:var(--color);color:#000;box-shadow:0 0 24px var(--color-glow);}
+#final-star{font-size:60px;animation:spin 3s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:transparent;} ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<div id="progress"><div id="progress-fill" style="width:0%"></div></div>
+<div id="flash"></div>
+<div id="toast"></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div id="hud-left">
+    <div id="hud-level">LVL 01</div>
+    <div id="hud-clicks">⚡ <span id="click-count">0</span> clicks</div>
+  </div>
+  <div id="hud-hint">ARROW KEYS / TILT</div>
+  <div id="hud-right">
+    <div id="hud-timer">00:00</div>
+    <button class="hud-btn" id="store-toggle-btn">🛒 STORE</button>
+    <button class="hud-btn" id="admin-toggle-btn">⚙ ADMIN</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ STORE PANEL ═══════════════════ -->
+<div id="store-panel">
+  <div class="panel-header">
+    <h2>🛒 STORE</h2>
+    <button class="panel-close" id="store-close">✕</button>
+  </div>
+  <div class="panel-currency">Balance: <span id="store-balance">0</span> clicks</div>
+
+  <div class="store-section">
+    <h3>⚡ Power-Ups</h3>
+
+    <div class="store-item" id="si-speed">
+      <div class="si-icon">🚀</div>
+      <div class="si-info">
+        <div class="si-name">SPEED BOOST</div>
+        <div class="si-desc">Ball moves 40% faster for the current level</div>
+        <div class="si-badge" id="si-speed-owned"></div>
+      </div>
+      <button class="si-buy" data-item="speed" data-cost="30">30 ⚡</button>
+    </div>
+
+    <div class="store-item" id="si-slowmo">
+      <div class="si-icon">🐢</div>
+      <div class="si-info">
+        <div class="si-name">SLOW-MO MODE</div>
+        <div class="si-desc">Physics run at half speed — precision mode</div>
+        <div class="si-badge" id="si-slowmo-owned"></div>
+      </div>
+      <button class="si-buy" data-item="slowmo" data-cost="25">25 ⚡</button>
+    </div>
+
+    <div class="store-item" id="si-ghost">
+      <div class="si-icon">👻</div>
+      <div class="si-info">
+        <div class="si-name">GHOST BALL</div>
+        <div class="si-desc">Ball clips through thin walls for 10 seconds</div>
+        <div class="si-badge" id="si-ghost-owned"></div>
+      </div>
+      <button class="si-buy" data-item="ghost" data-cost="60">60 ⚡</button>
+    </div>
+
+    <div class="store-item" id="si-magnet">
+      <div class="si-icon">🧲</div>
+      <div class="si-info">
+        <div class="si-name">MAGNET</div>
+        <div class="si-desc">Ball is pulled toward the exit automatically</div>
+        <div class="si-badge" id="si-magnet-owned"></div>
+      </div>
+      <button class="si-buy" data-item="magnet" data-cost="80">80 ⚡</button>
+    </div>
+  </div>
+
+  <div class="store-section">
+    <h3>🎯 Level Tools</h3>
+
+    <div class="store-item" id="si-skip">
+      <div class="si-icon">⏭</div>
+      <div class="si-info">
+        <div class="si-name">SKIP LEVEL <span class="stack-badge" id="skip-stack">0</span></div>
+        <div class="si-desc">Instantly complete the current level</div>
+      </div>
+      <button class="si-buy" data-item="skip" data-cost="50">50 ⚡</button>
+    </div>
+
+    <div class="store-item" id="si-addlevel">
+      <div class="si-icon">➕</div>
+      <div class="si-info">
+        <div class="si-name">ADD BONUS LEVEL</div>
+        <div class="si-desc">Generate and insert a new level after current</div>
+      </div>
+      <button class="si-buy" data-item="addlevel" data-cost="40">40 ⚡</button>
+    </div>
+
+    <div class="store-item" id="si-hint">
+      <div class="si-icon">💡</div>
+      <div class="si-info">
+        <div class="si-name">PATH HINT <span class="stack-badge" id="hint-stack">0</span></div>
+        <div class="si-desc">Illuminate the solution path for 4 seconds</div>
+      </div>
+      <button class="si-buy" data-item="hint" data-cost="35">35 ⚡</button>
+    </div>
+
+    <div class="store-item" id="si-restart-free">
+      <div class="si-icon">🔄</div>
+      <div class="si-info">
+        <div class="si-name">RETRY PACK <span class="stack-badge" id="retry-stack">0</span></div>
+        <div class="si-desc">Reset ball to start without losing progress</div>
+      </div>
+      <button class="si-buy" data-item="retry" data-cost="10">10 ⚡</button>
+    </div>
+  </div>
+
+  <div class="store-section">
+    <h3>💎 Cosmetics</h3>
+
+    <div class="store-item" id="si-rainbow">
+      <div class="si-icon">🌈</div>
+      <div class="si-info">
+        <div class="si-name">RAINBOW BALL</div>
+        <div class="si-desc">Ball cycles through all hues continuously</div>
+        <div class="si-badge" id="si-rainbow-badge"></div>
+      </div>
+      <button class="si-buy" data-item="rainbow" data-cost="100">100 ⚡</button>
+    </div>
+
+    <div class="store-item" id="si-trail">
+      <div class="si-icon">✨</div>
+      <div class="si-info">
+        <div class="si-name">GLOW TRAIL</div>
+        <div class="si-desc">Ball leaves a fading light trail as it moves</div>
+        <div class="si-badge" id="si-trail-badge"></div>
+      </div>
+      <button class="si-buy" data-item="trail" data-cost="75">75 ⚡</button>
+    </div>
+
+    <div class="store-item" id="si-darkwalls">
+      <div class="si-icon">🌑</div>
+      <div class="si-info">
+        <div class="si-name">DARK WALLS</div>
+        <div class="si-desc">Walls become near-invisible — extreme difficulty</div>
+        <div class="si-badge" id="si-darkwalls-badge"></div>
+      </div>
+      <button class="si-buy" data-item="darkwalls" data-cost="90">90 ⚡</button>
+    </div>
+  </div>
+
+  <div class="store-section">
+    <h3>💰 Click Packs</h3>
+    <div class="store-item">
+      <div class="si-icon">📦</div>
+      <div class="si-info"><div class="si-name">STARTER PACK</div><div class="si-desc">+50 bonus clicks</div></div>
+      <button class="si-buy" onclick="addClicks(50);showToast('+50 clicks added!');updateStoreUI()">FREE</button>
+    </div>
+  </div>
+
+  <div style="padding:10px 20px 24px;font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.15);line-height:1.7;">
+    Clicks are earned by completing levels.<br>Each level complete = 20 + level_number clicks.
+  </div>
+</div>
+
+<!-- ═══════════════════ ADMIN PANEL ═══════════════════ -->
+<div id="admin-panel">
+  <div class="panel-header">
+    <h2>⚙ ADMIN</h2>
+    <button class="panel-close" id="admin-close">✕</button>
+  </div>
+
+  <!-- Password gate -->
+  <div id="admin-gate">
+    <div class="admin-pw-gate">
+      <p>ENTER ADMIN PASSWORD</p>
+      <input class="admin-input" type="password" id="admin-pw-input" placeholder="password..." />
+      <br>
+      <button class="admin-btn" id="admin-pw-btn">UNLOCK</button>
+      <p style="margin-top:12px;font-size:9px;color:rgba(255,100,100,0.4);">Default: admin123</p>
+    </div>
+  </div>
+
+  <!-- Admin content (hidden until unlocked) -->
+  <div id="admin-content" style="display:none">
+
+    <div class="admin-section">
+      <h3>🎮 Navigation</h3>
+      <div class="admin-row">
+        <label>Jump to level</label>
+        <input type="number" id="adm-jump-lvl" min="1" max="999" value="1" />
+        <button class="admin-btn blue" onclick="adminJumpLevel()">GO</button>
+      </div>
+      <div class="admin-row">
+        <button class="admin-btn" onclick="adminSkipLevel()">Skip Current Level</button>
+        <button class="admin-btn green" onclick="adminPrevLevel()">◀ Prev</button>
+        <button class="admin-btn green" onclick="adminNextLevel()">Next ▶</button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>🎨 Ball Colour</h3>
+      <div class="admin-row">
+        <label>Custom colour</label>
+        <input type="color" id="adm-ball-color" value="#00ffcc" oninput="adminSetBallColor(this.value)" />
+        <button class="admin-btn" onclick="adminResetBallColor()">RESET</button>
+      </div>
+      <div class="admin-row" style="flex-wrap:wrap;gap:6px;">
+        <label>Presets</label>
+        <div id="ball-presets" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+      </div>
+      <div class="admin-row">
+        <label>Ball size</label>
+        <input type="range" id="adm-ball-size" min="6" max="20" value="8" oninput="adminSetBallSize(this.value)"/>
+        <span id="adm-ball-size-val">8</span>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>🧱 Wall Colour</h3>
+      <div class="admin-row">
+        <label>Custom colour</label>
+        <input type="color" id="adm-wall-color" value="#00cc88" oninput="adminSetWallColor(this.value)" />
+        <button class="admin-btn" onclick="adminResetWallColor()">RESET</button>
+      </div>
+      <div class="admin-row">
+        <label>Wall style</label>
+        <select id="adm-wall-style" onchange="adminSetWallStyle(this.value)" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:5px 8px;border-radius:3px;font-family:'Share Tech Mono',monospace;font-size:11px;">
+          <option value="normal">Normal</option>
+          <option value="neon">Neon Glow</option>
+          <option value="dark">Dark Minimal</option>
+          <option value="checker">Checkerboard</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>⚙ Physics Tweaks</h3>
+      <div class="admin-row">
+        <label>Gravity</label>
+        <input type="range" id="adm-gravity" min="5" max="80" value="28" oninput="adminSetGravity(this.value)"/>
+        <span id="adm-gravity-val">0.28</span>
+      </div>
+      <div class="admin-row">
+        <label>Friction</label>
+        <input type="range" id="adm-friction" min="50" max="99" value="88" oninput="adminSetFriction(this.value)"/>
+        <span id="adm-friction-val">0.88</span>
+      </div>
+      <div class="admin-row">
+        <label>Tilt power</label>
+        <input type="range" id="adm-tiltpow" min="5" max="35" value="18" oninput="adminSetTiltPow(this.value)"/>
+        <span id="adm-tiltpow-val">18°</span>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>💰 Economy</h3>
+      <div class="admin-row">
+        <label>Add clicks</label>
+        <input type="number" id="adm-add-clicks" min="0" value="100" style="width:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 8px;border-radius:3px;outline:none;"/>
+        <button class="admin-btn green" onclick="adminAddClicks()">ADD</button>
+      </div>
+      <div class="admin-row">
+        <button class="admin-btn" onclick="adminClearInventory()">Clear Inventory</button>
+        <button class="admin-btn green" onclick="adminMaxInventory()">Max All Items</button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>🗺 Maze Editor</h3>
+      <p class="admin-notice">Paint walls on a 10×10 grid to create a custom level. Click = toggle wall. Then inject it.</p>
+      <div id="maze-editor-wrap">
+        <div id="maze-grid-editor"></div>
+      </div>
+      <div class="admin-row" style="margin-top:10px;flex-wrap:wrap;gap:6px;">
+        <button class="admin-btn green" onclick="adminInjectCustomLevel()">INJECT AS NEXT LVL</button>
+        <button class="admin-btn" onclick="adminClearEditor()">CLEAR</button>
+        <button class="admin-btn blue" onclick="adminRandomEditor()">RANDOMISE</button>
+      </div>
+      <p class="admin-notice" id="editor-status"></p>
+    </div>
+
+    <div class="admin-section">
+      <h3>🌐 Level Info</h3>
+      <div id="adm-level-info" style="font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.4);line-height:2;"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>🔄 Reset</h3>
+      <div class="admin-row">
+        <button class="admin-btn" onclick="adminResetLevel()">Reset Current Level</button>
+        <button class="admin-btn" style="border-color:#ff3333;color:#ff3333;" onclick="adminFullReset()">FULL RESET</button>
+      </div>
+      <div class="admin-row">
+        <button class="admin-btn blue" onclick="adminLockPanel()">🔒 Lock Panel</button>
+      </div>
+    </div>
+
+  </div><!-- /admin-content -->
+</div>
+
+<!-- Game area -->
+<div id="scene">
+  <div id="container">
+    <div id="maze-box">
+      <canvas id="maze-canvas"></canvas>
+      <div id="end-marker"></div>
+      <div id="ball"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlays -->
+<div class="overlay" id="start-screen">
+  <h1>TILT</h1>
+  <p>50 levels of gravity madness.<br>Complete levels to earn clicks. Spend them in the store.</p>
+  <button id="start-btn">▶ PLAY</button>
+</div>
+
+<div class="overlay" id="win-screen" style="display:none">
+  <h2 id="win-title">LEVEL CLEAR</h2>
+  <p id="win-info"></p>
+  <button id="next-btn">NEXT LEVEL →</button>
+</div>
+
+<div class="overlay" id="final-screen" style="display:none">
+  <div id="final-star">★</div>
+  <h1>ESCAPED</h1>
+  <p>All levels conquered. You are a master of the tilt.</p>
+  <button id="replay-btn">PLAY AGAIN</button>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  COLOUR THEMES
+// ════════════════════════════════════════════════════════
+const THEMES=[{hue:160,bg:'#080f0d'},{hue:180,bg:'#081010'},{hue:200,bg:'#080d10'},{hue:220,bg:'#08090f'},{hue:240,bg:'#08080f'},{hue:260,bg:'#0a080f'},{hue:280,bg:'#0c080f'},{hue:300,bg:'#0f080e'},{hue:320,bg:'#0f0809'},{hue:340,bg:'#0f0808'},{hue:0,bg:'#100808'},{hue:15,bg:'#100a08'},{hue:30,bg:'#0f0c08'},{hue:45,bg:'#0d0f08'},{hue:60,bg:'#0b0f08'},{hue:75,bg:'#090f08'},{hue:90,bg:'#080f09'},{hue:105,bg:'#080f0b'},{hue:120,bg:'#080f0d'},{hue:140,bg:'#080f10'},{hue:170,bg:'#080f0d'},{hue:195,bg:'#08100f'},{hue:210,bg:'#080e10'},{hue:230,bg:'#080a10'},{hue:250,bg:'#090810'},{hue:270,bg:'#0b0810'},{hue:290,bg:'#0e0810'},{hue:310,bg:'#10080e'},{hue:330,bg:'#10080a'},{hue:350,bg:'#100808'},{hue:5,bg:'#100908'},{hue:20,bg:'#100b08'},{hue:35,bg:'#0f0d08'},{hue:50,bg:'#0c1008'},{hue:65,bg:'#091008'},{hue:80,bg:'#081008'},{hue:95,bg:'#081009'},{hue:110,bg:'#08100c'},{hue:125,bg:'#08100f'},{hue:145,bg:'#08100f'},{hue:165,bg:'#080f10'},{hue:185,bg:'#080f0f'},{hue:205,bg:'#080c10'},{hue:225,bg:'#08080f'},{hue:245,bg:'#0a0810'},{hue:265,bg:'#0d0810'},{hue:285,bg:'#10080f'},{hue:305,bg:'#100809'},{hue:325,bg:'#100808'},{hue:160,bg:'#080f0d'}];
+
+// ════════════════════════════════════════════════════════
+//  MAZE GENERATOR
+// ════════════════════════════════════════════════════════
+const GRID=20;
+function generateMazeGrid(cols,rows){
+  const flat=Array(GRID*GRID).fill(1);
+  const visited=Array(rows).fill(null).map(()=>Array(cols).fill(false));
+  const stack=[];
+  const cellW=Math.floor((GRID-2)/cols);
+  const cellH=Math.floor((GRID-2)/rows);
+  const offX=Math.floor((GRID-2-cols*cellW)/2)+1;
+  const offY=Math.floor((GRID-2-rows*cellH)/2)+1;
+  function open(cx,cy){const px=offX+cx*cellW,py=offY+cy*cellH;for(let dy=0;dy<cellH;dy++)for(let dx=0;dx<cellW;dx++)flat[(py+dy)*GRID+(px+dx)]=0;return[px,py];}
+  function carve(cx,cy,nx,ny){
+    const bx=offX+Math.min(cx,nx)*cellW+(cx<nx?cellW:0);
+    const by=offY+Math.min(cy,ny)*cellH+(cy<ny?cellH:0);
+    if(cx===nx){for(let dx=0;dx<cellW;dx++)flat[by*GRID+(bx+dx)]=0;}
+    else{for(let dy=0;dy<cellH;dy++)flat[(by+dy)*GRID+bx]=0;}
+  }
+  visited[0][0]=true;open(0,0);stack.push([0,0]);
+  const dirs=[[0,-1],[1,0],[0,1],[-1,0]];
+  while(stack.length>0){
+    const[cx,cy]=stack[stack.length-1];
+    const sh=dirs.slice().sort(()=>Math.random()-.5);
+    let moved=false;
+    for(const[dx,dy]of sh){const nx=cx+dx,ny=cy+dy;if(nx>=0&&ny>=0&&nx<cols&&ny<rows&&!visited[ny][nx]){visited[ny][nx]=true;open(nx,ny);carve(cx,cy,nx,ny);stack.push([nx,ny]);moved=true;break;}}
+    if(!moved)stack.pop();
+  }
+  const ex=offX+(cols-1)*cellW,ey=offY+(rows-1)*cellH;
+  return{flat,offX,offY,cellW,cellH,cols,rows,endCell:[ex,ey]};
+}
+
+function levelConfig(lvl){const c=3+Math.floor((lvl-1)*6/49);return{cols:c,rows:c};}
+
+// ════════════════════════════════════════════════════════
+//  GAME STATE
+// ════════════════════════════════════════════════════════
+let MAX_LEVEL=50;
+const levelData=[];
+function buildLevels(){levelData.length=0;for(let i=1;i<=MAX_LEVEL;i++){const cfg=levelConfig(i);levelData.push(generateMazeGrid(cfg.cols,cfg.rows));}}
+
+const canvas=document.getElementById('maze-canvas');
+const ctx=canvas.getContext('2d');
+const mazeBox=document.getElementById('maze-box');
+const ballEl=document.getElementById('ball');
+const endEl=document.getElementById('end-marker');
+const root=document.documentElement;
+
+let level=1;
+let tiltX=0,tiltY=0,targetTiltX=0,targetTiltY=0;
+let ballX=0,ballY=0,velX=0,velY=0;
+let walls=[];
+let cellPx=0,canvasSize=0;
+let running=false,animId=null;
+let startTime=0,timerInterval=null;
+const keysDown={};
+let endPx=[0,0];
+
+// Clicks / currency
+let clicks=0;
+// Inventory: stackable items
+let inv={skip:0,hint:0,retry:0};
+// Toggle upgrades
+let owned={speed:false,slowmo:false,ghost:false,magnet:false,rainbow:false,trail:false,darkwalls:false};
+// Active effects
+let fx={speed:false,slowmo:false,ghost:false,ghostTimer:0,magnet:false,rainbow:false,trail:false,darkwalls:false,hintActive:false,hintTimer:0};
+
+// Physics overrides (admin)
+let ADM_GRAVITY=0.28,ADM_FRICTION=0.88,ADM_TILT_DEG=18,ADM_BALL_R=8;
+// Custom colours (admin)
+let admBallColor=null,admWallColor=null,admWallStyle='normal';
+// Rainbow state
+let rainbowHue=0;
+// Trail
+let trailPoints=[];
+// Custom injected level
+let customLevelData=null;
+// Editor grid (10x10)
+const ED=10;
+let editorGrid=Array(ED*ED).fill(0);
+editorGrid[0]=1; // corner walls example
+
+// ════════════════════════════════════════════════════════
+//  CLICK TRACKING (every keydown/touch = click)
+// ════════════════════════════════════════════════════════
+function addClicks(n){clicks+=n;updateClickHUD();}
+function spendClicks(n){clicks-=n;updateClickHUD();}
+function updateClickHUD(){document.getElementById('click-count').textContent=clicks;document.getElementById('store-balance').textContent=clicks;}
+
+window.addEventListener('keydown',e=>{
+  if(!keysDown[e.code]){
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD'].includes(e.code)){
+      if(running) addClicks(1);
+    }
+  }
+  keysDown[e.code]=true;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
+});
+window.addEventListener('keyup',e=>{keysDown[e.code]=false;});
+
+// ════════════════════════════════════════════════════════
+//  THEME / COLOUR
+// ════════════════════════════════════════════════════════
+function applyTheme(lvl){
+  const t=THEMES[Math.min(lvl-1,THEMES.length-1)];
+  root.style.setProperty('--hue',t.hue);
+  root.style.setProperty('--color',`hsl(${t.hue},100%,62%)`);
+  root.style.setProperty('--color-dim',`hsl(${t.hue},80%,35%)`);
+  root.style.setProperty('--color-glow',`hsla(${t.hue},100%,62%,0.5)`);
+  document.body.style.background=t.bg;
+  document.getElementById('progress-fill').style.background=`hsl(${t.hue},100%,62%)`;
+  document.getElementById('progress-fill').style.boxShadow=`0 0 10px hsla(${t.hue},100%,62%,0.6)`;
+  // Ball colour
+  const bc=admBallColor||`hsl(${t.hue},100%,62%)`;
+  root.style.setProperty('--ball-color',bc);
+  ballEl.style.background=`radial-gradient(circle at 35% 35%,white,${bc})`;
+  ballEl.style.boxShadow=`0 0 12px hsla(${t.hue},100%,62%,.5),0 0 30px hsla(${t.hue},100%,62%,.5),inset 0 0 6px rgba(255,255,255,0.3)`;
+}
+
+// ════════════════════════════════════════════════════════
+//  INIT LEVEL
+// ════════════════════════════════════════════════════════
+function initLevel(lvl){
+  applyTheme(lvl);
+  let data;
+  if(customLevelData&&lvl===level){data=customLevelData;customLevelData=null;}
+  else{data=levelData[Math.min(lvl-1,levelData.length-1)];}
+
+  canvasSize=Math.min(400,Math.min(window.innerWidth*0.88,window.innerHeight*0.72));
+  canvas.width=canvasSize;canvas.height=canvasSize;
+  cellPx=canvasSize/GRID;
+
+  walls=[];
+  for(let row=0;row<GRID;row++)
+    for(let col=0;col<GRID;col++)
+      if(data.flat[row*GRID+col]===1)
+        walls.push({x:col*cellPx,y:row*cellPx,w:cellPx,h:cellPx});
+
+  const si=data.flat.findIndex(v=>v===0);
+  ballX=(si%GRID)*cellPx+cellPx/2; ballY=Math.floor(si/GRID)*cellPx+cellPx/2;
+  velX=0;velY=0;
+  const[ec,er]=data.endCell;
+  endPx=[ec*cellPx+cellPx/2,er*cellPx+cellPx/2];
+
+  tiltX=0;tiltY=0;targetTiltX=0;targetTiltY=0;
+  mazeBox.style.transform='rotateX(0deg) rotateY(0deg)';
+
+  document.getElementById('hud-level').textContent='LVL '+String(lvl).padStart(2,'0');
+  document.getElementById('progress-fill').style.width=(Math.min(lvl-1,MAX_LEVEL)/MAX_LEVEL*100)+'%';
+
+  // Reset per-level fx (not owned)
+  fx.speed=owned.speed;fx.slowmo=owned.slowmo;
+  fx.ghost=owned.ghost;fx.ghostTimer=owned.ghost?9999:0;
+  fx.magnet=owned.magnet;
+  fx.rainbow=owned.rainbow;fx.trail=owned.trail;fx.darkwalls=owned.darkwalls;
+  fx.hintActive=false;fx.hintTimer=0;
+  trailPoints=[];
+
+  updateEndMarker();updateBallEl();
+  drawMaze();
+  startTime=Date.now();
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=setInterval(updateTimer,500);
+  running=true;
+  updateAdminLevelInfo();
+}
+
+function updateTimer(){
+  const s=Math.floor((Date.now()-startTime)/1000);
+  const m=Math.floor(s/60),sec=s%60;
+  document.getElementById('hud-timer').textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+// ════════════════════════════════════════════════════════
+//  DRAW MAZE
+// ════════════════════════════════════════════════════════
+function drawMaze(hintPath){
+  const t=THEMES[Math.min(level-1,THEMES.length-1)];
+  const hue=t.hue;
+  ctx.clearRect(0,0,canvasSize,canvasSize);
+  ctx.fillStyle=`hsl(${hue},20%,6%)`;
+  ctx.fillRect(0,0,canvasSize,canvasSize);
+
+  // Trail
+  if(fx.trail&&trailPoints.length>1){
+    for(let i=1;i<trailPoints.length;i++){
+      const p=trailPoints[i],pp=trailPoints[i-1];
+      const alpha=(i/trailPoints.length)*0.5;
+      ctx.strokeStyle=`hsla(${hue},100%,65%,${alpha})`;
+      ctx.lineWidth=ADM_BALL_R*(canvasSize/420)*1.4;
+      ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(pp.x,pp.y);ctx.lineTo(p.x,p.y);ctx.stroke();
+    }
+  }
+
+  // Hint path
+  if(hintPath&&fx.hintActive){
+    ctx.strokeStyle=`hsla(${hue},100%,80%,0.35)`;
+    ctx.lineWidth=cellPx*0.5;
+    ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();
+    hintPath.forEach((p,i)=>i===0?ctx.moveTo(p[0],p[1]):ctx.lineTo(p[0],p[1]));
+    ctx.stroke();
+  }
+
+  // Walls
+  for(const w of walls){
+    if(fx.darkwalls){
+      ctx.fillStyle=`hsla(${hue},30%,15%,0.4)`;
+      ctx.fillRect(w.x,w.y,w.w,w.h);
+      continue;
+    }
+    const wc=admWallColor||`hsl(${hue},65%,50%)`;
+    if(admWallStyle==='neon'){
+      ctx.fillStyle=wc;ctx.fillRect(w.x,w.y,w.w,w.h);
+      ctx.shadowColor=wc;ctx.shadowBlur=8;
+      ctx.fillStyle=`hsla(${hue},100%,80%,0.4)`;ctx.fillRect(w.x+1,w.y+1,w.w-2,w.h-2);
+      ctx.shadowBlur=0;
+    } else if(admWallStyle==='dark'){
+      ctx.fillStyle=`hsl(${hue},20%,18%)`;ctx.fillRect(w.x,w.y,w.w,w.h);
+    } else if(admWallStyle==='checker'){
+      const ci=Math.floor(w.x/cellPx)+Math.floor(w.y/cellPx);
+      ctx.fillStyle=ci%2===0?wc:`hsl(${hue},40%,30%)`;ctx.fillRect(w.x,w.y,w.w,w.h);
+    } else {
+      ctx.fillStyle=wc;ctx.fillRect(w.x,w.y,w.w,w.h);
+      ctx.fillStyle=admWallColor?'rgba(255,255,255,0.25)':`hsl(${hue},80%,70%)`;
+      ctx.fillRect(w.x,w.y,w.w,2);ctx.fillRect(w.x,w.y,2,w.h);
+      ctx.fillStyle=admWallColor?'rgba(0,0,0,0.3)':`hsl(${hue},50%,30%)`;
+      ctx.fillRect(w.x,w.y+w.h-2,w.w,2);ctx.fillRect(w.x+w.w-2,w.y,2,w.h);
+      ctx.strokeStyle=`hsla(${hue},100%,80%,0.15)`;ctx.lineWidth=1;
+      ctx.strokeRect(w.x+3,w.y+3,w.w-6,w.h-6);
+    }
+  }
+
+  // Grid
+  ctx.strokeStyle=`hsla(${hue},40%,40%,0.06)`;ctx.lineWidth=0.5;
+  for(let i=0;i<=GRID;i++){
+    ctx.beginPath();ctx.moveTo(i*cellPx,0);ctx.lineTo(i*cellPx,canvasSize);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,i*cellPx);ctx.lineTo(canvasSize,i*cellPx);ctx.stroke();
+  }
+}
+
+function updateBallEl(){
+  const sz=18*(ADM_BALL_R/8);
+  ballEl.style.width=sz+'px';ballEl.style.height=sz+'px';
+  ballEl.style.left=(ballX/canvasSize*mazeBox.offsetWidth-sz/2)+'px';
+  ballEl.style.top=(ballY/canvasSize*mazeBox.offsetHeight-sz/2)+'px';
+  if(fx.rainbow){
+    rainbowHue=(rainbowHue+2)%360;
+    const rc=`hsl(${rainbowHue},100%,65%)`;
+    ballEl.style.background=`radial-gradient(circle at 35% 35%,white,${rc})`;
+    ballEl.style.boxShadow=`0 0 14px hsla(${rainbowHue},100%,65%,.6),0 0 32px hsla(${rainbowHue},100%,65%,.4)`;
+  }
+  if(fx.trail){
+    trailPoints.push({x:ballX,y:ballY});
+    if(trailPoints.length>40)trailPoints.shift();
+  }
+}
+
+function updateEndMarker(){
+  const ms=20;
+  endEl.style.left=(endPx[0]/canvasSize*mazeBox.offsetWidth-ms/2)+'px';
+  endEl.style.top=(endPx[1]/canvasSize*mazeBox.offsetHeight-ms/2)+'px';
+}
+
+// Simple BFS hint path
+function findHintPath(){
+  const CELL=Math.round(cellPx);
+  const r=Math.floor(ballY/cellPx),c=Math.floor(ballX/cellPx);
+  const er=Math.floor(endPx[1]/cellPx),ec2=Math.floor(endPx[0]/cellPx);
+  const visited=Array(GRID*GRID).fill(false);
+  const prev=Array(GRID*GRID).fill(-1);
+  const q=[];
+  const start=r*GRID+c;q.push(start);visited[start]=true;
+  const dirs2=[[0,1],[1,0],[0,-1],[-1,0]];
+  let found=false;
+  while(q.length){
+    const cur=q.shift();
+    const cr=Math.floor(cur/GRID),cc=cur%GRID;
+    if(cr===er&&cc===ec2){found=true;break;}
+    for(const[dr,dc]of dirs2){
+      const nr=cr+dr,nc=cc+dc;
+      if(nr<0||nc<0||nr>=GRID||nc>=GRID)continue;
+      const ni=nr*GRID+nc;
+      if(visited[ni])continue;
+      const wd=levelData[Math.min(level-1,levelData.length-1)];
+      if(wd.flat[ni]===1)continue;
+      visited[ni]=true;prev[ni]=cur;q.push(ni);
+    }
+  }
+  if(!found)return[];
+  const path=[];let cur=er*GRID+ec2;
+  while(cur!==-1){const r2=Math.floor(cur/GRID),c2=cur%GRID;path.unshift([(c2+.5)*cellPx,(r2+.5)*cellPx]);cur=prev[cur];}
+  return path;
+}
+
+// ════════════════════════════════════════════════════════
+//  PHYSICS
+// ════════════════════════════════════════════════════════
+function physicsStep(){
+  const tiltSpeed=0.04,maxTilt=1;
+  if(keysDown['ArrowLeft']||keysDown['KeyA']) targetTiltX=Math.max(-maxTilt,targetTiltX-tiltSpeed*2);
+  else if(keysDown['ArrowRight']||keysDown['KeyD']) targetTiltX=Math.min(maxTilt,targetTiltX+tiltSpeed*2);
+  else targetTiltX*=0.88;
+  if(keysDown['ArrowUp']||keysDown['KeyW']) targetTiltY=Math.max(-maxTilt,targetTiltY-tiltSpeed*2);
+  else if(keysDown['ArrowDown']||keysDown['KeyS']) targetTiltY=Math.min(maxTilt,targetTiltY+tiltSpeed*2);
+  else targetTiltY*=0.88;
+
+  tiltX+=(targetTiltX-tiltX)*0.12;
+  tiltY+=(targetTiltY-tiltY)*0.12;
+
+  let grav=ADM_GRAVITY,fric=ADM_FRICTION;
+  if(fx.speed){grav*=1.6;fric=Math.min(0.97,fric*1.06);}
+  if(fx.slowmo){grav*=0.45;fric=Math.max(0.6,fric*0.85);}
+
+  velX+=tiltX*grav; velY+=tiltY*grav;
+  // Magnet: pull toward exit
+  if(fx.magnet){const dx=endPx[0]-ballX,dy=endPx[1]-ballY,d=Math.sqrt(dx*dx+dy*dy)||1;velX+=dx/d*0.18;velY+=dy/d*0.18;}
+  velX*=fric; velY*=fric;
+
+  const r=ADM_BALL_R*(canvasSize/420);
+  let nx=ballX+velX,ny=ballY+velY;
+
+  if(!fx.ghost){
+    for(const w of walls){
+      const cx=Math.max(w.x+r*.3,Math.min(w.x+w.w-r*.3,nx));
+      const cy=Math.max(w.y+r*.3,Math.min(w.y+w.h-r*.3,ny));
+      const dx=nx-cx,dy=ny-cy,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<r){
+        const nx2=dx/(dist||1),ny2=dy/(dist||1),ov=r-dist;
+        nx+=nx2*ov;ny+=ny2*ov;
+        const dot=velX*nx2+velY*ny2;
+        if(dot<0){velX-=(1+0.18)*dot*nx2;velY-=(1+0.18)*dot*ny2;velX*=0.7;velY*=0.7;}
+      }
+    }
+  } else {
+    fx.ghostTimer--;
+    if(fx.ghostTimer<=0){fx.ghost=false;ballEl.style.opacity='1';}
+    else ballEl.style.opacity='0.45';
+  }
+
+  nx=Math.max(r,Math.min(canvasSize-r,nx));
+  ny=Math.max(r,Math.min(canvasSize-r,ny));
+  if(nx<=r||nx>=canvasSize-r)velX*=-0.18;
+  if(ny<=r||ny>=canvasSize-r)velY*=-0.18;
+  ballX=nx;ballY=ny;
+
+  if(fx.hintActive){fx.hintTimer--;if(fx.hintTimer<=0){fx.hintActive=false;}}
+}
+
+let hintPathCache=null;
+function renderFrame(){
+  if(!running)return;
+  physicsStep();
+  mazeBox.style.transform=`rotateX(${-tiltY*ADM_TILT_DEG}deg) rotateY(${tiltX*ADM_TILT_DEG}deg)`;
+  if(fx.hintActive&&!hintPathCache)hintPathCache=findHintPath();
+  if(!fx.hintActive)hintPathCache=null;
+  drawMaze(hintPathCache);
+  updateBallEl();
+
+  const r=ADM_BALL_R*(canvasSize/420);
+  const dx=ballX-endPx[0],dy=ballY-endPx[1];
+  if(Math.sqrt(dx*dx+dy*dy)<r*2.8){running=false;onLevelWin();return;}
+  animId=requestAnimationFrame(renderFrame);
+}
+
+function flashScreen(){const f=document.getElementById('flash');f.style.opacity='0.3';setTimeout(()=>{f.style.opacity='0';},80);}
+
+function onLevelWin(){
+  clearInterval(timerInterval);flashScreen();
+  const elapsed=Math.floor((Date.now()-startTime)/1000);
+  const m=Math.floor(elapsed/60),s=elapsed%60;
+  const ts=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  // Award clicks: 20 + level number
+  const earned=20+level;
+  addClicks(earned);
+  setTimeout(()=>{
+    if(level>=MAX_LEVEL){
+      document.getElementById('final-screen').style.display='flex';
+      document.getElementById('progress-fill').style.width='100%';
+    } else {
+      const ws=document.getElementById('win-screen');
+      ws.style.display='flex';
+      document.getElementById('win-title').textContent=`LEVEL ${level} CLEAR`;
+      document.getElementById('win-info').textContent=`Time: ${ts}  ·  +${earned} clicks earned`;
+    }
+  },200);
+}
+
+// ════════════════════════════════════════════════════════
+//  STORE LOGIC
+// ════════════════════════════════════════════════════════
+const STORE_ITEMS={
+  speed:{cost:30,stackable:false},
+  slowmo:{cost:25,stackable:false},
+  ghost:{cost:60,stackable:false},
+  magnet:{cost:80,stackable:false},
+  skip:{cost:50,stackable:true},
+  addlevel:{cost:40,stackable:false},
+  hint:{cost:35,stackable:true},
+  retry:{cost:10,stackable:true},
+  rainbow:{cost:100,stackable:false},
+  trail:{cost:75,stackable:false},
+  darkwalls:{cost:90,stackable:false},
+};
+
+function buyItem(id){
+  const item=STORE_ITEMS[id];
+  if(!item)return;
+  if(clicks<item.cost){showToast('Not enough clicks!');return;}
+  spendClicks(item.cost);
+  switch(id){
+    case 'speed': owned.speed=true;fx.speed=true;showToast('🚀 Speed Boost active!');break;
+    case 'slowmo': owned.slowmo=true;fx.slowmo=true;showToast('🐢 Slow-Mo active!');break;
+    case 'ghost': owned.ghost=true;fx.ghost=true;fx.ghostTimer=600;ballEl.style.opacity='0.45';showToast('👻 Ghost mode – 10 sec!');break;
+    case 'magnet': owned.magnet=true;fx.magnet=true;showToast('🧲 Magnet activated!');break;
+    case 'skip': inv.skip++;showToast('⏭ Skip added to inventory!');break;
+    case 'addlevel': injectBonusLevel();showToast('➕ Bonus level added!');break;
+    case 'hint': inv.hint++;showToast('💡 Hint added!');break;
+    case 'retry': inv.retry++;showToast('🔄 Retry added!');break;
+    case 'rainbow': owned.rainbow=true;fx.rainbow=true;showToast('🌈 Rainbow Ball on!');break;
+    case 'trail': owned.trail=true;fx.trail=true;showToast('✨ Glow Trail on!');break;
+    case 'darkwalls': owned.darkwalls=true;fx.darkwalls=true;drawMaze();showToast('🌑 Dark Walls on!');break;
+  }
+  updateStoreUI();
+}
+
+function useSkip(){if(inv.skip<=0){showToast('No skips!');return;}inv.skip--;running=false;clearInterval(timerInterval);addClicks(10);const earned=10;onLevelWinForce();updateStoreUI();}
+function useHint(){if(inv.hint<=0){showToast('No hints!');return;}inv.hint--;fx.hintActive=true;fx.hintTimer=240;hintPathCache=null;showToast('💡 Path shown for 4 sec!');updateStoreUI();}
+function useRetry(){if(inv.retry<=0){showToast('No retries!');return;}inv.retry--;const data=levelData[Math.min(level-1,levelData.length-1)];const si=data.flat.findIndex(v=>v===0);ballX=(si%GRID)*cellPx+cellPx/2;ballY=Math.floor(si/GRID)*cellPx+cellPx/2;velX=0;velY=0;showToast('🔄 Ball reset!');updateStoreUI();}
+
+function onLevelWinForce(){flashScreen();const earned=10+level;addClicks(earned);setTimeout(()=>{
+  if(level>=MAX_LEVEL){document.getElementById('final-screen').style.display='flex';}
+  else{document.getElementById('win-screen').style.display='flex';document.getElementById('win-title').textContent=`LEVEL ${level} CLEAR`;document.getElementById('win-info').textContent=`Skipped  ·  +${earned} clicks`;}
+},200);}
+
+function injectBonusLevel(){
+  const cfg=levelConfig(level);
+  const bonus=generateMazeGrid(cfg.cols+1,cfg.rows+1);
+  levelData.splice(level,0,bonus);
+  MAX_LEVEL++;
+  showToast('➕ Bonus level inserted after current!');
+}
+
+function updateStoreUI(){
+  document.getElementById('store-balance').textContent=clicks;
+  document.getElementById('skip-stack').textContent=inv.skip;
+  document.getElementById('hint-stack').textContent=inv.hint;
+  document.getElementById('retry-stack').textContent=inv.retry;
+  // Update buy buttons
+  document.querySelectorAll('.si-buy[data-item]').forEach(btn=>{
+    const id=btn.dataset.item;
+    const cost=parseInt(btn.dataset.cost);
+    const item=STORE_ITEMS[id];
+    if(!item)return;
+    if(!item.stackable&&owned[id]){btn.textContent='✓ OWNED';btn.disabled=true;btn.classList.add('owned-btn');return;}
+    btn.disabled=clicks<cost;
+    btn.textContent=cost+' ⚡';
+    btn.classList.remove('owned-btn');
+  });
+  // Badges
+  if(owned.rainbow)document.getElementById('si-rainbow-badge').textContent='● ACTIVE';
+  if(owned.trail)document.getElementById('si-trail-badge').textContent='● ACTIVE';
+  if(owned.darkwalls)document.getElementById('si-darkwalls-badge').textContent='● ACTIVE';
+}
+
+// ════════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════════
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ════════════════════════════════════════════════════════
+//  ADMIN LOGIC
+// ════════════════════════════════════════════════════════
+const ADMIN_PW='admin123';
+let adminUnlocked=false;
+
+document.getElementById('admin-pw-btn').addEventListener('click',()=>{
+  const pw=document.getElementById('admin-pw-input').value;
+  if(pw===ADMIN_PW){adminUnlocked=true;document.getElementById('admin-gate').style.display='none';document.getElementById('admin-content').style.display='block';buildEditorGrid();updateAdminLevelInfo();buildBallPresets();showToast('⚙ Admin panel unlocked!');}
+  else{showToast('Wrong password!');document.getElementById('admin-pw-input').value='';}
+});
+document.getElementById('admin-pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('admin-pw-btn').click();});
+
+function adminJumpLevel(){
+  const n=parseInt(document.getElementById('adm-jump-lvl').value);
+  if(isNaN(n)||n<1)return;
+  while(levelData.length<n){const cfg=levelConfig(levelData.length+1);levelData.push(generateMazeGrid(cfg.cols,cfg.rows));MAX_LEVEL=Math.max(MAX_LEVEL,levelData.length);}
+  level=n;running=false;cancelAnimationFrame(animId);
+  closeAllPanels();initLevel(level);animId=requestAnimationFrame(renderFrame);
+  showToast(`Jumped to level ${n}!`);
+}
+function adminSkipLevel(){running=false;cancelAnimationFrame(animId);if(level<MAX_LEVEL)level++;closeAllPanels();initLevel(level);animId=requestAnimationFrame(renderFrame);showToast('Level skipped!');}
+function adminPrevLevel(){if(level<=1)return;level--;running=false;cancelAnimationFrame(animId);closeAllPanels();initLevel(level);animId=requestAnimationFrame(renderFrame);}
+function adminNextLevel(){if(level>=MAX_LEVEL)return;level++;running=false;cancelAnimationFrame(animId);closeAllPanels();initLevel(level);animId=requestAnimationFrame(renderFrame);}
+
+const BALL_PRESETS=['#ff0066','#00ffcc','#ffff00','#ff6600','#00aaff','#ff00ff','#00ff44','#ffffff','#ff3333','#aaffaa'];
+function buildBallPresets(){
+  const wrap=document.getElementById('ball-presets');wrap.innerHTML='';
+  BALL_PRESETS.forEach(c=>{
+    const b=document.createElement('div');
+    b.style.cssText=`width:22px;height:22px;border-radius:50%;background:${c};cursor:pointer;border:2px solid rgba(255,255,255,0.15);flex-shrink:0;`;
+    b.title=c;b.onclick=()=>{admBallColor=c;document.getElementById('adm-ball-color').value=c;adminSetBallColor(c);};
+    wrap.appendChild(b);
+  });
+}
+function adminSetBallColor(c){admBallColor=c;ballEl.style.background=`radial-gradient(circle at 35% 35%,white,${c})`;ballEl.style.boxShadow=`0 0 12px ${c}88,0 0 28px ${c}44`;}
+function adminResetBallColor(){admBallColor=null;applyTheme(level);}
+function adminSetBallSize(v){ADM_BALL_R=parseInt(v);document.getElementById('adm-ball-size-val').textContent=v;}
+function adminSetWallColor(c){admWallColor=c;drawMaze();}
+function adminResetWallColor(){admWallColor=null;drawMaze();}
+function adminSetWallStyle(v){admWallStyle=v;drawMaze();}
+function adminSetGravity(v){ADM_GRAVITY=v/100;document.getElementById('adm-gravity-val').textContent=(v/100).toFixed(2);}
+function adminSetFriction(v){ADM_FRICTION=v/100;document.getElementById('adm-friction-val').textContent=(v/100).toFixed(2);}
+function adminSetTiltPow(v){ADM_TILT_DEG=parseInt(v);document.getElementById('adm-tiltpow-val').textContent=v+'°';}
+function adminAddClicks(){const n=parseInt(document.getElementById('adm-add-clicks').value)||0;addClicks(n);updateStoreUI();showToast(`+${n} clicks added!`);}
+function adminClearInventory(){inv={skip:0,hint:0,retry:0};owned={speed:false,slowmo:false,ghost:false,magnet:false,rainbow:false,trail:false,darkwalls:false};for(const k in fx)fx[k]=typeof fx[k]==='number'?0:false;updateStoreUI();showToast('Inventory cleared!');}
+function adminMaxInventory(){inv.skip+=10;inv.hint+=10;inv.retry+=10;for(const k in owned)owned[k]=true;for(const k in fx){if(typeof fx[k]==='boolean')fx[k]=true;}updateStoreUI();showToast('All items maxed!');}
+function adminResetLevel(){running=false;cancelAnimationFrame(animId);initLevel(level);animId=requestAnimationFrame(renderFrame);}
+function adminFullReset(){if(!confirm('Full reset? Loses all progress.'))return;level=1;clicks=0;inv={skip:0,hint:0,retry:0};owned={speed:false,slowmo:false,ghost:false,magnet:false,rainbow:false,trail:false,darkwalls:false};for(const k in fx)fx[k]=typeof fx[k]==='number'?0:false;updateClickHUD();buildLevels();MAX_LEVEL=50;running=false;cancelAnimationFrame(animId);initLevel(level);animId=requestAnimationFrame(renderFrame);showToast('Full reset done!');}
+function adminLockPanel(){adminUnlocked=false;document.getElementById('admin-gate').style.display='block';document.getElementById('admin-content').style.display='none';document.getElementById('admin-pw-input').value='';closeAllPanels();showToast('Admin panel locked.');}
+
+function updateAdminLevelInfo(){
+  const el=document.getElementById('adm-level-info');if(!el)return;
+  const data=levelData[Math.min(level-1,levelData.length-1)];
+  const wallCount=data.flat.filter(v=>v===1).length;
+  el.innerHTML=`Level: ${level} / ${MAX_LEVEL}<br>Grid cells: ${data.cols}×${data.rows}<br>Wall cells: ${wallCount}<br>End cell: [${data.endCell}]<br>Clicks: ${clicks}`;
+}
+
+// ── Editor ────────────────────────────────────────
+function buildEditorGrid(){
+  const wrap=document.getElementById('maze-grid-editor');wrap.innerHTML='';
+  wrap.style.gridTemplateColumns=`repeat(${ED},14px)`;
+  let painting=false,paintVal=1;
+  for(let i=0;i<ED*ED;i++){
+    const cell=document.createElement('div');
+    cell.className='me-cell'+(editorGrid[i]?' wall':'');
+    cell.dataset.i=i;
+    cell.addEventListener('mousedown',e=>{painting=true;paintVal=editorGrid[i]?0:1;toggleEdCell(i,cell,paintVal);});
+    cell.addEventListener('mouseover',e=>{if(painting)toggleEdCell(i,cell,paintVal);});
+    wrap.appendChild(cell);
+  }
+  document.addEventListener('mouseup',()=>painting=false);
+}
+function toggleEdCell(i,cell,val){editorGrid[i]=val;cell.className='me-cell'+(val?' wall':'');}
+function adminClearEditor(){editorGrid.fill(0);buildEditorGrid();}
+function adminRandomEditor(){for(let i=0;i<ED*ED;i++)editorGrid[i]=Math.random()<0.28?1:0;// ensure corners open
+editorGrid[0]=0;editorGrid[ED*ED-1]=0;buildEditorGrid();}
+function adminInjectCustomLevel(){
+  // Expand 10x10 to 20x20 flat
+  const flat=Array(GRID*GRID).fill(0);
+  // Border walls
+  for(let c=0;c<GRID;c++){flat[c]=1;flat[(GRID-1)*GRID+c]=1;}
+  for(let r=0;r<GRID;r++){flat[r*GRID]=1;flat[r*GRID+GRID-1]=1;}
+  // Map editor 10x10 into inner 18x18 (scale x2)
+  for(let er=0;er<ED;er++)for(let ec=0;ec<ED;ec++){
+    if(editorGrid[er*ED+ec]===1){
+      const br=1+er*1,bc=1+ec*1; // 1:1 into 18 wide inner
+      if(br<GRID-1&&bc<GRID-1)flat[br*GRID+bc]=1;
+    }
+  }
+  // End cell = last open cell near bottom-right
+  let endCell=[GRID-2,GRID-2];
+  for(let r=GRID-2;r>=0;r--)for(let c=GRID-2;c>=0;c--){if(flat[r*GRID+c]===0){endCell=[c,r];r=-1;break;}}
+  customLevelData={flat,endCell,cols:ED,rows:ED};
+  document.getElementById('editor-status').textContent='✓ Custom level ready — will load on next level start.';
+  showToast('Custom level injected!');
+}
+
+// ════════════════════════════════════════════════════════
+//  PANEL TOGGLES
+// ════════════════════════════════════════════════════════
+function closeAllPanels(){document.getElementById('store-panel').classList.remove('open');document.getElementById('admin-panel').classList.remove('open');document.getElementById('store-toggle-btn').classList.remove('active');document.getElementById('admin-toggle-btn').classList.remove('active');}
+
+document.getElementById('store-toggle-btn').addEventListener('click',()=>{
+  const sp=document.getElementById('store-panel');
+  const ap=document.getElementById('admin-panel');
+  ap.classList.remove('open');document.getElementById('admin-toggle-btn').classList.remove('active');
+  sp.classList.toggle('open');
+  document.getElementById('store-toggle-btn').classList.toggle('active',sp.classList.contains('open'));
+  if(sp.classList.contains('open')){updateStoreUI();}
+});
+document.getElementById('admin-toggle-btn').addEventListener('click',()=>{
+  const ap=document.getElementById('admin-panel');
+  const sp=document.getElementById('store-panel');
+  sp.classList.remove('open');document.getElementById('store-toggle-btn').classList.remove('active');
+  ap.classList.toggle('open');
+  document.getElementById('admin-toggle-btn').classList.toggle('active',ap.classList.contains('open'));
+});
+document.getElementById('store-close').addEventListener('click',()=>{document.getElementById('store-panel').classList.remove('open');document.getElementById('store-toggle-btn').classList.remove('active');});
+document.getElementById('admin-close').addEventListener('click',()=>{document.getElementById('admin-panel').classList.remove('open');document.getElementById('admin-toggle-btn').classList.remove('active');});
+
+// Store buy buttons
+document.querySelectorAll('.si-buy[data-item]').forEach(btn=>{
+  btn.addEventListener('click',()=>buyItem(btn.dataset.item));
+});
+
+// Inventory use buttons (store section actions via toast click area — add keyboard shortcut hints)
+// H = hint, R = retry, K = skip
+window.addEventListener('keydown',e=>{
+  if(document.getElementById('store-panel').classList.contains('open')||document.getElementById('admin-panel').classList.contains('open'))return;
+  if(e.code==='KeyH')useHint();
+  if(e.code==='KeyR'&&!e.ctrlKey)useRetry();
+  if(e.code==='KeyK')useSkip();
+});
+
+// ════════════════════════════════════════════════════════
+//  MOBILE / TOUCH
+// ════════════════════════════════════════════════════════
+function requestMotion(){if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function'){DeviceMotionEvent.requestPermission().then(r=>{if(r==='granted')window.addEventListener('deviceorientation',handleOrientation);}).catch(()=>{});}else{window.addEventListener('deviceorientation',handleOrientation);}}
+function handleOrientation(e){if(!running)return;const m=1;targetTiltX=Math.max(-m,Math.min(m,(e.gamma||0)/25));targetTiltY=Math.max(-m,Math.min(m,(e.beta||0)/25));}
+
+let touchStart=null;
+mazeBox.addEventListener('touchstart',e=>{touchStart=e.touches[0];addClicks(1);},{passive:true});
+mazeBox.addEventListener('touchmove',e=>{if(!touchStart)return;const dx=e.touches[0].clientX-touchStart.clientX,dy=e.touches[0].clientY-touchStart.clientY;targetTiltX=Math.max(-1,Math.min(1,dx*.012));targetTiltY=Math.max(-1,Math.min(1,dy*.012));},{passive:true});
+mazeBox.addEventListener('touchend',()=>{touchStart=null;targetTiltX=0;targetTiltY=0;},{passive:true});
+
+// ════════════════════════════════════════════════════════
+//  OVERLAY BUTTONS
+// ════════════════════════════════════════════════════════
+document.getElementById('start-btn').addEventListener('click',()=>{
+  document.getElementById('start-screen').style.display='none';
+  requestMotion();initLevel(level);animId=requestAnimationFrame(renderFrame);
+});
+document.getElementById('next-btn').addEventListener('click',()=>{
+  document.getElementById('win-screen').style.display='none';
+  level++;initLevel(level);animId=requestAnimationFrame(renderFrame);
+});
+document.getElementById('replay-btn').addEventListener('click',()=>{
+  document.getElementById('final-screen').style.display='none';
+  level=1;buildLevels();MAX_LEVEL=50;initLevel(level);animId=requestAnimationFrame(renderFrame);
+});
+
+// ════════════════════════════════════════════════════════
+//  BOOT
+// ════════════════════════════════════════════════════════
+buildLevels();
+applyTheme(1);
+canvas.width=400;canvas.height=400;
+ctx.fillStyle='#080f0d';ctx.fillRect(0,0,400,400);
+</script>
+</body>
+</html>

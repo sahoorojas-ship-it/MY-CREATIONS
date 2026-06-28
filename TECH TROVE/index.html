@@ -1,0 +1,548 @@
+<!-- CURSOR -->
+
+<link rel="stylesheet" href="style.css">
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- TOAST -->
+<div id="toast">✅ Added to cart!</div>
+
+<!-- BACKDROP -->
+<div class="backdrop" id="backdrop" onclick="closeAll()"></div>
+
+<!-- PURCHASE POPUP -->
+<div id="purchase-popup">
+  <img class="popup-img" id="popup-img" src="" alt="">
+  <div class="popup-text">
+    <strong id="popup-name"></strong>
+    <span id="popup-location"></span> just bought this<br>
+    <em id="popup-ago"></em>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div id="cart-sidebar">
+  <div class="cart-header">
+    <div class="cart-title">🛒 My Cart <span id="cart-count-header" style="font-size:13px;color:var(--muted);font-family:var(--font-mono)">(0 items)</span></div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">
+      <div class="empty-icon">🛒</div>
+      <div>Your cart is empty.<br><span style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">Add some awesome tech!</span></div>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div id="coupon-active-row"></div>
+    <div class="coupon-input-row">
+      <input class="coupon-input" id="coupon-field" placeholder="Enter coupon code..." type="text">
+      <button class="coupon-apply" onclick="applyCoupon()">APPLY</button>
+    </div>
+    <div class="cart-summary-row"><span>Subtotal</span><span id="cart-subtotal">₹0</span></div>
+    <div class="cart-summary-row"><span>Shipping</span><span id="cart-shipping">FREE</span></div>
+    <div class="cart-summary-row discount" id="discount-row" style="display:none"><span>Discount</span><span id="cart-discount">-₹0</span></div>
+    <div class="cart-summary-row total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="btn-checkout" onclick="openCheckout()">Checkout →</button>
+  </div>
+</div>
+
+<!-- WISHLIST SIDEBAR -->
+<div id="wishlist-sidebar">
+  <div class="cart-header">
+    <div class="cart-title">❤️ Wishlist</div>
+    <button class="cart-close" onclick="closeWishlist()">✕</button>
+  </div>
+  <div class="wishlist-items" id="wishlist-items">
+    <div class="cart-empty"><div class="empty-icon">💝</div><div>No saved items yet</div></div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div id="notif-panel">
+  <div class="notif-header">
+    🔔 Notifications
+    <button onclick="closeNotif()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">✕</button>
+  </div>
+  <div class="notif-item"><div class="notif-icon">🔥</div><div class="notif-text"><strong>Flash Sale Live!</strong>iPhone 17 Pro Max now 20% off for next 2 hours<div class="notif-time">2 min ago</div></div></div>
+  <div class="notif-item"><div class="notif-icon">📦</div><div class="notif-text"><strong>Stock Alert</strong>Samsung S25 Ultra — only 8 units left!<div class="notif-time">15 min ago</div></div></div>
+  <div class="notif-item"><div class="notif-icon">🎁</div><div class="notif-text"><strong>New Coupon!</strong>Use MEGA20 for 20% off on all orders above ₹50,000<div class="notif-time">1 hr ago</div></div></div>
+  <div class="notif-item"><div class="notif-icon">⭐</div><div class="notif-text"><strong>Price Drop</strong>TechTrove Watch Pro now ₹6,000 cheaper than last week<div class="notif-time">3 hr ago</div></div></div>
+  <div class="notif-item"><div class="notif-icon">🚚</div><div class="notif-text"><strong>Delivery Update</strong>Your last order is out for delivery<div class="notif-time">5 hr ago</div></div></div>
+</div>
+
+<!-- COMPARE MODAL -->
+<div class="modal-overlay" id="compare-overlay">
+  <div class="compare-modal">
+    <button class="modal-close" onclick="closeCompare()">✕</button>
+    <div class="compare-title">📊 Product Comparison</div>
+    <div style="overflow-x:auto">
+      <table class="compare-table" id="compare-table">
+        <thead><tr id="compare-head"></tr></thead>
+        <tbody id="compare-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkout-overlay">
+  <div class="std-modal">
+    <button class="modal-close" onclick="document.getElementById('checkout-overlay').classList.remove('open')">✕</button>
+    <div id="step1" class="checkout-step active">
+      <div class="checkout-title">📍 Shipping Details</div>
+      <div class="order-summary-mini" id="checkout-summary"></div>
+      <div class="form-row">
+        <div class="form-field"><label>First Name</label><input placeholder="Raj" type="text" value="Raj"></div>
+        <div class="form-field"><label>Last Name</label><input placeholder="Sharma" type="text" value="Sharma"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field" style="flex:2"><label>Address</label><input placeholder="123, MG Road, Apt 4B" type="text"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>City</label><input placeholder="Mumbai" type="text"></div>
+        <div class="form-field"><label>State</label>
+          <select><option>Maharashtra</option><option>Karnataka</option><option>Delhi</option><option>West Bengal</option><option>Tamil Nadu</option><option>Gujarat</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>PIN Code</label><input id="checkout-pin" placeholder="400001" type="text"></div>
+        <div class="form-field"><label>Phone</label><input placeholder="+91 98765 43210" type="text"></div>
+      </div>
+      <div class="step-nav"><button class="step-btn next" onclick="goStep(2)">Next: Shipping →</button></div>
+    </div>
+    <div id="step2" class="checkout-step">
+      <div class="checkout-title">🚚 Shipping &amp; Delivery</div>
+      <div class="pincode-row">
+        <input id="shipping-pin" placeholder="Enter PIN code to estimate delivery" type="text">
+        <button onclick="calcShipping()">Check</button>
+      </div>
+      <div class="pincode-result" id="pincode-result"></div>
+      <div class="shipping-options" style="margin-top:16px">
+        <div class="shipping-opt active" onclick="selectShipping(this,0)">
+          <div><div class="shipping-opt-name">Standard Delivery</div><div class="shipping-opt-days">5-7 business days</div></div>
+          <div class="shipping-opt-price">FREE</div>
+        </div>
+        <div class="shipping-opt" onclick="selectShipping(this,199)">
+          <div><div class="shipping-opt-name">Express Delivery</div><div class="shipping-opt-days">2-3 business days</div></div>
+          <div class="shipping-opt-price">₹199</div>
+        </div>
+        <div class="shipping-opt" onclick="selectShipping(this,499)">
+          <div><div class="shipping-opt-name">Next Day Delivery</div><div class="shipping-opt-days">Tomorrow by 8 PM</div></div>
+          <div class="shipping-opt-price">₹499</div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="step-btn back" onclick="goStep(1)">← Back</button>
+        <button class="step-btn next" onclick="goStep(3)">Next: Payment →</button>
+      </div>
+    </div>
+    <div id="step3" class="checkout-step">
+      <div class="checkout-title">💳 Payment Details</div>
+      <div class="order-summary-mini" id="checkout-summary2"></div>
+      <div class="form-row">
+        <div class="form-field" style="flex:2"><label>Card Number</label><input placeholder="1234 5678 9012 3456" type="text"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Expiry</label><input placeholder="MM/YY" type="text"></div>
+        <div class="form-field"><label>CVV</label><input placeholder="•••" type="password"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field" style="flex:2"><label>Name on Card</label><input placeholder="RAJ SHARMA" type="text"></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;margin-bottom:16px;align-items:center">
+        <div style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">Or pay with:</div>
+        <span class="coupon" onclick="showToast('UPI payment initiated!')" style="cursor:pointer">📱 UPI</span>
+        <span class="coupon" onclick="showToast('Paytm payment initiated!')" style="cursor:pointer">💚 Paytm</span>
+        <span class="coupon" onclick="showToast('Google Pay initiated!')" style="cursor:pointer">🔵 GPay</span>
+      </div>
+      <div class="step-nav">
+        <button class="step-btn back" onclick="goStep(2)">← Back</button>
+        <button class="step-btn confirm" onclick="placeOrder()">🔒 Place Order</button>
+      </div>
+    </div>
+    <div id="step4" class="checkout-step">
+      <div class="order-success">
+        <div class="success-icon">🎉</div>
+        <h2 style="font-size:26px;font-weight:800;margin-bottom:8px">Order Placed!</h2>
+        <p style="color:var(--muted);font-family:var(--font-mono);font-size:13px;margin-bottom:20px">Your order #TT<span id="order-num"></span> has been confirmed.<br>You'll receive a tracking update shortly.</p>
+        <button class="btn-explore" onclick="openTracking()" style="margin-right:10px">Track Order</button>
+        <button class="btn-cart" onclick="document.getElementById('checkout-overlay').classList.remove('open')">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER TRACKING MODAL -->
+<div class="modal-overlay" id="tracking-overlay">
+  <div class="tracking-modal">
+    <button class="modal-close" onclick="document.getElementById('tracking-overlay').classList.remove('open')">✕</button>
+    <div style="font-size:22px;font-weight:800;margin-bottom:4px">📦 Order Tracking</div>
+    <div style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">Order #TT<span id="track-order-num"></span> · Expected: <strong style="color:var(--green)">3-5 Business Days</strong></div>
+    <div class="tracking-steps">
+      <div class="track-step"><div class="track-dot done"></div><div class="track-step-info"><h4>Order Confirmed</h4><p>Your order has been received and confirmed</p></div></div>
+      <div class="track-step"><div class="track-dot done"></div><div class="track-step-info"><h4>Processing</h4><p>Your items are being packed at the warehouse</p></div></div>
+      <div class="track-step"><div class="track-dot active"></div><div class="track-step-info"><h4>Shipped</h4><p>Out for transit — TT Express · Tracking: TTX8842916</p></div></div>
+      <div class="track-step"><div class="track-dot"></div><div class="track-step-info"><h4>Out for Delivery</h4><p>Arriving at your address</p></div></div>
+      <div class="track-step"><div class="track-dot"></div><div class="track-step-info"><h4>Delivered</h4><p>Package handed over</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="login-overlay">
+  <div class="auth-modal">
+    <button class="modal-close" onclick="document.getElementById('login-overlay').classList.remove('open')">✕</button>
+    <div class="auth-title">Welcome Back 👋</div>
+    <div class="auth-sub">Sign in to your TechTrove account</div>
+    <div class="auth-tabs">
+      <button class="tab active" onclick="switchAuth('login',this)">Login</button>
+      <button class="tab" onclick="switchAuth('signup',this)">Sign Up</button>
+    </div>
+    <div class="auth-form active" id="auth-login">
+      <div class="form-row"><div class="form-field"><label>Email</label><input id="login-email" placeholder="raj@email.com" type="email"></div></div>
+      <div class="form-row"><div class="form-field"><label>Password</label><input placeholder="••••••••" type="password"></div></div>
+      <button class="btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Login</button>
+      <div class="social-login">
+        <button class="social-btn" onclick="showToast('Google login!')">🔵 Google</button>
+        <button class="social-btn" onclick="showToast('Facebook login!')">📘 Facebook</button>
+      </div>
+    </div>
+    <div class="auth-form" id="auth-signup">
+      <div class="form-row">
+        <div class="form-field"><label>Name</label><input id="signup-name" placeholder="Raj Sharma" type="text"></div>
+        <div class="form-field"><label>Phone</label><input placeholder="+91 98765" type="text"></div>
+      </div>
+      <div class="form-row"><div class="form-field"><label>Email</label><input id="signup-email" placeholder="raj@email.com" type="email"></div></div>
+      <div class="form-row"><div class="form-field"><label>Password</label><input placeholder="Create password" type="password"></div></div>
+      <button class="btn-primary" style="width:100%;margin-top:8px" onclick="doSignup()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-overlay">
+  <div class="profile-modal">
+    <button class="modal-close" onclick="document.getElementById('profile-overlay').classList.remove('open')">✕</button>
+    <div class="profile-header">
+      <div class="profile-avatar" id="profile-avatar">R</div>
+      <div>
+        <div class="profile-name" id="profile-name">Raj Sharma</div>
+        <div class="profile-email" id="profile-email">raj@email.com</div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchProfileTab('orders',this)">Order History</button>
+      <button class="tab" onclick="switchProfileTab('addresses',this)">Saved Addresses</button>
+      <button class="tab" onclick="switchProfileTab('wishlist',this)">Wishlist</button>
+    </div>
+    <div class="tab-content active" id="profile-orders">
+      <div class="order-history-item">
+        <img class="order-history-img" src="https://rukminim2.flixcart.com/image/480/640/xif0q/mobile/i/s/g/-original-imahgfmzraymrnrg.jpeg?q=90" alt="">
+        <div class="order-history-info"><div class="oh-name">Samsung Galaxy S25 Ultra</div><div class="oh-meta">Order #TT88213 · Placed 3 days ago · ₹1,03,999</div></div>
+        <div class="order-status-pill">Delivered</div>
+      </div>
+      <div class="order-history-item">
+        <img class="order-history-img" src="https://chatgpt.com/backend-api/estuary/content?id=file_000000007160720b908c191e14989889&ts=494791&p=fs&cid=1&sig=0716dea815843f3e17b0eb9fd55823132324817b770b8033556ea7f3f6083c3d&v=0" alt="">
+        <div class="order-history-info"><div class="oh-name">TechTrove Buds Pro</div><div class="oh-meta">Order #TT88190 · Placed 2 weeks ago · ₹6,999</div></div>
+        <div class="order-status-pill">Delivered</div>
+      </div>
+      <div class="order-history-item">
+        <img class="order-history-img" src="https://chatgpt.com/backend-api/estuary/content?id=file_000000008cc8720bbf18ae792bba8607&ts=494791&p=fs&cid=1&sig=0bc3fefbc1c0cec8929967dff3824b36bef167c3ef464731940f8f7cb64f2b8a&v=0" alt="">
+        <div class="order-history-info"><div class="oh-name">TechTrove Watch Pro</div><div class="oh-meta">Order #TT88102 · Placed 1 month ago · ₹13,999</div></div>
+        <div class="order-status-pill" style="background:rgba(255,68,68,.1);color:var(--red);border-color:rgba(255,68,68,.2)">Returned</div>
+      </div>
+    </div>
+    <div class="tab-content" id="profile-addresses">
+      <div class="address-card">
+        <span class="address-default">Default</span>
+        <strong>Home</strong>
+        Raj Sharma, 123 MG Road, Apt 4B<br>Mumbai, Maharashtra 400001<br>+91 98765 43210
+      </div>
+      <div class="address-card">
+        <strong>Office</strong>
+        Raj Sharma, Tower B, WeWork Galaxy<br>Bengaluru, Karnataka 560001<br>+91 98765 43210
+      </div>
+      <button class="btn-cart" style="width:100%" onclick="showToast('Address form coming soon!')">+ Add New Address</button>
+    </div>
+    <div class="tab-content" id="profile-wishlist">
+      <div id="profile-wishlist-list" style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">Your wishlist items will appear here.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="product-overlay">
+  <div class="product-modal" id="product-modal-content">
+    <button class="modal-close" onclick="closeProductModal()">✕</button>
+    <div class="modal-imgs">
+      <div class="zoom-wrap"><img class="modal-main-img" id="modal-main-img" src="" alt=""></div>
+      <div class="modal-thumbs" id="modal-thumbs"></div>
+    </div>
+    <div class="modal-info">
+      <div class="modal-brand" id="modal-brand"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-rating" id="modal-rating"></div>
+      <div class="modal-price-row">
+        <div class="modal-price-old" id="modal-price-old"></div>
+        <div class="modal-price-new" id="modal-price-new"></div>
+        <div class="modal-badge" id="modal-badge"></div>
+      </div>
+      <div class="option-row" id="modal-colors-row">
+        <div class="option-label">Color</div>
+        <div class="options" id="modal-colors"></div>
+      </div>
+      <div class="option-row" id="modal-storage-row">
+        <div class="option-label">Storage</div>
+        <div class="options" id="modal-storage"></div>
+      </div>
+      <div class="qty-row">
+        <div class="qty-label">Qty</div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <div class="qty-val" id="modal-qty">1</div>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <div style="font-size:11px;font-family:var(--font-mono);color:var(--red)" id="modal-stock-text"></div>
+      </div>
+      <div class="delivery-box">
+        🚚 <strong>FREE delivery</strong> by <span id="modal-delivery-date"></span> if ordered in <span id="modal-countdown"></span>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cart" onclick="addToCartFromModal()">🛒 Add to Cart</button>
+        <button class="btn-explore" onclick="wishlistFromModal()">❤️ Wishlist</button>
+      </div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('specs',this)">Specs</button>
+        <button class="tab" onclick="switchTab('reviews',this)">Reviews</button>
+        <button class="tab" onclick="switchTab('faqs',this)">FAQs</button>
+        <button class="tab" onclick="switchTab('delivery',this)">Delivery</button>
+      </div>
+      <div class="tab-content active" id="tab-specs"></div>
+      <div class="tab-content" id="tab-reviews"></div>
+      <div class="tab-content" id="tab-faqs"></div>
+      <div class="tab-content" id="tab-delivery"></div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <a href="#" class="logo-wrap" onclick="return false">
+      <img class="logo-img" src="Tech Trove.png" alt="TechTrove">
+      <div class="logo-text">TECHTROVE<span>EXPLORE · INNOVATE · ELEVATE</span></div>
+    </a>
+    <div class="header-search">
+      <input type="text" placeholder="Search phones, tablets, watches..." id="search-input" oninput="filterProducts();showSuggest(this.value)" onfocus="showSuggest(this.value)">
+      <button onclick="filterProducts()">🔍</button>
+      <div class="search-suggest" id="search-suggest">
+        <div class="sug-label">Popular Searches</div>
+        <div class="sug-item" onclick="searchFor('Samsung S25 Ultra')">🔥 Samsung S25 Ultra</div>
+        <div class="sug-item" onclick="searchFor('iPhone 17 Pro Max')">🔥 iPhone 17 Pro Max</div>
+        <div class="sug-item" onclick="searchFor('Smart Watch')">🔥 Smart Watch</div>
+        <div class="sug-item" onclick="searchFor('Wireless Earbuds')">🔥 Wireless Earbuds</div>
+        <div class="sug-item" onclick="searchFor('Tablet')">🔥 Tablet</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="toggleNotif()" title="Notifications">
+        🔔<span class="badge">5</span>
+      </button>
+      <button class="btn-icon" onclick="openWishlist()" title="Wishlist">
+        ❤️<span class="badge" id="wishlist-badge">0</span>
+      </button>
+      <button class="btn-icon" onclick="openCart()" title="Cart">
+        🛒<span class="badge" id="cart-badge">0</span>
+      </button>
+      <button class="btn-login" id="login-btn" onclick="document.getElementById('login-overlay').classList.add('open')">Login / Sign Up</button>
+    </div>
+  </div>
+  <nav>
+    <button class="nav-link active" onclick="filterCat('all',this)">All Products</button>
+    <button class="nav-link" onclick="filterCat('phone',this)">📱 Phones</button>
+    <button class="nav-link" onclick="filterCat('tablet',this)">💻 Tablets</button>
+    <button class="nav-link" onclick="filterCat('watch',this)">⌚ Watches</button>
+    <button class="nav-link" onclick="filterCat('audio',this)">🎧 Audio</button>
+    <button class="nav-link" onclick="openTracking()">📦 Track Order</button>
+  </nav>
+</header>
+
+<div class="sale-strip">⚡ MEGA SALE — UP TO 20% OFF · Use <strong>MEGA20</strong> or <strong>WELCOME10</strong> for extra savings · Limited stock! ⚡</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text fade-up">
+    <h1>TECH<br>MEGA SALE<br>2026</h1>
+    <p>Premium smartphones, tablets, watches &amp; audio at unbeatable prices — brought to you by TechTrove. Limited time, unlimited tech.</p>
+    <div class="timer-box">
+      <div class="timer-unit"><span id="t-h">00</span><small>Hours</small></div>
+      <div class="timer-unit"><span id="t-m">00</span><small>Mins</small></div>
+      <div class="timer-unit"><span id="t-s">00</span><small>Secs</small></div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.querySelector('.products').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
+      <button class="btn-secondary" onclick="openTracking()">Track Order</button>
+    </div>
+    <div class="coupon-banner">
+      <div class="coupon" onclick="applyCouponCode('MEGA20')"><small>Coupon</small><strong>MEGA20</strong><small>20% off ₹50k+</small></div>
+      <div class="coupon" onclick="applyCouponCode('WELCOME10')"><small>Coupon</small><strong>WELCOME10</strong><small>10% off first order</small></div>
+    </div>
+  </div>
+  <div class="hero-img-wrap">
+    <img src="https://rukminim2.flixcart.com/image/480/640/xif0q/mobile/i/s/g/-original-imahgfmzraymrnrg.jpeg?q=90" alt="S25 Ultra">
+  </div>
+</section>
+
+<div class="main">
+
+<!-- TRENDING -->
+<div class="trending-strip fade-up">
+  <div class="trend-label">🔥 TRENDING</div>
+  <button class="trend-item" onclick="searchFor('Samsung Galaxy S25 Ultra')"><span class="trend-num">#1</span><span class="trend-name">Samsung Galaxy S25 Ultra</span></button>
+  <button class="trend-item" onclick="searchFor('iPhone 17 Pro Max')"><span class="trend-num">#2</span><span class="trend-name">iPhone 17 Pro Max</span></button>
+  <button class="trend-item" onclick="searchFor('TechTrove Watch Pro')"><span class="trend-num">#3</span><span class="trend-name">TechTrove Watch Pro</span></button>
+  <button class="trend-item" onclick="searchFor('TechTrove Buds Pro')"><span class="trend-num">#4</span><span class="trend-name">TechTrove Buds Pro</span></button>
+  <button class="trend-item" onclick="searchFor('TechTrove Tab Pro')"><span class="trend-num">#5</span><span class="trend-name">TechTrove Tab Pro</span></button>
+</div>
+
+<!-- POPULAR SEARCH -->
+<div class="popular-search fade-up">
+  <span class="ps-tag" onclick="searchFor('Samsung')">Samsung</span>
+  <span class="ps-tag" onclick="searchFor('iPhone')">iPhone</span>
+  <span class="ps-tag" onclick="searchFor('256GB')">256GB Storage</span>
+  <span class="ps-tag" onclick="searchFor('Smart Watch')">Smart Watches</span>
+  <span class="ps-tag" onclick="searchFor('Earbuds')">Earbuds</span>
+  <span class="ps-tag" onclick="searchFor('Tablet')">Tablets</span>
+  <span class="ps-tag" onclick="searchFor('5G')">5G Phones</span>
+</div>
+
+<!-- CATEGORIES -->
+<div class="fade-up">
+<h2 class="section-title">Browse <span>Categories</span></h2>
+<p class="section-sub">Find what you're looking for</p>
+<div class="categories">
+  <div class="cat-card" onclick="filterCatByName('phone')"><div class="cat-icon">📱</div><div class="cat-name">Phones</div><div class="cat-count">6 products</div></div>
+  <div class="cat-card" onclick="filterCatByName('tablet')"><div class="cat-icon">💻</div><div class="cat-name">Tablets</div><div class="cat-count">1 product</div></div>
+  <div class="cat-card" onclick="filterCatByName('watch')"><div class="cat-icon">⌚</div><div class="cat-name">Watches</div><div class="cat-count">1 product</div></div>
+  <div class="cat-card" onclick="filterCatByName('audio')"><div class="cat-icon">🎧</div><div class="cat-name">Audio</div><div class="cat-count">1 product</div></div>
+  <div class="cat-card" onclick="filterCatByName('all')"><div class="cat-icon">⚡</div><div class="cat-name">All Deals</div><div class="cat-count">9 products</div></div>
+</div>
+</div>
+
+<!-- RECENTLY VIEWED -->
+<div id="recents-section" style="display:none" class="fade-up">
+  <h2 class="section-title">Recently <span>Viewed</span></h2>
+  <p class="section-sub">Continue browsing</p>
+  <div class="recents" id="recents-list"></div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-bar fade-up">
+  <div class="filter-group">
+    <span class="filter-label">Brand:</span>
+    <button class="filter-btn active" onclick="applyFilter('brand','all',this)">All</button>
+    <button class="filter-btn" onclick="applyFilter('brand','Samsung',this)">Samsung</button>
+    <button class="filter-btn" onclick="applyFilter('brand','Apple',this)">Apple</button>
+    <button class="filter-btn" onclick="applyFilter('brand','TechTrove',this)">TechTrove</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Price:</span>
+    <button class="filter-btn active" onclick="applyFilter('price','all',this)">All</button>
+    <button class="filter-btn" onclick="applyFilter('price','under50k',this)">&lt;₹50k</button>
+    <button class="filter-btn" onclick="applyFilter('price','50to100k',this)">₹50k–1L</button>
+    <button class="filter-btn" onclick="applyFilter('price','over100k',this)">&gt;₹1L</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Rating:</span>
+    <button class="filter-btn active" onclick="applyFilter('rating','all',this)">All</button>
+    <button class="filter-btn" onclick="applyFilter('rating','4.5',this)">4.5★+</button>
+    <button class="filter-btn" onclick="applyFilter('rating','4.7',this)">4.7★+</button>
+  </div>
+  <div class="sort-wrap">
+    <select class="sort-select" onchange="applySort(this.value)">
+      <option value="default">Sort: Default</option>
+      <option value="low">Price: Low → High</option>
+      <option value="high">Price: High → Low</option>
+      <option value="discount">Biggest Discount</option>
+      <option value="rating">Highest Rating</option>
+      <option value="newest">Newest First</option>
+    </select>
+  </div>
+  <div class="compare-bar">
+    <span class="compare-count" id="compare-count">Select up to 3 to compare</span>
+    <button class="btn-compare" id="compare-btn" onclick="openCompare()">📊 Compare</button>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="products" id="products-grid">
+  <div class="skel-card skeleton"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line w80 skeleton"></div><div class="skel-line w60 skeleton"></div><div class="skel-line w40 skeleton"></div></div></div>
+  <div class="skel-card skeleton"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line w80 skeleton"></div><div class="skel-line w60 skeleton"></div><div class="skel-line w40 skeleton"></div></div></div>
+  <div class="skel-card skeleton"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line w80 skeleton"></div><div class="skel-line w60 skeleton"></div><div class="skel-line w40 skeleton"></div></div></div>
+  <div class="skel-card skeleton"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line w80 skeleton"></div><div class="skel-line w60 skeleton"></div><div class="skel-line w40 skeleton"></div></div></div>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<div class="reco-section fade-up">
+  <h2 class="section-title">People Also <span>Viewed</span></h2>
+  <p class="section-sub">Based on Samsung Galaxy S25 Ultra</p>
+  <div class="reco-scroll" id="reco-scroll"></div>
+</div>
+
+</div><!-- /main -->
+
+<!-- FLOAT BUTTON -->
+<button class="float-whatsapp" onclick="showToast('Connecting to WhatsApp support...')">💬</button>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo"><img src="Tech Trove.png" alt="TechTrove"><span>TECHTROVE</span></div>
+      <p>India's premium tech marketplace. Explore. Innovate. Elevate.<br>Best prices, genuine products, lightning-fast delivery.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <a onclick="filterCatByName('phone')">Smartphones</a>
+      <a onclick="filterCatByName('tablet')">Tablets</a>
+      <a onclick="filterCatByName('watch')">Smartwatches</a>
+      <a onclick="filterCatByName('audio')">Audio Gear</a>
+      <a onclick="filterCatByName('all')">All Deals</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a onclick="openTracking()">Track Order</a>
+      <a onclick="showToast('Return policy: 7-day easy returns')">Return Policy</a>
+      <a onclick="showToast('1 year manufacturer warranty on all products')">Warranty</a>
+      <a onclick="showToast('Connecting to WhatsApp support...')">Contact Us</a>
+      <a onclick="document.querySelector('#product-overlay')">FAQs</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a onclick="showToast('About TechTrove — coming soon!')">About Us</a>
+      <a onclick="showToast('We are hiring! 🚀')">Careers</a>
+      <a onclick="showToast('Blog launching soon')">Blog</a>
+      <a onclick="showToast('Press kit coming soon')">Press</a>
+      <a onclick="showToast('Partner program coming soon')">Partners</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 TechTrove. All rights reserved.</div>
+    <div class="footer-payments">
+      <div class="fpay">UPI</div>
+      <div class="fpay">Paytm</div>
+      <div class="fpay">GPay</div>
+      <div class="fpay">Visa</div>
+      <div class="fpay">Mastercard</div>
+      <div class="fpay">SBI</div>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html> 
+// https://delicate-froyo-44de4e.netlify.app/
+// Client ID - 167635441616-e9omb78veii4ppl67rqebg7ck92uo29s.apps.googleusercontent.com
+// Client Secret - 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

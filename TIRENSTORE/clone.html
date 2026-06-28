@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIREN STORE - Premium Grocery Experience</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brandGreen: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        },
+                        brandOrange: {
+                            500: '#f97316',
+                            600: '#ea580c',
+                        }
+                    },
+                    boxShadow: {
+                        'premium': '0 20px 40px -15px rgba(0,0,0,0.05)',
+                        'glass': '0 8px 32px 0 rgba(15, 23, 42, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 20px; }
+        .dark-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 20px; }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen selection:bg-brandGreen-600 selection:text-white">
+
+    <!-- ========================================== -->
+    <!-- REAL-TIME INTER-APP ENVIRONMENT BANNER    -->
+    <!-- ========================================== -->
+    <div class="bg-slate-950 text-white text-xs px-6 py-2.5 flex flex-wrap justify-between items-center gap-3 shadow-inner sticky top-0 z-50 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span class="font-medium tracking-wide text-slate-400">TIREN Cross-App Environment Node</span>
+        </div>
+        <div class="flex items-center gap-2" id="role-login-controls">
+            <button onclick="switchToRole('customer')" class="bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-semibold transition-all">Customer View</button>
+            <button onclick="switchToRole('deliverer')" class="bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full text-xs font-semibold transition-all">Rider Companion</button>
+            <button onclick="openAdminAuthModal()" class="bg-rose-600/10 hover:bg-rose-600/20 text-rose-400 border border-rose-500/20 px-3 py-1 rounded-full text-xs font-semibold transition-all">Admin Headquarters</button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: SECURED ADMIN ACCESS CONTROL PANEL  -->
+    <!-- ========================================== -->
+    <div id="admin-auth-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-premium border border-slate-100 transform transition-all animate-in fade-in zoom-in-95 duration-200">
+            <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-4 text-xl">🔐</div>
+            <h3 class="text-lg font-bold tracking-tight text-slate-900 heading-font">Secure Administrator Verification</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">Access to inventory kernels and cross-app log monitoring telemetry streams requires credentials verification.</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Master Passkey</label>
+                    <input id="admin-password-input" type="password" placeholder="Enter password (use 'tiren2026')" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all text-slate-900 font-mono">
+                </div>
+                <p id="admin-auth-error" class="hidden text-xs font-semibold text-rose-600 flex items-center gap-1">❌ Incorrect master authorization token.</p>
+                <div class="flex gap-2.5 pt-2">
+                    <button onclick="closeAdminAuthModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-xl transition-all">Dismiss</button>
+                    <button onclick="verifyAdminLogin()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-2.5 rounded-xl shadow-md transition-all">Verify Node</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: CUSTOMER OTP SECURE SIGN-IN ENGINE  -->
+    <!-- ========================================== -->
+    <div id="customer-otp-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-premium border border-slate-100 transform transition-all animate-in fade-in zoom-in-95 duration-200">
+            <div class="w-12 h-12 bg-brandGreen-50 text-brandGreen-700 rounded-2xl flex items-center justify-center mb-4 text-xl">📱</div>
+            <h3 class="text-lg font-bold tracking-tight text-slate-900 heading-font">Instant Account Access</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">No complex passwords required. Authenticate via instant simulated OTP matching.</p>
+            
+            <div id="otp-step-1" class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Mobile Number</label>
+                    <input id="customer-phone-input" type="tel" placeholder="Enter 10-digit smartphone number" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brandGreen-600/20 focus:border-brandGreen-600 transition-all">
+                </div>
+                <button onclick="sendCustomerOtp()" class="w-full bg-brandGreen-700 hover:bg-brandGreen-800 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-md shadow-brandGreen-700/10 tracking-wide">Generate OTP Token</button>
+            </div>
+            
+            <div id="otp-step-2" class="hidden space-y-4">
+                <div class="bg-amber-50 text-amber-800 p-3 rounded-xl text-xs font-medium border border-amber-200/40 flex items-center justify-between">
+                    <span>💡 Intercepted Target System Token:</span>
+                    <strong class="text-sm font-bold tracking-wider font-mono">7759</strong>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Enter 4-Digit Validation Code</label>
+                    <input id="customer-otp-input" type="text" placeholder="••••" maxlength="4" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-center text-xl font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-brandGreen-600/20 focus:border-brandGreen-600 transition-all font-mono">
+                </div>
+                <p id="customer-otp-error" class="hidden text-xs font-semibold text-rose-600">❌ Code mismatch. Please review systemic log tracking stream.</p>
+                <button onclick="verifyCustomerOtp()" class="w-full bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-md tracking-wide">Validate Token</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- INTERFACE MODULE 1: PREMIUM CUSTOMER APP   -->
+    <!-- ========================================== -->
+    <div id="view-customer" class="block app-view animate-in fade-in duration-300">
+        <!-- Sticky Main Luxury Navigation Bar -->
+        <header class="sticky top-0 glassmorphism border-b border-slate-200/60 z-40 px-6 py-4 transition-all">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <!-- Dynamic verified load frame mapping logo resource verbatim -->
+                    <div class="relative group">
+                        <div class="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-amber-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
+                        <div class="relative bg-white rounded-2xl p-1 shadow-md border border-slate-100">
+                            <img src="ChatGPT Image Jun 14, 2026, 10_29_42 PM.png" alt="TIREN STORE Logo" class="w-14 h-14 object-contain rounded-xl">
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-extrabold tracking-tight text-slate-900 heading-font">TIREN <span class="text-brandGreen-700">STORE</span></h1>
+                        <p class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">Freshness You Can Trust • Pallahara Hub</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-4 w-full md:w-auto justify-end">
+                    <div id="customer-profile-badge" class="text-xs bg-slate-100/80 border border-slate-200/50 rounded-xl px-3 py-2 text-slate-600 font-medium">
+                        👤 Session Identity: <button onclick="openCustomerAuth()" class="text-brandGreen-700 font-bold hover:underline ml-1">Connect Mobile Account</button>
+                    </div>
+                    <button onclick="toggleTrackingLayout('customer')" class="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-xl font-bold text-xs tracking-wide transition-all shadow-sm flex items-center gap-2">
+                        🗺️ Transit Map Tracker
+                    </button>
+                    <div class="text-xs font-bold bg-brandGreen-50 border border-brandGreen-100 px-4 py-2 rounded-xl text-brandGreen-800 shadow-sm">
+                        🛒 Basket: <span id="store-cart-count" class="font-extrabold">0</span> items — <span class="font-extrabold">₹<span id="store-cart-total">0</span></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Premium Glassmorphism Live Delivery Tracking Drawer -->
+        <div id="customer-map-wrapper" class="hidden bg-slate-900 border-b border-slate-800 py-6 px-6 text-white transform origin-top transition-all animate-in slide-in-from-top duration-300">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-sm font-bold tracking-wider text-amber-400 uppercase heading-font">🛰️ Real-Time Hyperlocal Logistics Radar</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Tracking node coordinates via Pallahara regional server clusters.</p>
+                    </div>
+                    <button onclick="toggleTrackingLayout('customer')" class="text-xs text-slate-400 hover:text-white bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 transition-all">Collapse Map</button>
+                </div>
+                
+                <div class="grid md:grid-cols-4 gap-6 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                    <div class="md:col-span-3 relative bg-slate-900 rounded-xl h-64 flex items-center justify-center overflow-hidden border border-slate-800 shadow-inner">
+                        <!-- Simulated Grid Blueprint Map Graphics -->
+                        <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-70"></div>
+                        <!-- Decorative Route Lines -->
+                        <div class="absolute w-72 h-32 border border-dashed border-emerald-500/30 rounded-full rotate-12 -left-10 top-10"></div>
+                        
+                        <div class="absolute top-1/2 left-1/3 text-center z-10">
+                            <span class="inline-flex px-3 py-1 bg-gradient-to-r from-brandOrange-500 to-amber-500 text-[10px] font-black rounded-xl shadow-lg animate-bounce items-center gap-1.5 text-white">
+                                🛵 TIREN DRIVER
+                            </span>
+                        </div>
+                        <div class="absolute top-1/3 right-1/4 text-center z-10">
+                            <span class="inline-flex px-3 py-1 bg-emerald-600 text-[10px] font-bold rounded-xl shadow-lg text-white">
+                                📍 Your Residence Node
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 text-xs text-slate-300 flex flex-col justify-center">
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Package Telemetry</span>
+                            <span id="customer-track-status" class="font-extrabold text-amber-400 text-sm">No Active Shipments Handled</span>
+                        </div>
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Estimated Handover Window</span>
+                            <span class="font-bold text-white text-sm">15 - 30 Minutes Max</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sleek Brand Marketing Hero Deck Banner -->
+        <section class="bg-gradient-to-br from-brandGreen-950 via-brandGreen-900 to-emerald-950 text-white py-16 px-6 text-center relative overflow-hidden border-b border-emerald-900">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-800/10 via-transparent to-transparent opacity-60"></div>
+            <div class="max-w-3xl mx-auto relative z-10">
+                <span class="bg-emerald-500/10 text-emerald-300 text-[10px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full border border-emerald-500/20 shadow-sm">
+                    ✨ High-Velocity Hyperlocal Procurement
+                </span>
+                <h2 class="text-4xl md:text-5xl font-black mt-4 mb-4 tracking-tight heading-font leading-tight">Freshness & Groceries<br>Delivered directly to your door</h2>
+                <p class="text-sm md:text-base text-emerald-200/70 max-w-xl mx-auto font-light leading-relaxed">Browse authentic pantry staples, fresh local items, curated daily essentials, snacks, and house cleaning products directly in our interface.</p>
+            </div>
+        </section>
+
+        <!-- Marketplace Container Architecture -->
+        <main class="max-w-7xl mx-auto px-6 py-12 grid lg:grid-cols-4 gap-10">
+            <!-- Dynamic Category Layout Feed -->
+            <div class="lg:col-span-3 space-y-12">
+                <div id="category-catalog-container" class="space-y-12">
+                    <!-- Managed dynamic engine injects product data loops here -->
+                </div>
+            </div>
+
+            <!-- Modern Fluid Interactive Sidebar Checkout Panel -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-3xl border border-slate-200 p-5 shadow-premium sticky top-28 space-y-5">
+                    <h3 class="text-sm font-extrabold border-b border-slate-100 pb-3 text-slate-800 uppercase tracking-wider heading-font">Order Summary</h3>
+                    
+                    <div id="cart-items-preview" class="space-y-2.5 max-h-60 overflow-y-auto custom-scrollbar text-xs text-slate-500 pr-1">
+                        <p class="italic py-8 text-center text-slate-400">Your basket looks delightfully light. Start choosing items!</p>
+                    </div>
+                    
+                    <div class="border-t border-slate-100 pt-4 space-y-2 text-xs">
+                        <div class="flex justify-between font-medium text-slate-500">
+                            <span>Basket Subtotal</span>
+                            <span class="text-slate-800 font-bold">₹<span id="summary-subtotal">0</span></span>
+                        </div>
+                        <div class="flex justify-between font-medium text-slate-500">
+                            <span>Convenience Logistic Fee</span>
+                            <span class="text-slate-800 font-bold">₹<span id="summary-delivery">0</span></span>
+                        </div>
+                        <div class="flex justify-between font-black text-slate-900 text-sm border-t border-dashed border-slate-200 pt-3 mt-3">
+                            <span class="heading-font">Total Payable</span>
+                            <span class="text-brandGreen-700 text-base font-extrabold">₹<span id="summary-payable">0</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Mode Interface Selection Controls -->
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60 space-y-2.5">
+                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Simulated Payment Core Engine</span>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 cursor-pointer font-bold select-none hover:bg-slate-50 transition-all">
+                                <input type="radio" name="paymentMethod" value="COD" checked class="accent-brandGreen-700 w-3.5 h-3.5"> Cash (COD)
+                            </label>
+                            <label class="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 cursor-pointer font-bold select-none hover:bg-slate-50 transition-all">
+                                <input type="radio" name="paymentMethod" value="FAKE_GATEWAY" class="accent-brandGreen-700 w-3.5 h-3.5"> Fake Card/UPI
+                            </label>
+                        </div>
+                    </div>
+
+                    <button onclick="triggerSimulatedOrderCheckout()" class="w-full bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-extrabold py-3.5 rounded-2xl text-xs transition-all uppercase tracking-widest shadow-md shadow-orange-500/10 hover:shadow-lg">
+                        Dispatch Secure Checkout
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- INTERFACE MODULE 2: DELIVERER APPS PORTAL  -->
+    <!-- ========================================== -->
+    <div id="view-deliverer" class="hidden app-view bg-slate-950 min-h-screen text-slate-100 p-6 max-w-md mx-auto shadow-2xl border-x border-slate-800 animate-in fade-in duration-300">
+        <header class="border-b border-slate-800 pb-4 mb-5 flex justify-between items-center">
+            <div>
+                <h1 class="text-xs font-bold tracking-widest text-brandOrange-500 uppercase heading-font">TIREN DRIVER COMPANION</h1>
+                <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">Logistics Terminal active</p>
+            </div>
+            <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide animate-pulse">
+                🟢 Shift Live
+            </div>
+        </header>
+
+        <!-- Dynamic Shift Metrics Cards Layout -->
+        <div class="grid grid-cols-2 gap-3 mb-6 text-center">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5">
+                <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold block">Assigned Routes</span>
+                <span id="deliverer-assigned-count" class="text-lg font-bold text-white mt-1 block heading-font">0 Routes</span>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5">
+                <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold block">Wallet Payout Balance</span>
+                <span class="text-lg font-bold text-emerald-400 mt-1 block heading-font">₹840.00</span>
+            </div>
+        </div>
+
+        <!-- Interactive Driver Transit Vector Map Frame -->
+        <div class="mb-6 bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-brandOrange-500 heading-font">🗺️ Route Navigation System</span>
+                <span class="text-[9px] bg-slate-950 text-slate-400 px-2 py-0.5 rounded-md font-mono border border-slate-800">Zone-A Node</span>
+            </div>
+            <div class="relative bg-slate-950 border border-slate-850 rounded-xl h-44 overflow-hidden flex items-center justify-center">
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-size opacity-40 [background-size:20px_20px]"></div>
+                <!-- Mock Map Interfacing Elements -->
+                <div class="absolute top-1/4 left-1/4 text-center">
+                    <div class="w-2 h-2 rounded-full bg-blue-400 mx-auto animate-ping mb-1"></div>
+                    <span class="bg-blue-600 text-[8px] font-bold text-white px-1.5 py-0.5 rounded-full shadow-md">Central Hub</span>
+                </div>
+                <div class="absolute bottom-1/4 right-1/4 text-center">
+                    <div class="w-2 h-2 rounded-full bg-brandOrange-500 mx-auto animate-pulse mb-1"></div>
+                    <span class="bg-brandOrange-600 text-[8px] font-bold text-white px-1.5 py-0.5 rounded-full shadow-md">Drop Destination</span>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 heading-font">Pending Shipments Stack</h3>
+        <div id="deliverer-jobs-stack" class="space-y-4">
+            <!-- Handled dynamically by javascript update triggers loop -->
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- INTERFACE MODULE 3: ADMIN CONTROL HQ       -->
+    <!-- ========================================== -->
+    <div id="view-admin" class="hidden app-view bg-slate-950 min-h-screen text-slate-100 p-6 lg:p-8 dark-scrollbar animate-in fade-in duration-300">
+        <header class="border-b border-slate-800 pb-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-xl font-black text-rose-500 tracking-tight flex items-center gap-2 heading-font">🛡️ CENTRAL OPERATIONS HUB</h1>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mt-0.5">System-wide parameters telemetry, log feeds, & inventory editing tools</p>
+            </div>
+            <div class="bg-rose-500/10 border border-rose-500/20 text-rose-400 px-4 py-1.5 rounded-xl text-xs font-bold font-mono tracking-wide">
+                🛡️ Operator: Kernel Level Root
+            </div>
+        </header>
+
+        <!-- Analytics Monitoring Cards Matrix Dashboard -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-4 shadow-lg">
+                <span class="text-[10px] uppercase text-slate-500 font-bold block tracking-wider">Gross Simulated Turnover</span>
+                <span id="admin-stat-revenue" class="text-xl font-bold text-emerald-400 mt-1 block heading-font">₹3,420</span>
+            </div>
+            <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-4 shadow-lg">
+                <span class="text-[10px] uppercase text-slate-500 font-bold block tracking-wider">Total Dispatches Documented</span>
+                <span id="admin-stat-orders" class="text-xl font-bold text-white mt-1 block heading-font">0</span>
+            </div>
+            <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-4 shadow-lg">
+                <span class="text-[10px] uppercase text-slate-500 font-bold block tracking-wider">Active Inventory SKUs</span>
+                <span id="admin-stat-skus" class="text-xl font-bold text-amber-400 mt-1 block heading-font">0</span>
+            </div>
+            <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-4 shadow-lg">
+                <span class="text-[10px] uppercase text-slate-500 font-bold block tracking-wider">System Node Latency</span>
+                <span class="text-xl font-bold text-blue-400 mt-1 block heading-font font-mono">1.2ms</span>
+            </div>
+        </div>
+
+        <!-- Core Split Management Panels layout -->
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Left Grid: App-Wide Realtime Information Feed Engine -->
+            <div class="lg:col-span-1 bg-slate-900 border border-slate-800/60 rounded-3xl p-5 flex flex-col h-[520px] shadow-2xl">
+                <div class="border-b border-slate-800 pb-3 mb-4 flex justify-between items-center">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-amber-500 flex items-center gap-2 heading-font">
+                        <span class="w-2 h-2 bg-amber-400 rounded-full animate-ping"></span> Realtime Activity Log Stream
+                    </h3>
+                    <span class="text-[9px] text-slate-500 font-mono uppercase font-bold tracking-widest">Every Bit Informed</span>
+                </div>
+                <div id="admin-logs-terminal" class="flex-1 overflow-y-auto space-y-2.5 text-[11px] font-mono text-slate-300 pr-1 dark-scrollbar">
+                    <!-- Event logs are appended here by writeAppRuntimeLog() javascript operations -->
+                </div>
+            </div>
+
+            <!-- Right Grid: Inventory Editor & Management Panel -->
+            <div class="lg:col-span-2 bg-slate-900 border border-slate-800/60 rounded-3xl p-5 flex flex-col h-[520px] shadow-2xl">
+                <div class="border-b border-slate-800 pb-3 mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400 heading-font">Dynamic SKU Inventory Matrix</h3>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Admin privilege to live-inject new variants or edit parameters instantly.</p>
+                    </div>
+                    <button onclick="openInventoryAddState()" class="bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-extrabold uppercase px-3 py-2 rounded-xl tracking-wider shadow transition-all">
+                        + Insert New SKU Item
+                    </button>
+                </div>
+
+                <!-- Product Parameter Input Modification Drawer Section Form -->
+                <div id="inventory-editor-form-wrapper" class="hidden bg-slate-950 border border-slate-800 p-4 rounded-2xl mb-4 text-xs space-y-3.5 animate-in fade-in zoom-in-95 duration-200">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <span id="form-action-title" class="font-bold text-amber-400 uppercase tracking-wider font-mono">Add Product Item SKU</span>
+                        <button onclick="closeInventoryForm()" class="text-slate-500 text-[10px] underline hover:text-slate-300">Collapse Form</button>
+                    </div>
+                    <input type="hidden" id="edit-prod-id">
+                    <div class="grid sm:grid-cols-3 gap-3.5">
+                        <div>
+                            <label class="block text-[9px] text-slate-400 uppercase font-bold mb-1">Product Title</label>
+                            <input id="form-prod-name" type="text" placeholder="e.g., Lays Classic Cream" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-rose-500">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-slate-400 uppercase font-bold mb-1">Brand Name</label>
+                            <input id="form-prod-brand" type="text" placeholder="e.g., PepsiCo India" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-rose-500">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-slate-400 uppercase font-bold mb-1">Category Target</label>
+                            <select id="form-prod-category" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-rose-500 text-xs">
+                                <option value="Snacks & Munchies">Snacks & Munchies</option>
+                                <option value="Ration Staples">Ration Staples</option>
+                                <option value="Daily Cleaning & Essentials">Daily Cleaning & Essentials</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid sm:grid-cols-3 gap-3.5">
+                        <div>
+                            <label class="block text-[9px] text-slate-400 uppercase font-bold mb-1">Retail Price (₹)</label>
+                            <input id="form-prod-price" type="number" placeholder="40" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-rose-500">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-slate-400 uppercase font-bold mb-1">Volume/Net Weight</label>
+                            <input id="form-prod-weight" type="text" placeholder="e.g., 150g, 1 Litre" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-rose-500">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-slate-400 uppercase font-bold mb-1">Initial Node Stock Capacity</label>
+                            <input id="form-prod-stock" type="number" placeholder="60" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-rose-500">
+                        </div>
+                    </div>
+                    <button onclick="submitProductFormAction()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold uppercase py-2.5 rounded-xl text-[10px] tracking-widest transition-all shadow-md">
+                        Commit Master Inventory Configuration Update
+                    </button>
+                </div>
+
+                <!-- Product Inventory Dynamic Data Grid Table View -->
+                <div class="flex-1 overflow-y-auto dark-scrollbar border border-slate-800/80 rounded-2xl bg-slate-950 text-xs">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/60 border-b border-slate-800 text-slate-400 font-bold text-[9px] uppercase tracking-wider">
+                                <th class="p-3">SKU Variant Metadata</th>
+                                <th class="p-3">Category Mapping</th>
+                                <th class="p-3 text-right">Retail Price</th>
+                                <th class="p-3 text-center">Node Stock</th>
+                                <th class="p-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-inventory-table-body" class="divide-y divide-slate-900 font-medium">
+                            <!-- Injected dynamically via script functions below -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- MASTER LOGIC CONTROLLER AND DATABASE ENGINE-->
+    <!-- ========================================== -->
+    <script>
+        // Inline SVG Vector Art Presets to give products crisp, lightweight imagery out of the box
+        const img = {
+            src: {
+            atta: `hi.jpeg`,
+            rice: `bonatique.jpeg`,
+            oil:`muscular.jpeg`,
+            chips: `hot.jpeg`,
+            bhujia: `rizzy.jpeg`,
+            noodles: `hi.jpeg`,
+            handwash: `download.jpeg`,
+            dishwash: `vim.jpeg`
+            }
+        };
+
+        // Master Shared App State Database Kernel
+        let APP_PRODUCTS = [
+            { id: 'p1', name: 'Premium Aashirvaad Atta', brand: 'ITC', price: 280, weight: '5 Kg Pack', category: 'Ration Staples', stock: 45, imgKey: 'atta' },
+            { id: 'p2', name: 'Miniket Rice Premium', brand: 'Local Mills', price: 650, weight: '10 Kg Bag', category: 'Ration Staples', stock: 22, imgKey: 'rice' },
+            { id: 'p3', name: 'Pure Kachi Ghani Mustard Oil', brand: 'Engine Brand', price: 175, weight: '1 Litre Bottle', category: 'Ration Staples', stock: 55, imgKey: 'oil' },
+            { id: 'p4', name: 'Bingo Potato Chips (Masala)', brand: 'ITC', price: 20, weight: '90g Pack', category: 'Snacks & Munchies', stock: 120, imgKey: 'chips' },
+            { id: 'p5', name: 'Haldiram Bhujia Sev', brand: 'Haldiram', price: 45, weight: '200g Bag', category: 'Snacks & Munchies', stock: 90, imgKey: 'bhujia' },
+            { id: 'p6', name: 'Maggie 2-Min Instant Noodles', brand: 'Nestle', price: 14, weight: '70g Single Pack', category: 'Snacks & Munchies', stock: 180, imgKey: 'noodles' },
+            { id: 'p7', name: 'Dettol Liquid Handwash Refill', brand: 'Reckitt', price: 99, weight: '200ml Pouch', category: 'Daily Cleaning & Essentials', stock: 35, imgKey: 'handwash' },
+            { id: 'p8', name: 'Vim Dishwash Lemon Gel', brand: 'HUL', price: 55, weight: '250ml Bottle', category: 'Daily Cleaning & Essentials', stock: 65, imgKey: 'dishwash' }
+        ];
+
+        let GLOBAL_CART = {}; // Product mapping table (id -> ordered volume values)
+        let MASTER_ORDERS_QUEUE = [
+            { id: 'o-1', number: 'TS-PLH-9921', customer: '+91 9845XXXXXX', location: 'Station Road Market Square', amount: 480, method: 'ONLINE', status: 'ASSIGNED' }
+        ];
+        
+        let CURRENT_LOGGED_IN_CUSTOMER = null;
+
+        // Unified cross-app log feed event push engine for total administrator tracking transparency
+        function writeAppRuntimeLog(messageString, severity = "info") {
+            const consoleBox = document.getElementById('admin-logs-terminal');
+            if(!consoleBox) return;
+            const timeTag = new Date().toLocaleTimeString();
+            
+            let badgeStyles = { 
+                info: 'text-sky-400 bg-sky-950/40 border-sky-900/30', 
+                success: 'text-emerald-400 bg-emerald-950/40 border-emerald-900/30', 
+                alert: 'text-amber-400 bg-amber-950/40 border-amber-900/30', 
+                crit: 'text-rose-400 bg-rose-950/50 border-rose-900/40 font-bold' 
+            };
+            
+            const row = document.createElement('div');
+            row.className = `p-2 rounded-xl border text-[11px] font-mono leading-relaxed transition-all ${badgeStyles[severity] || 'text-slate-400 bg-slate-900'}`;
+            row.innerHTML = `<span class="text-slate-500 opacity-80 font-sans mr-1">[${timeTag}]</span> ${messageString}`;
+            
+            consoleBox.appendChild(row);
+            consoleBox.scrollTop = consoleBox.scrollHeight;
+        }
+
+        // Framework lifecycle init hooks
+        window.addEventListener('DOMContentLoaded', () => {
+            writeAppRuntimeLog("TIREN Dynamic Kernel Layer boot phase complete.", "success");
+            writeAppRuntimeLog("Connected to Pallahara Hyperlocal Cluster Server Node-A.", "info");
+            refreshMarketplaceCatalog();
+            syncAdminMetricsView();
+        });
+
+        // App environment switching engine routing rules
+        function switchToRole(roleTarget) {
+            document.querySelectorAll('.app-view').forEach(view => view.classList.replace('block', 'hidden'));
+            
+            if (roleTarget === 'customer') {
+                document.getElementById('view-customer').classList.replace('hidden', 'block');
+                writeAppRuntimeLog("System View Context decoupled to Customer Storefront Portal.");
+            } else if (roleTarget === 'deliverer') {
+                document.getElementById('view-deliverer').classList.replace('hidden', 'block');
+                refreshDelivererQueue();
+                writeAppRuntimeLog("System View Context attached to Rider Smartphone Companion Application Grid.");
+            } else if (roleTarget === 'admin') {
+                document.getElementById('view-admin').classList.replace('hidden', 'block');
+                refreshAdminInventorySuite();
+                writeAppRuntimeLog("Access Granted. Central Operations Headquarters Viewport initialized.", "success");
+            }
+        }
+
+        // ==========================================
+        // CUSTOMER APP LOGICAL CONTROLLERS
+        // ==========================================
+        function openCustomerAuth() {
+            document.getElementById('customer-otp-modal').classList.remove('hidden');
+            document.getElementById('otp-step-1').classList.remove('hidden');
+            document.getElementById('otp-step-2').classList.add('hidden');
+            document.getElementById('customer-otp-error').classList.add('hidden');
+        }
+
+        function sendCustomerOtp() {
+            const phone = document.getElementById('customer-phone-input').value;
+            if(phone.trim().length < 10) {
+                alert("Please type a complete valid mobile phone string target.");
+                return;
+            }
+            document.getElementById('otp-step-1').classList.add('hidden');
+            document.getElementById('otp-step-2').classList.remove('hidden');
+            writeAppRuntimeLog(`Security handshake broadcast sent: Dynamic OTP generated for customer endpoint (+91 ${phone.slice(0,5)}XXXXX)`, "alert");
+        }
+
+        function verifyCustomerOtp() {
+            const typedOtp = document.getElementById('customer-otp-input').value;
+            if(typedOtp === '7759') {
+                CURRENT_LOGGED_IN_CUSTOMER = "+91 " + document.getElementById('customer-phone-input').value.slice(0,5) + "XXXXX";
+                document.getElementById('customer-profile-badge').innerHTML = `👤 Profile Node: <span class="text-brandGreen-700 font-extrabold">${CURRENT_LOGGED_IN_CUSTOMER}</span>`;
+                document.getElementById('customer-otp-modal').classList.add('hidden');
+                writeAppRuntimeLog(`Token authorized: Session mapping signed in safely for customer standard identity token: ${CURRENT_LOGGED_IN_CUSTOMER}`, "success");
+            } else {
+                document.getElementById('customer-otp-error').classList.remove('hidden');
+            }
+        }
+
+        function toggleTrackingLayout(context) {
+            if(context === 'customer') {
+                const element = document.getElementById('customer-map-wrapper');
+                element.classList.toggle('hidden');
+            }
+        }
+
+        function refreshMarketplaceCatalog() {
+            const container = document.getElementById('category-catalog-container');
+            if(!container) return;
+            
+            const standardCategories = ["Ration Staples", "Snacks & Munchies", "Daily Cleaning & Essentials"];
+            container.innerHTML = '';
+
+            standardCategories.forEach(categoryName => {
+                const block = document.createElement('div');
+                block.className = 'space-y-5';
+                block.innerHTML = `<h4 class="text-sm font-extrabold tracking-wider text-slate-900 uppercase heading-font bg-white border border-slate-200/60 px-4 py-2 rounded-xl inline-block shadow-sm">${categoryName}</h4>`;
+                
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6';
+                
+                APP_PRODUCTS.filter(p => p.category === categoryName).forEach(product => {
+                    const chosenQty = GLOBAL_CART[product.id] || 0;
+                    
+                    const card = document.createElement('div');
+                    card.className = "bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:shadow-premium transition-all duration-300 flex flex-col justify-between group transform hover:-translate-y-1";
+                    
+                    let actionButtonTemplate = `
+                        <button onclick="modifyCartAmount('${product.id}', 1)" class="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2 rounded-xl transition-all tracking-wide">Add to Cart</button>
+                    `;
+                    
+                    if (chosenQty > 0) {
+                        actionButtonTemplate = `
+                            <div class="flex items-center justify-between border-2 border-brandGreen-700 rounded-xl overflow-hidden h-9 bg-brandGreen-50/50">
+                                <button onclick="modifyCartAmount('${product.id}', -1)" class="text-brandGreen-800 font-black w-9 h-full hover:bg-brandGreen-100 transition-all text-sm">-</button>
+                                <span class="text-xs font-extrabold text-brandGreen-950 font-mono">${chosenQty}</span>
+                                <button onclick="modifyCartAmount('${product.id}', 1)" class="text-brandGreen-800 font-black w-9 h-full hover:bg-brandGreen-100 transition-all text-sm">+</button>
+                            </div>
+                        `;
+                    }
+
+                    card.innerHTML = `
+                        <div>
+                            <div class="w-full h-32 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center transition-all group-hover:bg-white relative overflow-hidden p-4 mb-3">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-slate-100/10 to-slate-200/20 mix-blend-multiply"></div>
+                               
+                            </div>
+                            <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase block">${product.brand}</span>
+                            <h5 class="text-xs font-bold text-slate-900 line-clamp-2 h-8 mt-1 tracking-tight leading-tight group-hover:text-brandGreen-800 transition-all">${product.name}</h5>
+                            <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md inline-block mt-1.5">${product.weight}</span>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100/60">
+                            <div class="flex items-baseline justify-between mb-2.5">
+                                <span class="text-base font-extrabold text-slate-900 font-mono">₹${product.price}</span>
+                                <span class="text-[10px] text-slate-400 font-medium">Stock: ${product.stock} units</span>
+                            </div>
+                            ${actionButtonTemplate}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+                
+                block.appendChild(grid);
+                container.appendChild(block);
+            });
+        }
+
+        function modifyCartAmount(id, step) {
+            const targetProd = APP_PRODUCTS.find(p => p.id === id);
+            if (!targetProd) return;
+
+            const existingVolume = GLOBAL_CART[id] || 0;
+            const targetVolume = existingVolume + step;
+
+            if (step > 0 && targetVolume > targetProd.stock) {
+                alert(`Insufficient stock levels. Only ${targetProd.stock} units are currently present inside local distribution centers.`);
+                return;
+            }
+
+            if (targetVolume <= 0) {
+                delete GLOBAL_CART[id];
+                writeAppRuntimeLog(`Cart Update: Variant [${targetProd.name}] dropped from selection matrix.`);
+            } else {
+                GLOBAL_CART[id] = targetVolume;
+                writeAppRuntimeLog(`Cart Update: Item [${targetProd.name}] volume level state adjusted to: ${targetVolume}`);
+            }
+
+            refreshMarketplaceCatalog();
+            recalculateCheckoutSummary();
+        }
+
+        function recalculateCheckoutSummary() {
+            let totalVolumeUnits = 0;
+            let currentSubtotal = 0;
+            const container = document.getElementById('cart-items-preview');
+            container.innerHTML = '';
+
+            Object.keys(GLOBAL_CART).forEach(id => {
+                const item = APP_PRODUCTS.find(p => p.id === id);
+                if (item) {
+                    const volumeCount = GLOBAL_CART[id];
+                    const computationalCost = item.price * volumeCount;
+                    totalVolumeUnits += volumeCount;
+                    currentSubtotal += computationalCost;
+
+                    const row = document.createElement('div');
+                    row.className = "flex justify-between items-center bg-slate-50/80 border border-slate-100 p-2 rounded-xl transition-all";
+                    row.innerHTML = `
+                        <div>
+                            <span class="font-bold text-slate-800 block tracking-tight line-clamp-1">${item.name}</span>
+                            <span class="text-[10px] text-slate-400 font-medium font-mono">₹${item.price} × ${volumeCount}</span>
+                        </div>
+                        <span class="font-bold text-slate-900 font-mono">₹${computationalCost}</span>
+                    `;
+                    container.appendChild(row);
+                }
+            });
+
+            if(totalVolumeUnits === 0) {
+                container.innerHTML = `<p class="italic py-8 text-center text-slate-400">Your basket looks delightfully light. Start choosing items!</p>`;
+            }
+
+            const logisticCharges = currentSubtotal > 350 || currentSubtotal === 0 ? 0 : 35;
+            const truePayableBalance = currentSubtotal + logisticCharges;
+
+            document.getElementById('store-cart-count').innerText = totalVolumeUnits;
+            document.getElementById('store-cart-total').innerText = truePayableBalance;
+            document.getElementById('summary-subtotal').innerText = currentSubtotal;
+            document.getElementById('summary-delivery').innerText = logisticCharges;
+            document.getElementById('summary-payable').innerText = truePayableBalance;
+        }
+
+        function triggerSimulatedOrderCheckout() {
+            const paymentOptionSelected = document.querySelector('input[name="paymentMethod"]:checked');
+            const calculatedTotalSum = parseInt(document.getElementById('summary-payable').innerText);
+
+            if (calculatedTotalSum === 0) {
+                alert("Please choose items first before triggering checkout sequences.");
+                return;
+            }
+
+            const activeMethodString = paymentOptionSelected ? paymentOptionSelected.value : "COD";
+            const orderIdentityHash = `TS-PLH-${Math.floor(1000 + Math.random() * 9000)}`;
+
+            writeAppRuntimeLog(`Spawning transaction pipeline loop. Method: ${activeMethodString} | Total Flow: ₹${calculatedTotalSum}`, "info");
+
+            if (activeMethodString === 'FAKE_GATEWAY') {
+                writeAppRuntimeLog(`[Mock Payment Gateway] Displaying native authorization sandbox modal...`, "alert");
+                const simulatedPaymentPass = confirm(`[TIREN STORE SECURE PAYMENT SANDBOX]\nSimulating banking authorization handshakes for amount: ₹${calculatedTotalSum}\n\nClick OK to simulate validation Success callback response.\nClick Cancel to simulate network Drop/Failure.`);
+                
+                if (!simulatedPaymentPass) {
+                    writeAppRuntimeLog(`[Mock Payment Gateway] Transaction dropped via manual cancellation token.`, "crit");
+                    alert("Simulated card payment verification handshake rejected.");
+                    return;
+                }
+                writeAppRuntimeLog(`[Mock Payment Gateway] Handshake payload valid. Authorization cleared.`, "success");
+            } else {
+                writeAppRuntimeLog(`Cash on Delivery parameters logged down. Order mapped to localized cash handling ledger.`, "success");
+            }
+
+            // Deduct system stock indices metrics
+            Object.keys(GLOBAL_CART).forEach(id => {
+                const item = APP_PRODUCTS.find(p => p.id === id);
+                if (item) {
+                    item.stock = Math.max(0, item.stock - GLOBAL_CART[id]);
+                }
+            });
+
+            // Append order instance array metrics inside global memory
+            const freshOrderNode = {
+                id: `o-${Date.now()}`,
+                number: orderIdentityHash,
+                customer: CURRENT_LOGGED_IN_CUSTOMER || "Walk-in Guest Identity",
+                location: "Pallahara Central Residential Complex Block B",
+                amount: calculatedTotalSum,
+                method: activeMethodString === 'COD' ? 'COD' : 'ONLINE',
+                status: 'ASSIGNED'
+            };
+
+            MASTER_ORDERS_QUEUE.push(freshOrderNode);
+            
+            // Re-flush consumer state objects
+            GLOBAL_CART = {};
+            recalculateCheckoutSummary();
+            refreshMarketplaceCatalog();
+
+            // Auto display transit radar map updates instantly
+            document.getElementById('customer-track-status').innerText = `${orderIdentityHash} — Dispatched with Rider`;
+            document.getElementById('customer-map-wrapper').classList.remove('hidden');
+
+            writeAppRuntimeLog(`Order payload mapped inside main distribution queue database. Reference Hash: ${orderIdentityHash}`, "success");
+            alert(`Brilliant! Your order ${orderIdentityHash} has been logged. Follow the rider's transit map at the top of the screen.`);
+            syncAdminMetricsView();
+        }
+
+
+        // ==========================================
+        // DRIVER PLATFORM LOGISTICS COMPONENT ACTIONS
+        // ==========================================
+        function refreshDelivererQueue() {
+            const container = document.getElementById('deliverer-jobs-stack');
+            if(!container) return;
+            container.innerHTML = '';
+
+            const livePendingJobs = MASTER_ORDERS_QUEUE.filter(o => o.status !== 'DELIVERED');
+            document.getElementById('deliverer-assigned-count').innerText = `${livePendingJobs.length} Route${livePendingJobs.length === 1 ? '' : 's'}`;
+
+            livePendingJobs.forEach(job => {
+                const block = document.createElement('div');
+                block.className = "bg-slate-900 rounded-2xl p-4 border border-slate-800/80 space-y-3 transform transition-all hover:scale-[1.01]";
+                
+                let conditionalActionButtonMarkup = '';
+                if (job.status === 'ASSIGNED') {
+                    conditionalActionButtonMarkup = `
+                        <button onclick="advanceLogisticsJobState('${job.id}', 'PICKED_UP')" class="w-full bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold text-xs py-2.5 rounded-xl transition-all uppercase tracking-wider shadow-sm">Acknowledge Depot Pick-Up</button>
+                    `;
+                } else if (job.status === 'PICKED_UP') {
+                    conditionalActionButtonMarkup = `
+                        <div class="bg-slate-950 p-3 rounded-xl border border-brandOrange-500/20 space-y-2">
+                            <label class="block text-[9px] font-bold uppercase tracking-wider text-brandOrange-500">Security Verification Handshake Code (Use '1234')</label>
+                            <div class="flex gap-2">
+                                <input id="driver-otp-input-${job.id}" type="text" placeholder="••••" maxlength="4" class="bg-slate-900 text-center text-white text-xs font-bold border border-slate-700 rounded-lg flex-1 py-1 focus:outline-none focus:border-brandOrange-500 font-mono tracking-widest">
+                                <button onclick="verifyDriverDeliveryFulfillment('${job.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 rounded-lg transition-all">Submit</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                block.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[9px] font-mono font-bold bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700 uppercase tracking-wide">${job.number}</span>
+                            <h4 class="text-xs font-bold text-white mt-2 font-sans">${job.customer}</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">📍 ${job.location}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold text-emerald-400 font-mono">₹${job.amount}</div>
+                            <div class="text-[8px] font-bold text-slate-500 bg-slate-950 border border-slate-800 rounded px-1.5 py-0.5 inline-block mt-1 uppercase tracking-wider font-mono">${job.method}</div>
+                        </div>
+                    </div>
+                    <div class="pt-1">${conditionalActionButtonMarkup}</div>
+                `;
+                container.appendChild(block);
+            });
+
+            if (livePendingJobs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-slate-900/40 rounded-2xl border border-dashed border-slate-800">
+                        <p class="text-xs text-slate-500">No shipments assigned to your driver ID right now.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function advanceLogisticsJobState(id, stateTarget) {
+            const order = MASTER_ORDERS_QUEUE.find(o => o.id === id);
+            if(order) {
+                order.status = stateTarget;
+                writeAppRuntimeLog(`[Transit System] Shipment node ${order.number} status flag changed to: ${stateTarget}`, "alert");
+                
+                const clientStatusTrackingBadge = document.getElementById('customer-track-status');
+                if (clientStatusTrackingBadge) clientStatusTrackingBadge.innerText = `${order.number} — Rider is navigating to your address`;
+                
+                refreshDelivererQueue();
+            }
+        }
+
+        function verifyDriverDeliveryFulfillment(id) {
+            const inputVal = document.getElementById(`driver-otp-input-${id}`).value;
+            const order = MASTER_ORDERS_QUEUE.find(o => o.id === id);
+            
+            if(!order) return;
+
+            if (inputVal === '1234') {
+                order.status = 'DELIVERED';
+                writeAppRuntimeLog(`[Transit System] Delivery confirmed for order ${order.number}. Status set to DELIVERED.`, "success");
+                
+                const clientStatusTrackingBadge = document.getElementById('customer-track-status');
+                if (clientStatusTrackingBadge) clientStatusTrackingBadge.innerText = `${order.number} — Package handed over safely!`;
+                
+                alert("Security handshake verified. Route completed successfully.");
+                refreshDelivererQueue();
+                syncAdminMetricsView();
+            } else {
+                alert("Security handshake code failed. Enter standard bypass code '1234'.");
+            }
+        }
+
+
+        // ==========================================
+        // ADMINISTRATIVE CENTRAL CONSOLE ENGINE
+        // ==========================================
+        function openAdminAuthModal() {
+            document.getElementById('admin-auth-modal').classList.remove('hidden');
+            document.getElementById('admin-password-input').value = '';
+            document.getElementById('admin-auth-error').classList.add('hidden');
+        }
+
+        function closeAdminAuthModal() {
+            document.getElementById('admin-auth-modal').classList.add('hidden');
+        }
+
+        function verifyAdminLogin() {
+            const passwordValue = document.getElementById('admin-password-input').value;
+            if (passwordValue === 'tiren2026') {
+                closeAdminAuthModal();
+                switchToRole('admin');
+            } else {
+                document.getElementById('admin-auth-error').classList.remove('hidden');
+            }
+        }
+
+        function syncAdminMetricsView() {
+            const computationalRevenueSum = MASTER_ORDERS_QUEUE.reduce((acc, current) => acc + (current.status === 'DELIVERED' ? current.amount : 0), 0);
+            const totalCount = MASTER_ORDERS_QUEUE.length;
+            const currentSkus = APP_PRODUCTS.length;
+
+            document.getElementById('admin-stat-revenue').innerText = `₹${computationalRevenueSum}`;
+            document.getElementById('admin-stat-orders').innerText = totalCount;
+            document.getElementById('admin-stat-skus').innerText = currentSkus;
+        }
+
+        function refreshAdminInventorySuite() {
+            const tableBody = document.getElementById('admin-inventory-table-body');
+            if(!tableBody) return;
+            tableBody.innerHTML = '';
+
+            APP_PRODUCTS.forEach(product => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-slate-900/40 border-b border-slate-900/60 transition-all text-slate-300 font-sans font-medium";
+                row.innerHTML = `
+                    <td class="p-3">
+                        <span class="font-bold text-white block text-xs tracking-tight">${product.name}</span>
+                        <span class="text-[10px] text-slate-500 font-mono">${product.brand} • ${product.weight}</span>
+                    </td>
+                    <td class="p-3 text-slate-400 text-[11px] font-sans">${product.category}</td>
+                    <td class="p-3 text-right font-bold text-emerald-400 font-mono">₹${product.price}</td>
+                    <td class="p-3 text-center font-bold ${product.stock < 30 ? 'text-rose-400 bg-rose-500/5' : 'text-slate-400'} font-mono">${product.stock} units</td>
+                    <td class="p-3 text-right">
+                        <button onclick="populateFormForInventoryModification('${product.id}')" class="text-amber-500 hover:text-amber-400 underline font-bold text-[11px]">Edit Parameters</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function openInventoryAddState() {
+            document.getElementById('inventory-editor-form-wrapper').classList.remove('hidden');
+            document.getElementById('form-action-title').innerText = "Add New Inventory SKU";
+            document.getElementById('edit-prod-id').value = '';
+            
+            document.getElementById('form-prod-name').value = '';
+            document.getElementById('form-prod-brand').value = '';
+            document.getElementById('form-prod-price').value = '';
+            document.getElementById('form-prod-weight').value = '';
+            document.getElementById('form-prod-stock').value = '';
+        }
+
+        function closeInventoryForm() {
+            document.getElementById('inventory-editor-form-wrapper').classList.add('hidden');
+        }
+
+        function populateFormForInventoryModification(id) {
+            const product = APP_PRODUCTS.find(p => p.id === id);
+            if(!product) return;
+
+            document.getElementById('inventory-editor-form-wrapper').classList.remove('hidden');
+            document.getElementById('form-action-title').innerText = `Edit Parameter Handles: ${product.name}`;
+            document.getElementById('edit-prod-id').value = product.id;
+
+            document.getElementById('form-prod-name').value = product.name;
+            document.getElementById('form-prod-brand').value = product.brand;
+            document.getElementById('form-prod-category').value = product.category;
+            document.getElementById('form-prod-price').value = product.price;
+            document.getElementById('form-prod-weight').value = product.weight;
+            document.getElementById('form-prod-stock').value = product.stock;
+        }
+
+        function submitProductFormAction() {
+            const elementId = document.getElementById('edit-prod-id').value;
+            const name = document.getElementById('form-prod-name').value;
+            const brand = document.getElementById('form-prod-brand').value;
+            const category = document.getElementById('form-prod-category').value;
+            const price = parseInt(document.getElementById('form-prod-price').value);
+            const weight = document.getElementById('form-prod-weight').value;
+            const stock = parseInt(document.getElementById('form-prod-stock').value);
+
+            if (!name || !brand || isNaN(price) || !weight || isNaN(stock)) {
+                alert("Please declare accurate variables inside all operational configuration handles.");
+                return;
+            }
+
+            if (elementId) {
+                const index = APP_PRODUCTS.findIndex(p => p.id === elementId);
+                if (index !== -1) {
+                    const existingProduct = APP_PRODUCTS[index];
+                    APP_PRODUCTS[index] = { 
+                        id: elementId, name, brand, category, price, weight, stock, 
+                        imgKey: existingProduct.imgKey || 'generic' 
+                    };
+                    writeAppRuntimeLog(`[Inventory Kernel] Modified product SKU configuration metrics: ${name}`, "alert");
+                }
+            } else {
+                const freshGeneratedId = `p-${Date.now()}`;
+                APP_PRODUCTS.push({ 
+                    id: freshGeneratedId, name, brand, category, price, weight, stock, imgKey: 'generic' 
+                });
+                writeAppRuntimeLog(`[Inventory Kernel] Dispatched fresh product entity object insertion: ${name}`, "success");
+            }
+
+            closeInventoryForm();
+            refreshAdminInventorySuite();
+            refreshMarketplaceCatalog();
+            syncAdminMetricsView();
+        }
+    </script>
+</body>
+</html>

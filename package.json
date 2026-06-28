@@ -1,0 +1,28 @@
+{
+  "name": "my-creations",
+  "version": "1.0.0",
+  "description": "<img width=\"1536\" height=\"1024\" alt=\"coming soon\" src=\"https://github.com/user-attachments/assets/f93c81a2-2090-47ce-adfd-09fd46e9187a\" />",
+  "main": "nodeJSmodules.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sahoorojas-ship-it/MY-CREATIONS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sahoorojas-ship-it/MY-CREATIONS/issues"
+  },
+  "homepage": "https://github.com/sahoorojas-ship-it/MY-CREATIONS#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mongoose": "^9.7.1"
+  }
+}

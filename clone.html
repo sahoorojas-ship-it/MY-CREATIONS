@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>⚡ TECH MEGA SALE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--purple:rgb(114,2,112);
+--purple-dark:#5a0158;
+--purple-glow:rgba(114,2,112,.45);
+--green:#00ff99;
+--gold:#ffd000;
+--red:#ff4444;
+--bg:#060610;
+--card:#0d1117;
+--card2:#111827;
+--border:rgba(255,255,255,.08);
+--text:#e8e8f0;
+--muted:#888;
+--font-head:'Syne',sans-serif;
+--font-mono:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-head);overflow-x:hidden;cursor:none}
+
+/* CUSTOM CURSOR */
+#cursor{position:fixed;width:14px;height:14px;background:var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:exclusion}
+#cursor-ring{position:fixed;width:38px;height:38px;border:2px solid var(--purple);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease;mix-blend-mode:exclusion}
+body:hover #cursor{opacity:1}
+
+/* TOAST */
+#toast{position:fixed;bottom:30px;right:30px;background:var(--green);color:#000;padding:14px 22px;border-radius:12px;font-family:var(--font-mono);font-size:13px;font-weight:700;z-index:9000;opacity:0;transform:translateY(30px);transition:all .4s;pointer-events:none;max-width:300px}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* MODAL OVERLAY */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal-overlay.open{display:flex}
+
+/* HEADER */
+header{background:linear-gradient(180deg,var(--purple) 0%,var(--purple-dark) 100%);padding:0;position:sticky;top:0;z-index:500;box-shadow:0 4px 40px var(--purple-glow)}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:14px 30px;gap:16px;flex-wrap:wrap}
+.logo{font-family:var(--font-head);font-size:26px;font-weight:800;letter-spacing:-1px;color:#fff;text-decoration:none}
+.logo span{color:var(--gold)}
+.header-search{flex:1;max-width:480px;position:relative}
+.header-search input{width:100%;padding:10px 44px 10px 16px;border-radius:50px;border:none;background:rgba(255,255,255,.12);color:#fff;font-family:var(--font-mono);font-size:13px;outline:none;transition:.3s}
+.header-search input::placeholder{color:rgba(255,255,255,.5)}
+.header-search input:focus{background:rgba(255,255,255,.2)}
+.header-search button{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--gold);font-size:16px;cursor:pointer}
+.header-actions{display:flex;gap:12px;align-items:center}
+.btn-icon{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:.3s;position:relative}
+.btn-icon:hover{background:var(--gold);color:#000}
+.badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono)}
+.btn-login{background:var(--gold);border:none;color:#000;padding:10px 20px;border-radius:50px;font-family:var(--font-head);font-weight:700;font-size:13px;cursor:pointer;transition:.3s;white-space:nowrap}
+.btn-login:hover{background:#fff}
+
+/* NAV */
+nav{background:var(--purple-dark);padding:0 30px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-link{color:rgba(255,255,255,.75);text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;letter-spacing:.5px;white-space:nowrap;border-bottom:3px solid transparent;transition:.3s;text-transform:uppercase;font-family:var(--font-mono)}
+.nav-link:hover,.nav-link.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* BANNER */
+.sale-strip{background:var(--gold);color:#000;text-align:center;padding:10px;font-weight:800;font-size:14px;letter-spacing:1px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.8;letter-spacing:2px}}
+
+/* HERO */
+.hero{padding:60px 30px;display:flex;align-items:center;justify-content:space-between;gap:40px;background:linear-gradient(135deg,#0d0015 0%,#1a0050 50%,#0d0015 100%);position:relative;overflow:hidden;flex-wrap:wrap}
+.hero::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,var(--purple-glow) 0%,transparent 70%);top:-200px;right:-100px;pointer-events:none}
+.hero-text h1{font-size:clamp(36px,5vw,72px);font-weight:800;line-height:1;letter-spacing:-2px;background:linear-gradient(135deg,#fff 30%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-text p{margin-top:16px;font-family:var(--font-mono);font-size:14px;color:var(--muted);max-width:400px;line-height:1.6}
+.timer-box{margin-top:24px;display:flex;gap:12px}
+.timer-unit{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:14px 18px;text-align:center;min-width:68px}
+.timer-unit span{display:block;font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--green)}
+.timer-unit small{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.hero-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.btn-primary{background:var(--green);color:#000;border:none;padding:14px 28px;border-radius:50px;font-family:var(--font-head);font-weight:800;font-size:15px;cursor:pointer;transition:.3s}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,255,153,.4)}
+.btn-secondary{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.3);padding:14px 28px;border-radius:50px;font-family:var(--font-head);font-weight:700;font-size:15px;cursor:pointer;transition:.3s}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+.coupon-banner{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+.coupon{background:rgba(255,208,0,.1);border:1px dashed var(--gold);border-radius:8px;padding:8px 14px;font-family:var(--font-mono);font-size:12px;color:var(--gold);cursor:pointer;transition:.3s}
+.coupon:hover{background:rgba(255,208,0,.2)}
+.coupon strong{display:block;font-size:14px;letter-spacing:1px}
+
+/* FILTERS BAR */
+.filters-bar{padding:20px 30px;background:var(--card);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.filter-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-label{font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-right:4px}
+.filter-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:50px;font-size:12px;cursor:pointer;transition:.3s;font-family:var(--font-mono);white-space:nowrap}
+.filter-btn:hover,.filter-btn.active{background:var(--purple);border-color:var(--purple);color:#fff}
+.sort-select{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:50px;font-size:12px;cursor:pointer;font-family:var(--font-mono);outline:none;appearance:none;padding-right:28px}
+.sort-wrap{position:relative}
+.sort-wrap::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:12px}
+.compare-bar{margin-left:auto;display:flex;gap:10px;align-items:center}
+.compare-count{font-size:12px;font-family:var(--font-mono);color:var(--muted)}
+.btn-compare{background:var(--purple);border:none;color:#fff;padding:8px 16px;border-radius:50px;font-family:var(--font-mono);font-size:12px;cursor:pointer;transition:.3s;display:none}
+.btn-compare.show{display:inline-flex}
+.btn-compare:hover{background:var(--purple-dark)}
+
+/* MAIN LAYOUT */
+.main{padding:40px 30px;max-width:1600px;margin:auto}
+.section-title{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.section-title span{color:var(--gold)}
+.section-sub{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:28px;letter-spacing:.5px}
+
+/* TRENDING STRIP */
+.trending-strip{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 24px;margin-bottom:36px;display:flex;gap:24px;align-items:center;overflow-x:auto;scrollbar-width:none}
+.trending-strip::-webkit-scrollbar{display:none}
+.trend-label{font-size:11px;font-family:var(--font-mono);color:var(--gold);text-transform:uppercase;letter-spacing:2px;white-space:nowrap;border-right:1px solid var(--border);padding-right:20px;flex-shrink:0}
+.trend-item{display:flex;align-items:center;gap:8px;white-space:nowrap;cursor:pointer;padding:6px 12px;border-radius:50px;transition:.3s}
+.trend-item:hover{background:rgba(255,255,255,.06)}
+.trend-num{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.trend-name{font-size:13px;font-weight:700}
+
+/* PRODUCT GRID */
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:28px;margin-bottom:60px}
+
+/* PRODUCT CARD */
+.card{background:var(--card2);border-radius:24px;border:1px solid var(--border);overflow:hidden;position:relative;transition:.4s;cursor:pointer;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-8px) scale(1.01);border-color:rgba(114,2,112,.5);box-shadow:0 24px 60px rgba(114,2,112,.25)}
+.card.compare-selected{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.card-img-wrap{position:relative;overflow:hidden;aspect-ratio:1;background:#0a0a15}
+.card-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.5) 100%);pointer-events:none}
+.product-img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.card:hover .product-img{transform:scale(1.06)}
+.card-badge{position:absolute;top:14px;left:14px;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px;font-family:var(--font-mono);letter-spacing:.5px;z-index:2}
+.card-badge.new{background:#0099ff}
+.card-badge.trending{background:var(--gold);color:#000}
+.card-actions{position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:8px;z-index:2;opacity:0;transform:translateX(10px);transition:.3s}
+.card:hover .card-actions{opacity:1;transform:translateX(0)}
+.action-btn{background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:.3s;backdrop-filter:blur(8px)}
+.action-btn:hover{background:var(--purple);border-color:var(--purple)}
+.action-btn.liked{color:var(--red);background:rgba(255,68,68,.15)}
+.compare-toggle{font-size:10px}
+.stock-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.1);z-index:2}
+.stock-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:2px;transition:width 1s ease}
+.card-body{padding:20px;flex:1;display:flex;flex-direction:column}
+.card-brand{font-family:var(--font-mono);font-size:10px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.card-name{font-size:18px;font-weight:800;letter-spacing:-.5px;line-height:1.2;margin-bottom:6px}
+.card-rating{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.stars{color:var(--gold);font-size:13px}
+.rating-count{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.card-specs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.spec-tag{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;font-family:var(--font-mono);color:var(--muted)}
+.price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.price-old{text-decoration:line-through;opacity:.5;font-size:14px;font-family:var(--font-mono)}
+.price-new{font-size:26px;font-weight:800;color:var(--green);font-family:var(--font-head)}
+.price-save{font-size:11px;background:rgba(0,255,153,.1);border:1px solid rgba(0,255,153,.2);color:var(--green);border-radius:6px;padding:2px 8px;font-family:var(--font-mono)}
+.payments{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.payment-chip{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:10px;font-family:var(--font-mono);color:var(--muted)}
+.stock-text{font-size:11px;font-family:var(--font-mono);color:var(--red);margin-bottom:12px}
+.card-btns{display:flex;gap:8px;margin-top:auto}
+.btn-cart{flex:1;background:var(--purple);border:none;color:#fff;padding:12px;border-radius:12px;font-family:var(--font-head);font-weight:700;font-size:13px;cursor:pointer;transition:.3s}
+.btn-cart:hover{background:var(--purple-dark);transform:scale(1.03)}
+.btn-explore{flex:1;background:var(--green);border:none;color:#000;padding:12px;border-radius:12px;font-family:var(--font-head);font-weight:700;font-size:13px;cursor:pointer;transition:.3s}
+.btn-explore:hover{background:#00cc7a;transform:scale(1.03)}
+
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,var(--card2) 25%,rgba(255,255,255,.03) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{border-radius:24px;border:1px solid var(--border);overflow:hidden}
+.skel-img{aspect-ratio:1;width:100%}
+.skel-body{padding:20px}
+.skel-line{height:14px;border-radius:4px;margin-bottom:10px}
+.skel-line.w60{width:60%}
+.skel-line.w80{width:80%}
+.skel-line.w40{width:40%}
+
+/* RECENTLY VIEWED */
+.recents{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;margin-bottom:50px}
+.recents::-webkit-scrollbar{display:none}
+.recent-card{flex-shrink:0;width:140px;background:var(--card2);border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:.3s}
+.recent-card:hover{border-color:var(--purple);transform:translateY(-4px)}
+.recent-img{width:100%;aspect-ratio:1;object-fit:cover}
+.recent-info{padding:8px 10px}
+.recent-name{font-size:11px;font-weight:700;line-height:1.3}
+.recent-price{font-size:12px;color:var(--green);font-family:var(--font-mono);font-weight:700;margin-top:2px}
+
+/* CATEGORIES */
+.categories{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:50px}
+.cat-card{background:var(--card2);border:1px solid var(--border);border-radius:18px;padding:20px;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
+.cat-card::before{content:'';position:absolute;inset:0;background:var(--purple);opacity:0;transition:.3s}
+.cat-card:hover::before{opacity:.15}
+.cat-card:hover{transform:translateY(-4px);border-color:var(--purple)}
+.cat-icon{font-size:32px;margin-bottom:8px}
+.cat-name{font-size:14px;font-weight:700}
+.cat-count{font-size:11px;font-family:var(--font-mono);color:var(--muted);margin-top:2px}
+
+/* PRODUCT MODAL */
+.product-modal{background:var(--card);border-radius:28px;max-width:900px;width:95%;max-height:90vh;overflow-y:auto;padding:36px;position:relative;display:flex;gap:36px;flex-wrap:wrap;scrollbar-width:thin;scrollbar-color:var(--purple) transparent}
+.product-modal::-webkit-scrollbar{width:6px}
+.product-modal::-webkit-scrollbar-thumb{background:var(--purple);border-radius:3px}
+.modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;transition:.3s;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--red)}
+.modal-imgs{flex:1;min-width:260px}
+.modal-main-img{width:100%;border-radius:16px;aspect-ratio:1;object-fit:cover;background:#0a0a15}
+.modal-thumbs{display:flex;gap:8px;margin-top:12px}
+.modal-thumb{width:60px;height:60px;border-radius:10px;object-fit:cover;cursor:pointer;border:2px solid transparent;transition:.3s;background:#0a0a15}
+.modal-thumb.active,.modal-thumb:hover{border-color:var(--purple)}
+.modal-info{flex:1;min-width:260px}
+.modal-brand{font-family:var(--font-mono);font-size:11px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.modal-name{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:10px}
+.modal-price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.modal-price-old{text-decoration:line-through;opacity:.5;font-size:16px;font-family:var(--font-mono)}
+.modal-price-new{font-size:36px;font-weight:800;color:var(--green)}
+.modal-badge{background:var(--red);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;font-family:var(--font-mono)}
+.modal-rating{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.option-row{margin-bottom:14px}
+.option-label{font-size:12px;font-family:var(--font-mono);color:var(--muted);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase}
+.options{display:flex;gap:8px;flex-wrap:wrap}
+.option-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:.3s;font-family:var(--font-mono)}
+.option-btn:hover,.option-btn.active{background:var(--purple);border-color:var(--purple);color:#fff}
+.qty-row{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.qty-label{font-size:12px;font-family:var(--font-mono);color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.qty-ctrl{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:4px 8px}
+.qty-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;transition:.3s;border-radius:6px}
+.qty-btn:hover{background:var(--purple);color:#fff}
+.qty-val{font-family:var(--font-mono);font-size:16px;font-weight:700;min-width:24px;text-align:center}
+.modal-btns{display:flex;gap:10px;margin-bottom:20px}
+.modal-btns button{flex:1}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tab{background:none;border:none;color:var(--muted);padding:10px 16px;cursor:pointer;font-family:var(--font-mono);font-size:12px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid transparent;transition:.3s;white-space:nowrap}
+.tab:hover,.tab.active{color:var(--green);border-bottom-color:var(--green)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.spec-table{width:100%;border-collapse:collapse}
+.spec-table tr{border-bottom:1px solid var(--border)}
+.spec-table td{padding:8px 12px;font-size:13px;font-family:var(--font-mono)}
+.spec-table td:first-child{color:var(--muted);width:45%}
+.review-item{background:rgba(255,255,255,.03);border-radius:12px;padding:14px;margin-bottom:10px}
+.review-author{font-weight:700;font-size:13px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.review-text{font-size:13px;color:var(--muted);line-height:1.5}
+.faq-item{margin-bottom:10px}
+.faq-q{font-size:13px;font-weight:700;margin-bottom:4px;color:var(--green)}
+.faq-a{font-size:12px;color:var(--muted);font-family:var(--font-mono);line-height:1.6}
+.delivery-info{background:rgba(0,255,153,.05);border:1px solid rgba(0,255,153,.2);border-radius:12px;padding:14px;font-size:13px;font-family:var(--font-mono);color:var(--muted);line-height:1.6}
+.delivery-info strong{color:var(--green)}
+
+/* CART SIDEBAR */
+#cart-sidebar{position:fixed;right:0;top:0;height:100vh;width:380px;background:var(--card);border-left:1px solid var(--border);z-index:1000;transform:translateX(100%);transition:.4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,.5)}
+#cart-sidebar.open{transform:translateX(0)}
+.cart-header{padding:24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cart-title{font-size:20px;font-weight:800}
+.cart-close{background:rgba(255,255,255,.08);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;transition:.3s}
+.cart-close:hover{background:var(--red)}
+.cart-items{flex:1;overflow-y:auto;padding:16px;scrollbar-width:thin;scrollbar-color:var(--purple) transparent}
+.cart-item{display:flex;gap:14px;padding:14px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;margin-bottom:10px;align-items:center}
+.cart-item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#0a0a15}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-item-price{font-size:14px;color:var(--green);font-family:var(--font-mono);font-weight:700;margin-top:2px}
+.cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+.cq-btn{background:rgba(255,255,255,.1);border:none;color:#fff;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:.3s}
+.cq-btn:hover{background:var(--purple)}
+.cq-val{font-family:var(--font-mono);font-size:13px;min-width:20px;text-align:center}
+.cart-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;border-radius:6px;transition:.3s;flex-shrink:0}
+.cart-remove:hover{color:var(--red)}
+.cart-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.cart-empty .empty-icon{font-size:48px;margin-bottom:12px}
+.cart-footer{padding:20px;border-top:1px solid var(--border)}
+.coupon-input-row{display:flex;gap:8px;margin-bottom:14px}
+.coupon-input{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:10px;font-family:var(--font-mono);font-size:13px;outline:none}
+.coupon-input::placeholder{color:var(--muted)}
+.coupon-apply{background:var(--purple);border:none;color:#fff;padding:10px 16px;border-radius:10px;font-family:var(--font-mono);font-size:12px;cursor:pointer;font-weight:700;white-space:nowrap;transition:.3s}
+.coupon-apply:hover{background:var(--purple-dark)}
+.cart-summary-row{display:flex;justify-content:space-between;font-size:13px;font-family:var(--font-mono);margin-bottom:6px;color:var(--muted)}
+.cart-summary-row.total{font-size:16px;color:var(--text);font-weight:700;border-top:1px solid var(--border);padding-top:10px;margin-top:6px}
+.cart-summary-row .discount{color:var(--green)}
+.btn-checkout{width:100%;background:var(--green);border:none;color:#000;padding:16px;border-radius:14px;font-family:var(--font-head);font-weight:800;font-size:15px;cursor:pointer;margin-top:14px;transition:.3s}
+.btn-checkout:hover{transform:scale(1.02);box-shadow:0 8px 30px rgba(0,255,153,.4)}
+
+/* WISHLIST */
+#wishlist-sidebar{position:fixed;left:0;top:0;height:100vh;width:360px;background:var(--card);border-right:1px solid var(--border);z-index:1000;transform:translateX(-100%);transition:.4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:8px 0 40px rgba(0,0,0,.5)}
+#wishlist-sidebar.open{transform:translateX(0)}
+.wishlist-items{flex:1;overflow-y:auto;padding:16px;scrollbar-width:thin;scrollbar-color:var(--purple) transparent}
+.wishlist-item{display:flex;gap:12px;padding:12px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;align-items:center;cursor:pointer;transition:.3s}
+.wishlist-item:hover{border-color:var(--purple)}
+.wishlist-img{width:54px;height:54px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#0a0a15}
+.wishlist-name{font-size:12px;font-weight:700;flex:1}
+.wishlist-price{font-size:13px;color:var(--green);font-family:var(--font-mono);font-weight:700}
+
+/* COMPARE MODAL */
+.compare-modal{background:var(--card);border-radius:24px;max-width:1100px;width:95%;max-height:90vh;overflow:auto;padding:36px;scrollbar-width:thin;scrollbar-color:var(--purple) transparent}
+.compare-title{font-size:24px;font-weight:800;margin-bottom:24px}
+.compare-grid{display:grid;gap:0;overflow-x:auto}
+.compare-table{width:100%;border-collapse:collapse;min-width:500px}
+.compare-table th{background:rgba(255,255,255,.04);padding:16px 14px;text-align:left;font-size:13px;font-family:var(--font-mono);color:var(--muted);border-bottom:1px solid var(--border);position:sticky;top:0}
+.compare-table th:first-child{width:150px}
+.compare-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+.compare-table td:first-child{font-family:var(--font-mono);color:var(--muted);font-size:12px}
+.compare-table tr:hover td{background:rgba(255,255,255,.02)}
+.compare-img{width:80px;height:80px;object-fit:cover;border-radius:10px;background:#0a0a15}
+.compare-name{font-weight:700;font-size:14px;margin-top:6px}
+.compare-price{color:var(--green);font-family:var(--font-mono);font-weight:700;margin-top:2px}
+
+/* CHECKOUT MODAL */
+.checkout-modal{background:var(--card);border-radius:24px;max-width:600px;width:95%;max-height:90vh;overflow-y:auto;padding:36px;scrollbar-width:thin;scrollbar-color:var(--purple) transparent}
+.checkout-step{display:none}
+.checkout-step.active{display:block}
+.checkout-title{font-size:22px;font-weight:800;margin-bottom:20px}
+.form-row{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.form-field{flex:1;min-width:200px}
+.form-field label{font-size:11px;font-family:var(--font-mono);color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.form-field input,.form-field select{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);color:#fff;padding:11px 14px;border-radius:10px;font-family:var(--font-mono);font-size:13px;outline:none;transition:.3s}
+.form-field input:focus,.form-field select:focus{border-color:var(--purple);background:rgba(114,2,112,.1)}
+.form-field input::placeholder{color:var(--muted)}
+.form-field select option{background:var(--card2);color:#fff}
+.step-nav{display:flex;gap:12px;justify-content:flex-end;margin-top:20px}
+.step-btn{padding:12px 24px;border-radius:12px;font-family:var(--font-head);font-weight:700;font-size:14px;cursor:pointer;border:none;transition:.3s}
+.step-btn.back{background:rgba(255,255,255,.08);color:#fff}
+.step-btn.next{background:var(--purple);color:#fff}
+.step-btn.next:hover{background:var(--purple-dark)}
+.step-btn.confirm{background:var(--green);color:#000}
+.order-success{text-align:center;padding:20px 0}
+.success-icon{font-size:60px;margin-bottom:16px}
+.shipping-options{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.shipping-opt{border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:.3s;display:flex;justify-content:space-between;align-items:center}
+.shipping-opt:hover,.shipping-opt.active{border-color:var(--purple);background:rgba(114,2,112,.1)}
+.shipping-opt-name{font-size:13px;font-weight:700}
+.shipping-opt-days{font-size:12px;font-family:var(--font-mono);color:var(--muted)}
+.shipping-opt-price{font-family:var(--font-mono);font-weight:700;color:var(--green)}
+.order-summary-mini{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+
+/* LOGIN MODAL */
+.auth-modal{background:var(--card);border-radius:24px;max-width:440px;width:95%;padding:40px;position:relative}
+.auth-title{font-size:28px;font-weight:800;margin-bottom:6px;letter-spacing:-1px}
+.auth-sub{font-size:13px;color:var(--muted);font-family:var(--font-mono);margin-bottom:28px}
+.auth-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:24px}
+.auth-form{display:none}
+.auth-form.active{display:block}
+.social-login{display:flex;gap:10px;margin-top:20px}
+.social-btn{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);color:#fff;padding:11px;border-radius:10px;cursor:pointer;font-size:13px;font-family:var(--font-mono);transition:.3s;text-align:center}
+.social-btn:hover{background:rgba(255,255,255,.12)}
+
+/* NOTIFICATIONS */
+#notif-panel{position:fixed;top:80px;right:20px;width:320px;background:var(--card);border:1px solid var(--border);border-radius:20px;z-index:1500;transform:translateY(-20px) scale(.95);opacity:0;pointer-events:none;transition:.3s;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#notif-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
+.notif-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700}
+.notif-item{padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;gap:12px;align-items:flex-start}
+.notif-icon{font-size:20px;flex-shrink:0}
+.notif-text{font-size:12px;line-height:1.5;color:var(--muted)}
+.notif-text strong{color:var(--text);display:block;margin-bottom:2px}
+.notif-time{font-size:10px;font-family:var(--font-mono);color:var(--muted);margin-top:2px}
+
+/* RECOMMENDATION STRIP */
+.reco-section{margin-bottom:50px}
+.reco-scroll{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.reco-scroll::-webkit-scrollbar{display:none}
+.reco-card{flex-shrink:0;width:190px;background:var(--card2);border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:.3s}
+.reco-card:hover{border-color:var(--purple);transform:translateY(-4px)}
+.reco-img{width:100%;aspect-ratio:1;object-fit:cover;background:#0a0a15}
+.reco-info{padding:10px 12px}
+.reco-name{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:2px}
+.reco-price{font-size:13px;color:var(--green);font-family:var(--font-mono);font-weight:700}
+
+/* PURCHASE POPUP */
+#purchase-popup{position:fixed;bottom:100px;left:24px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 18px;display:flex;gap:12px;align-items:center;z-index:800;transform:translateX(-120%);transition:.4s;max-width:280px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+#purchase-popup.show{transform:translateX(0)}
+.popup-img{width:44px;height:44px;border-radius:8px;object-fit:cover;background:#0a0a15;flex-shrink:0}
+.popup-text{font-size:11px;color:var(--muted);line-height:1.4}
+.popup-text strong{color:var(--text);font-size:12px;display:block}
+.popup-text em{color:var(--green);font-size:11px;font-family:var(--font-mono);font-style:normal}
+
+/* ORDER TRACKING */
+.tracking-modal{background:var(--card);border-radius:24px;max-width:560px;width:95%;padding:36px}
+.tracking-steps{margin-top:24px;position:relative;padding-left:24px}
+.tracking-steps::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.track-step{position:relative;padding-bottom:24px;display:flex;gap:16px}
+.track-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;margin-top:2px;position:relative;z-index:1;border:2px solid var(--border)}
+.track-dot.done{background:var(--green);border-color:var(--green)}
+.track-dot.active{background:var(--gold);border-color:var(--gold);animation:dotPulse 1.5s infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,208,0,.6)}50%{box-shadow:0 0 0 8px rgba(255,208,0,0)}}
+.track-step-info h4{font-size:14px;font-weight:700;margin-bottom:2px}
+.track-step-info p{font-size:12px;font-family:var(--font-mono);color:var(--muted)}
+
+/* SCROLL ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* FOOTER */
+footer{background:#04040c;border-top:1px solid var(--border);padding:50px 30px 30px}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:40px;max-width:1200px;margin:auto 0;margin-bottom:40px}
+.footer-brand h3{font-size:22px;font-weight:800;margin-bottom:10px}
+.footer-brand h3 span{color:var(--gold)}
+.footer-brand p{font-size:12px;font-family:var(--font-mono);color:var(--muted);line-height:1.6}
+.footer-col h4{font-size:13px;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:1px}
+.footer-col a{display:block;font-size:12px;font-family:var(--font-mono);color:var(--muted);text-decoration:none;margin-bottom:8px;transition:.3s}
+.footer-col a:hover{color:var(--green)}
+.footer-bottom{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:20px;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:11px;font-family:var(--font-mono);color:var(--muted)}
+.footer-payments{display:flex;gap:8px}
+.fpay{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:10px;font-family:var(--font-mono);color:var(--muted)}
+
+/* OVERLAY BACKDROP */
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;opacity:0;pointer-events:none;transition:.3s}
+.backdrop.show{opacity:1;pointer-events:auto}
+
+/* GLOWING FLOATING BTN */
+.float-whatsapp{position:fixed;bottom:30px;right:30px;width:52px;height:52px;border-radius:50%;background:#25d366;border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.5);z-index:700;transition:.3s;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+.header-top{padding:10px 16px}
+.hero{padding:36px 16px}
+.main{padding:24px 16px}
+.filters-bar{padding:14px 16px}
+nav{padding:0 16px}
+.product-modal{padding:20px;gap:20px}
+#cart-sidebar{width:100%}
+#wishlist-sidebar{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- TOAST -->
+<div id="toast">✅ Added to cart!</div>
+
+<!-- BACKDROP -->
+<div class="backdrop" id="backdrop" onclick="closeAll()"></div>
+
+<!-- PURCHASE POPUP -->
+<div id="purchase-popup">
+  <img class="popup-img" id="popup-img" src="" alt="">
+  <div class="popup-text">
+    <strong id="popup-name"></strong>
+    <span id="popup-location"></span> just bought this<br>
+    <em id="popup-ago"></em>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div id="cart-sidebar">
+  <div class="cart-header">
+    <div class="cart-title">🛒 My Cart <span id="cart-count-header" style="font-size:14px;color:var(--muted);font-family:var(--font-mono)">(0 items)</span></div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">
+      <div class="empty-icon">🛒</div>
+      <div>Your cart is empty.<br><span style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">Add some awesome tech!</span></div>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="coupon-input-row">
+      <input class="coupon-input" id="coupon-field" placeholder="Enter coupon code..." type="text">
+      <button class="coupon-apply" onclick="applyCoupon()">APPLY</button>
+    </div>
+    <div class="cart-summary-row"><span>Subtotal</span><span id="cart-subtotal">₹0</span></div>
+    <div class="cart-summary-row"><span>Shipping</span><span id="cart-shipping">FREE</span></div>
+    <div class="cart-summary-row discount" id="discount-row" style="display:none"><span>Discount</span><span id="cart-discount">-₹0</span></div>
+    <div class="cart-summary-row total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="btn-checkout" onclick="openCheckout()">Checkout →</button>
+  </div>
+</div>
+
+<!-- WISHLIST SIDEBAR -->
+<div id="wishlist-sidebar">
+  <div class="cart-header">
+    <div class="cart-title">❤️ Wishlist</div>
+    <button class="cart-close" onclick="closeWishlist()">✕</button>
+  </div>
+  <div class="wishlist-items" id="wishlist-items">
+    <div class="cart-empty"><div class="empty-icon">💝</div><div>No saved items yet</div></div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div id="notif-panel">
+  <div class="notif-header">
+    🔔 Notifications
+    <button onclick="closeNotif()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">✕</button>
+  </div>
+  <div class="notif-item"><div class="notif-icon">🔥</div><div class="notif-text"><strong>Flash Sale Starting!</strong>iPhone 17 Pro Max now 20% off for next 2 hours<div class="notif-time">2 min ago</div></div></div>
+  <div class="notif-item"><div class="notif-icon">📦</div><div class="notif-text"><strong>Stock Alert</strong>Samsung S25 Ultra — only 8 units left!<div class="notif-time">15 min ago</div></div></div>
+  <div class="notif-item"><div class="notif-icon">🎁</div><div class="notif-text"><strong>New Coupon!</strong>Use MEGA20 for 20% off on all orders above ₹50,000<div class="notif-time">1 hr ago</div></div></div>
+  <div class="notif-item"><div class="notif-icon">⭐</div><div class="notif-text"><strong>Price Drop</strong>Smart Watch now ₹5,000 cheaper than last week<div class="notif-time">3 hr ago</div></div></div>
+</div>
+
+<!-- COMPARE MODAL -->
+<div class="modal-overlay" id="compare-overlay">
+  <div class="compare-modal">
+    <button class="modal-close" onclick="closeCompare()">✕</button>
+    <div class="compare-title">📊 Product Comparison</div>
+    <div class="compare-grid">
+      <table class="compare-table" id="compare-table">
+        <thead><tr id="compare-head"></tr></thead>
+        <tbody id="compare-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkout-overlay">
+  <div class="checkout-modal">
+    <button class="modal-close" onclick="document.getElementById('checkout-overlay').classList.remove('open')">✕</button>
+    <div id="step1" class="checkout-step active">
+      <div class="checkout-title">📍 Shipping Details</div>
+      <div class="order-summary-mini" id="checkout-summary"></div>
+      <div class="form-row">
+        <div class="form-field"><label>First Name</label><input placeholder="Raj" type="text"></div>
+        <div class="form-field"><label>Last Name</label><input placeholder="Sharma" type="text"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field" style="flex:2"><label>Address</label><input placeholder="123, MG Road, Apt 4B" type="text"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>City</label><input placeholder="Mumbai" type="text"></div>
+        <div class="form-field"><label>State</label>
+          <select><option>Maharashtra</option><option>Karnataka</option><option>Delhi</option><option>West Bengal</option><option>Tamil Nadu</option><option>Gujarat</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>PIN Code</label><input placeholder="400001" type="text"></div>
+        <div class="form-field"><label>Phone</label><input placeholder="+91 98765 43210" type="text"></div>
+      </div>
+      <div class="step-nav"><button class="step-btn next" onclick="goStep(2)">Next: Shipping →</button></div>
+    </div>
+    <div id="step2" class="checkout-step">
+      <div class="checkout-title">🚚 Shipping Method</div>
+      <div class="shipping-options">
+        <div class="shipping-opt active" onclick="selectShipping(this)">
+          <div><div class="shipping-opt-name">Standard Delivery</div><div class="shipping-opt-days">5-7 business days</div></div>
+          <div class="shipping-opt-price">FREE</div>
+        </div>
+        <div class="shipping-opt" onclick="selectShipping(this)">
+          <div><div class="shipping-opt-name">Express Delivery</div><div class="shipping-opt-days">2-3 business days</div></div>
+          <div class="shipping-opt-price">₹199</div>
+        </div>
+        <div class="shipping-opt" onclick="selectShipping(this)">
+          <div><div class="shipping-opt-name">Next Day Delivery</div><div class="shipping-opt-days">Tomorrow by 8 PM</div></div>
+          <div class="shipping-opt-price">₹499</div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="step-btn back" onclick="goStep(1)">← Back</button>
+        <button class="step-btn next" onclick="goStep(3)">Next: Payment →</button>
+      </div>
+    </div>
+    <div id="step3" class="checkout-step">
+      <div class="checkout-title">💳 Payment Details</div>
+      <div class="form-row">
+        <div class="form-field" style="flex:2"><label>Card Number</label><input placeholder="1234 5678 9012 3456" type="text"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Expiry</label><input placeholder="MM/YY" type="text"></div>
+        <div class="form-field"><label>CVV</label><input placeholder="•••" type="password"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field" style="flex:2"><label>Name on Card</label><input placeholder="RAJ SHARMA" type="text"></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;margin-bottom:16px">
+        <div style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">Or pay with:</div>
+        <span class="coupon" onclick="showToast('UPI payment initiated!')" style="cursor:pointer">📱 UPI</span>
+        <span class="coupon" onclick="showToast('Paytm payment initiated!')" style="cursor:pointer">💚 Paytm</span>
+        <span class="coupon" onclick="showToast('Google Pay initiated!')" style="cursor:pointer">🔵 GPay</span>
+      </div>
+      <div class="step-nav">
+        <button class="step-btn back" onclick="goStep(2)">← Back</button>
+        <button class="step-btn confirm" onclick="placeOrder()">🔒 Place Order</button>
+      </div>
+    </div>
+    <div id="step4" class="checkout-step">
+      <div class="order-success">
+        <div class="success-icon">🎉</div>
+        <h2 style="font-size:26px;font-weight:800;margin-bottom:8px">Order Placed!</h2>
+        <p style="color:var(--muted);font-family:var(--font-mono);font-size:13px;margin-bottom:20px">Your order #TMS<span id="order-num"></span> has been confirmed.<br>You'll receive a tracking update shortly.</p>
+        <button class="btn-explore" onclick="openTracking()" style="margin-right:10px">Track Order</button>
+        <button class="btn-cart" onclick="document.getElementById('checkout-overlay').classList.remove('open')">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER TRACKING MODAL -->
+<div class="modal-overlay" id="tracking-overlay">
+  <div class="tracking-modal">
+    <button class="modal-close" onclick="document.getElementById('tracking-overlay').classList.remove('open')">✕</button>
+    <div style="font-size:22px;font-weight:800;margin-bottom:4px">📦 Order Tracking</div>
+    <div style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">Order #TMS<span id="track-order-num"></span> · Expected: <strong style="color:var(--green)">3-5 Business Days</strong></div>
+    <div class="tracking-steps">
+      <div class="track-step"><div class="track-dot done"></div><div class="track-step-info"><h4>Order Confirmed</h4><p>Your order has been received and confirmed</p></div></div>
+      <div class="track-step"><div class="track-dot done"></div><div class="track-step-info"><h4>Processing</h4><p>Your items are being packed at warehouse</p></div></div>
+      <div class="track-step"><div class="track-dot active"></div><div class="track-step-info"><h4>Shipped</h4><p>Out for delivery — BlueDart Express · Tracking: BD8842916</p></div></div>
+      <div class="track-step"><div class="track-dot"></div><div class="track-step-info"><h4>Out for Delivery</h4><p>Arriving at your address</p></div></div>
+      <div class="track-step"><div class="track-dot"></div><div class="track-step-info"><h4>Delivered</h4><p>Package handed over</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="login-overlay">
+  <div class="auth-modal">
+    <button class="modal-close" onclick="document.getElementById('login-overlay').classList.remove('open')">✕</button>
+    <div class="auth-title">Welcome Back 👋</div>
+    <div class="auth-sub">Sign in to your TechMega account</div>
+    <div class="auth-tabs">
+      <button class="tab active" onclick="switchAuth('login',this)">Login</button>
+      <button class="tab" onclick="switchAuth('signup',this)">Sign Up</button>
+    </div>
+    <div class="auth-form active" id="auth-login">
+      <div class="form-row"><div class="form-field"><label>Email</label><input placeholder="raj@email.com" type="email"></div></div>
+      <div class="form-row"><div class="form-field"><label>Password</label><input placeholder="••••••••" type="password"></div></div>
+      <button class="btn-primary" style="width:100%;margin-top:8px" onclick="showToast('Welcome back! 🎉');document.getElementById('login-overlay').classList.remove('open')">Login</button>
+      <div class="social-login">
+        <button class="social-btn" onclick="showToast('Google login!')">🔵 Google</button>
+        <button class="social-btn" onclick="showToast('Facebook login!')">📘 Facebook</button>
+      </div>
+    </div>
+    <div class="auth-form" id="auth-signup">
+      <div class="form-row">
+        <div class="form-field"><label>Name</label><input placeholder="Raj Sharma" type="text"></div>
+        <div class="form-field"><label>Phone</label><input placeholder="+91 98765" type="text"></div>
+      </div>
+      <div class="form-row"><div class="form-field"><label>Email</label><input placeholder="raj@email.com" type="email"></div></div>
+      <div class="form-row"><div class="form-field"><label>Password</label><input placeholder="Create password" type="password"></div></div>
+      <button class="btn-primary" style="width:100%;margin-top:8px" onclick="showToast('Account created! 🎊');document.getElementById('login-overlay').classList.remove('open')">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="product-overlay">
+  <div class="product-modal" id="product-modal-content">
+    <button class="modal-close" onclick="closeProductModal()">✕</button>
+    <div class="modal-imgs">
+      <img class="modal-main-img" id="modal-main-img" src="" alt="">
+      <div class="modal-thumbs" id="modal-thumbs"></div>
+    </div>
+    <div class="modal-info">
+      <div class="modal-brand" id="modal-brand"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-rating" id="modal-rating"></div>
+      <div class="modal-price-row">
+        <div class="modal-price-old" id="modal-price-old"></div>
+        <div class="modal-price-new" id="modal-price-new"></div>
+        <div class="modal-badge" id="modal-badge"></div>
+      </div>
+      <div class="option-row" id="modal-colors-row">
+        <div class="option-label">Color</div>
+        <div class="options" id="modal-colors"></div>
+      </div>
+      <div class="option-row">
+        <div class="option-label">Storage</div>
+        <div class="options" id="modal-storage"></div>
+      </div>
+      <div class="qty-row">
+        <div class="qty-label">Qty</div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <div class="qty-val" id="modal-qty">1</div>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+      <div style="background:rgba(0,255,153,.05);border:1px solid rgba(0,255,153,.2);border-radius:10px;padding:10px 14px;font-size:12px;font-family:var(--font-mono);color:var(--muted);margin-bottom:16px">
+        🚚 <strong style="color:var(--green)">FREE delivery</strong> by <span id="modal-delivery-date"></span> if ordered in <span id="modal-countdown"></span>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cart" onclick="addToCartFromModal()">🛒 Add to Cart</button>
+        <button class="btn-explore" onclick="wishlistFromModal()">❤️ Wishlist</button>
+      </div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('specs',this)">Specs</button>
+        <button class="tab" onclick="switchTab('reviews',this)">Reviews</button>
+        <button class="tab" onclick="switchTab('faqs',this)">FAQs</button>
+        <button class="tab" onclick="switchTab('delivery',this)">Delivery</button>
+      </div>
+      <div class="tab-content active" id="tab-specs"></div>
+      <div class="tab-content" id="tab-reviews"></div>
+      <div class="tab-content" id="tab-faqs"></div>
+      <div class="tab-content" id="tab-delivery"></div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <a href="#" class="logo">TECH<span>MEGA</span></a>
+    <div class="header-search">
+      <input type="text" placeholder="Search phones, tablets, watches..." id="search-input" oninput="filterProducts()">
+      <button>🔍</button>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="toggleNotif()" title="Notifications">
+        🔔<span class="badge">4</span>
+      </button>
+      <button class="btn-icon" onclick="openWishlist()" title="Wishlist">
+        ❤️<span class="badge" id="wishlist-badge">0</span>
+      </button>
+      <button class="btn-icon" onclick="openCart()" title="Cart">
+        🛒<span class="badge" id="cart-badge">0</span>
+      </button>
+      <button class="btn-login" onclick="document.getElementById('login-overlay').classList.add('open')">Login / Sign Up</button>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-link active" href="#" onclick="filterCat('all',this)">All Products</a>
+    <a class="nav-link" href="#" onclick="filterCat('phone',this)">📱 Phones</a>
+    <a class="nav-link" href="#" onclick="filterCat('tablet',this)">💻 Tablets</a>
+    <a class="nav-link" href="#" onclick="filterCat('watch',this)">⌚ Watches</a>
+    <a class="nav-link" href="#" onclick="filterCat('audio',this)">🎧 Audio</a>
+    <a class="nav-link" href="#" onclick="openTracking()">📦 Track Order</a>
+  </nav>
+</header>
+
+<div class="sale-strip">⚡ MEGA SALE — UP TO 20% OFF · Use <strong>MEGA20</strong> or <strong>WELCOME10</strong> for extra savings · Limited stock! ⚡</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text fade-up">
+    <h1>TECH<br>MEGA SALE<br>2025</h1>
+    <p>Premium smartphones, watches & audio at unbeatable prices. Limited time, unlimited tech.</p>
+    <div class="timer-box">
+      <div class="timer-unit"><span id="t-h">00</span><small>Hours</small></div>
+      <div class="timer-unit"><span id="t-m">00</span><small>Mins</small></div>
+      <div class="timer-unit"><span id="t-s">00</span><small>Secs</small></div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.querySelector('.products').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
+      <button class="btn-secondary" onclick="openTracking()">Track Order</button>
+    </div>
+    <div class="coupon-banner">
+      <div class="coupon" onclick="applyCouponCode('MEGA20')"><small>Coupon</small><strong>MEGA20</strong><small>20% off ₹50k+</small></div>
+      <div class="coupon" onclick="applyCouponCode('WELCOME10')"><small>Coupon</small><strong>WELCOME10</strong><small>10% off first order</small></div>
+    </div>
+  </div>
+  <div style="flex:1;min-width:240px;display:flex;justify-content:center;align-items:center;position:relative">
+    <div style="position:relative;z-index:1">
+      <img src="https://ankurelectricals.com/cdn/shop/files/Titanium_Grey.png?v=1739343999&width=1000" alt="S25 Ultra" style="width:260px;filter:drop-shadow(0 0 60px rgba(114,2,112,.8));animation:heroFloat 4s ease-in-out infinite">
+    </div>
+  </div>
+</section>
+<style>@keyframes heroFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-18px) rotate(2deg)}}</style>
+
+<div class="main">
+
+<!-- TRENDING -->
+<div class="trending-strip fade-up">
+  <div class="trend-label">🔥 TRENDING</div>
+  <div class="trend-item" onclick="document.getElementById('search-input').value='Samsung';filterProducts()"><span class="trend-num">#1</span><span class="trend-name">Samsung S25 Ultra</span></div>
+  <div class="trend-item" onclick="document.getElementById('search-input').value='iPhone';filterProducts()"><span class="trend-num">#2</span><span class="trend-name">iPhone 17 Pro Max</span></div>
+  <div class="trend-item" onclick="document.getElementById('search-input').value='Watch';filterProducts()"><span class="trend-num">#3</span><span class="trend-name">Smart Watches</span></div>
+  <div class="trend-item" onclick="document.getElementById('search-input').value='Earbuds';filterProducts()"><span class="trend-num">#4</span><span class="trend-name">Wireless Earbuds</span></div>
+  <div class="trend-item"><span class="trend-num">#5</span><span class="trend-name">Tablets 2025</span></div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="fade-up">
+<h2 class="section-title">Browse <span>Categories</span></h2>
+<p class="section-sub">FIND WHAT YOU'RE LOOKING FOR</p>
+<div class="categories">
+  <div class="cat-card" onclick="filterCat('phone',document.querySelector('[onclick*=\"phone\"]'))"><div class="cat-icon">📱</div><div class="cat-name">Phones</div><div class="cat-count">6 products</div></div>
+  <div class="cat-card" onclick="filterCat('tablet',document.querySelector('[onclick*=\"tablet\"]'))"><div class="cat-icon">💻</div><div class="cat-name">Tablets</div><div class="cat-count">1 product</div></div>
+  <div class="cat-card" onclick="filterCat('watch',document.querySelector('[onclick*=\"watch\"]'))"><div class="cat-icon">⌚</div><div class="cat-name">Watches</div><div class="cat-count">1 product</div></div>
+  <div class="cat-card" onclick="filterCat('audio',document.querySelector('[onclick*=\"audio\"]'))"><div class="cat-icon">🎧</div><div class="cat-name">Audio</div><div class="cat-count">1 product</div></div>
+  <div class="cat-card" onclick="filterCat('all',null)"><div class="cat-icon">⚡</div><div class="cat-name">All Deals</div><div class="cat-count">9 products</div></div>
+</div>
+</div>
+
+<!-- RECENTLY VIEWED -->
+<div id="recents-section" style="display:none" class="fade-up">
+  <h2 class="section-title">Recently <span>Viewed</span></h2>
+  <p class="section-sub">CONTINUE BROWSING</p>
+  <div class="recents" id="recents-list"></div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-bar fade-up">
+  <div class="filter-group">
+    <span class="filter-label">Brand:</span>
+    <button class="filter-btn active" onclick="applyFilter('brand','all',this)">All</button>
+    <button class="filter-btn" onclick="applyFilter('brand','samsung',this)">Samsung</button>
+    <button class="filter-btn" onclick="applyFilter('brand','apple',this)">Apple</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Price:</span>
+    <button class="filter-btn active" onclick="applyFilter('price','all',this)">All</button>
+    <button class="filter-btn" onclick="applyFilter('price','under50k',this)">&lt;₹50k</button>
+    <button class="filter-btn" onclick="applyFilter('price','50to100k',this)">₹50k–1L</button>
+    <button class="filter-btn" onclick="applyFilter('price','over100k',this)">&gt;₹1L</button>
+  </div>
+  <div class="sort-wrap">
+    <select class="sort-select" onchange="applySort(this.value)">
+      <option value="default">Sort: Default</option>
+      <option value="low">Price: Low → High</option>
+      <option value="high">Price: High → Low</option>
+      <option value="discount">Biggest Discount</option>
+      <option value="rating">Highest Rating</option>
+    </select>
+  </div>
+  <div class="compare-bar">
+    <span class="compare-count" id="compare-count">Select up to 3 to compare</span>
+    <button class="btn-compare" id="compare-btn" onclick="openCompare()">📊 Compare</button>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="products" id="products-grid">
+  <!-- skeleton placeholders shown initially -->
+  <div class="skel-card skeleton"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line w80 skeleton"></div><div class="skel-line w60 skeleton"></div><div class="skel-line w40 skeleton"></div></div></div>
+  <div class="skel-card skeleton"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line w80 skeleton"></div><div class="skel-line w60 skeleton"></div><div class="skel-line w40 skeleton"></div></div></div>
+  <div class="skel-card skeleton"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line w80 skeleton"></div><div class="skel-line w60 skeleton"></div><div class="skel-line w40 skeleton"></div></div></div>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<div class="reco-section fade-up">
+  <h2 class="section-title">You Might <span>Also Like</span></h2>
+  <p class="section-sub">BASED ON YOUR BROWSING</p>
+  <div class="reco-scroll" id="reco-scroll"></div>
+</div>
+
+</div><!-- /main -->
+
+<!-- FLOAT BUTTON -->
+<button class="float-whatsapp" onclick="showToast('Connecting to WhatsApp support...')">💬</button>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>TECH<span>MEGA</span></h3>
+      <p>India's premium tech marketplace. Best prices, genuine products, lightning-fast delivery.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <a href="#">Smartphones</a>
+      <a href="#">Tablets</a>
+      <a href="#">Smartwatches</a>
+      <a href="#">Audio Gear</a>
+      <a href="#">Accessories</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Track Order</a>
+      <a href="#">Return Policy</a>
+      <a href="#">Warranty</a>
+      <a href="#">Contact Us</a>
+      <a href="#">FAQs</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About Us</a>
+      <a href="#">Careers</a>
+      <a href="#">Blog</a>
+      <a href="#">Press</a>
+      <a href="#">Partners</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 TechMega Sale. All rights reserved.</div>
+    <div class="footer-payments">
+      <div class="fpay">UPI</div>
+      <div class="fpay">Paytm</div>
+      <div class="fpay">GPay</div>
+      <div class="fpay">Visa</div>
+      <div class="fpay">Mastercard</div>
+      <div class="fpay">SBI</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============ DATA ============
+const PRODUCTS = [
+  {
+    id:1, name:'Samsung Galaxy S25 Ultra', brand:'Samsung', category:'phone',
+    img:'https://ankurelectricals.com/cdn/shop/files/Titanium_Grey.png?v=1739343999&width=1000',
+    thumbs:['https://ankurelectricals.com/cdn/shop/files/Titanium_Grey.png?v=1739343999&width=1000'],
+    oldPrice:129999, newPrice:103999, offer:'20% OFF', badge:'', rating:4.8, reviews:2341,
+    stock:8, payments:['Paytm','GPay','UPI','SBI'],
+    specs:[['Display','6.9" QHD+ Dynamic AMOLED 2X, 120Hz'],['Processor','Snapdragon 8 Elite'],['RAM','12GB'],['Storage','256GB / 512GB / 1TB'],['Camera','200MP + 50MP + 12MP + 10MP'],['Battery','5000mAh, 45W Fast Charge'],['OS','Android 15, One UI 7']],
+    colors:['Titanium Grey','Titanium Black','Titanium Violet','Titanium Yellow'],
+    storage:['256GB','512GB','1TB'],
+    ratingDist:[60,20,12,5,3],
+    faqs:[{q:'Does it support 5G?',a:'Yes, Samsung Galaxy S25 Ultra supports 5G across all Indian bands including n77 and n78.'}],
+    desc:'The ultimate Android flagship'
+  },
+  {
+    id:2, name:'iPhone 17', brand:'Apple', category:'phone',
+    img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStkY3PjkOZKQHgPdfiSOd5nLclQDONKmfP4Q&s',
+    thumbs:['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStkY3PjkOZKQHgPdfiSOd5nLclQDONKmfP4Q&s'],
+    oldPrice:89999, newPrice:76999, offer:'HOT DEAL', badge:'new', rating:4.7, reviews:1892,
+    stock:15, payments:['UPI','Cards','Paytm'],
+    specs:[['Display','6.1" Super Retina XDR OLED'],['Processor','Apple A19 Bionic'],['RAM','8GB'],['Storage','128GB / 256GB / 512GB'],['Camera','48MP + 12MP + 12MP'],['Battery','3800mAh, MagSafe'],['OS','iOS 19']],
+    colors:['Black','White','Pink','Desert Titanium'],
+    storage:['128GB','256GB','512GB'],
+    ratingDist:[58,22,11,6,3],
+    faqs:[{q:'Is Face ID available?',a:'Yes, Face ID is available and works in all lighting conditions.'}],
+    desc:'Pure. Simple. Brilliant.'
+  },
+  {
+    id:3, name:'iPhone 17 Pro', brand:'Apple', category:'phone',
+    img:'data:image/jpeg;base64,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CAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAIAgCAI
