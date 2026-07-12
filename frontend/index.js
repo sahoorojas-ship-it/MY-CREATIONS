@@ -1,0 +1,4 @@
+document.addEventListener("DOMContentLoaded",() => { const form = document.getElementById("userForm");
+if (!form) { console.error("Form not found"); 
+return; } form.addEventListener("submit", async function (e) { console.log("Form submitted"); 
+e.preventDefault(); e.stopPropagation(); const data = { name: document.getElementById("name").value, age: document.getElementById("age").value, email: document.getElementById("email").value, password: document.getElementById("password").value, phoneNumber: document.getElementById("phoneNumber").value, role: document.getElementById("role").value, }; try { const response = await fetch( "http://localhost:5001/api/v1/user/createUser", { method: "POST", body: JSON.stringify(data), headers: { "Content-Type": "application/json" }, }, ); const result = await response.json(); console.log(result); } catch (error) { console.log(error); } }); });

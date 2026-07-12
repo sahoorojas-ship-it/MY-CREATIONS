@@ -19,11 +19,6 @@ interface CartState {
   isOpen: boolean;
 }
 
-const loadCart = (): CartItem[] => {
-  if (typeof window === 'undefined') return [];
-  try { return JSON.parse(localStorage.getItem('tiren_cart') || '[]'); } catch { return []; }
-};
-
 const saveCart = (items: CartItem[]) => {
   if (typeof window !== 'undefined') localStorage.setItem('tiren_cart', JSON.stringify(items));
 };
@@ -68,12 +63,11 @@ const cartSlice = createSlice({
     setCartOpen(state, action: PayloadAction<boolean>) {
       state.isOpen = action.payload;
     },
+    hydrateCart(state, action: PayloadAction<CartItem[]>) {
+      state.items = action.payload;
+    },
   },
 });
-
-hydrateCart(state, action: PayloadAction<CartItem[]>) {
-  state.items = action.payload;
-},
 
 export const { addToCart, updateQuantity, removeFromCart, clearCart, toggleCart, setCartOpen, hydrateCart } = cartSlice.actions;
 export default cartSlice.reducer;

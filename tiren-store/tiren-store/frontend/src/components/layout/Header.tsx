@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -14,7 +14,8 @@ export default function Header() {
   const { user } = useSelector((s: RootState) => s.auth);
   const { darkMode } = useSelector((s: RootState) => s.ui);
   const [search, setSearch] = useState('');
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   const cartCount = items.reduce((a, i) => a + i.quantity, 0);
 
@@ -25,30 +26,22 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800">
-      {/* Top bar */}
-      <div className="bg-tiren-green dark:bg-green-900 text-white text-xs py-1 px-4 text-center">
-        🚚 Free delivery on orders above ₹499 | 📞 Support: +91 70080 11037
+      <div className="bg-green-800 text-white text-xs py-1 px-4 text-center">
+        🚚 Free delivery on orders above ₹499 | 📞 Support: 1800-XXX-XXXX
       </div>
-
-      {/* Main header */}
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center gap-4">
-          {/* Logo */}
+
           <Link href="/" className="flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <div><img src="logo.png" alt="TIREN STORE" className="w-10 h-10" /></div>
-              <div>
-                <div className="font-bold text-green-800 dark:text-green-400 text-lg leading-none">TIREN</div>
-                <div className="text-orange-500 font-semibold text-sm leading-none">STORE</div>
-              </div>
-            </div>
+            <img src="/logo.png" alt="TIREN STORE" className="h-12 w-auto object-contain" />
           </Link>
 
-          {/* Search bar */}
           <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
             <div className="flex rounded-lg overflow-hidden border-2 border-green-700 dark:border-green-600">
               <input
-                type="text" value={search} onChange={e => setSearch(e.target.value)}
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
                 placeholder="Search for atta, rice, oil, snacks..."
                 className="flex-1 px-4 py-2 text-sm bg-white dark:bg-gray-800 dark:text-white outline-none"
               />
@@ -58,16 +51,19 @@ export default function Header() {
             </div>
           </form>
 
-          {/* Actions */}
           <div className="flex items-center gap-2 ml-auto">
-            {/* Dark mode */}
-            <button onClick={() => dispatch(toggleDarkMode())}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors">
-              {darkMode ? '☀️' : '🌙'}
+            <button
+              onClick={() => dispatch(toggleDarkMode())}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors"
+            >
+              {mounted ? (darkMode ? '☀️' : '🌙') : '🌙'}
             </button>
 
-            {/* User */}
-            {user ? (
+            {!mounted ? (
+              <Link href="/auth/login" className="px-4 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors">
+                Login
+              </Link>
+            ) : user ? (
               <div className="relative group">
                 <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                   <div className="w-8 h-8 bg-green-700 rounded-full flex items-center justify-center text-white font-semibold text-sm">
@@ -83,7 +79,9 @@ export default function Header() {
                     <Link href="/admin" className="block px-4 py-2 text-sm text-orange-600 font-medium hover:bg-gray-50 dark:hover:bg-gray-700">Admin Panel</Link>
                   )}
                   <hr className="border-gray-200 dark:border-gray-700" />
-                  <button onClick={() => dispatch(logout())} className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 dark:hover:bg-gray-700">Logout</button>
+                  <button onClick={() => dispatch(logout())} className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Logout
+                  </button>
                 </div>
               </div>
             ) : (
@@ -92,12 +90,13 @@ export default function Header() {
               </Link>
             )}
 
-            {/* Cart */}
-            <button onClick={() => dispatch(toggleCart())}
-              className="relative flex items-center gap-1 px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors">
+            <button
+              onClick={() => dispatch(toggleCart())}
+              className="relative flex items-center gap-1 px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            >
               <span className="text-lg">🛒</span>
               <span className="text-sm font-medium hidden md:block">Cart</span>
-              {cartCount > 0 && (
+              {mounted && cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
@@ -106,7 +105,6 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Category nav */}
         <nav className="flex gap-1 mt-3 overflow-x-auto scrollbar-hide">
           {['Atta & Flour','Rice','Dal & Pulses','Oil & Ghee','Masala & Spices','Tea & Coffee','Snacks','Biscuits','Noodles','Soap & Bath','Shampoo','Detergents'].map(cat => (
             <Link key={cat} href={`/products?category=${cat.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}

@@ -52,9 +52,9 @@ const authSlice = createSlice({
       state.user = action.payload;
     },
     hydrateAuth(state, action: PayloadAction<{ user: User | null; token: string | null }>) {
-  state.user = action.payload.user;
-  state.token = action.payload.token;
-},
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+    },
   },
   extraReducers: (builder) => {
     const handlePending = (state: AuthState) => { state.loading = true; state.error = null; };
@@ -85,5 +85,4 @@ const authSlice = createSlice({
 });
 
 export const { logout, setUser, hydrateAuth } = authSlice.actions;
-
 export default authSlice.reducer;
