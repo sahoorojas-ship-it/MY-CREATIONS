@@ -2,8 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/admin": "pages/admin.js",
   "/products": "pages/products.js",
   "/": "pages/index.js",
-  "/auth/login": "pages/auth/login.js"
+  "/checkout": "pages/checkout.js",
+  "/product/[slug]": "pages/product/[slug].js"
 }

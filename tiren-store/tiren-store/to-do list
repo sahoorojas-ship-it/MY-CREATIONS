@@ -1,0 +1,34 @@
+1. Add real-timed payments to the app
+2. Improve UI, make the web attractive and beautiful.
+3. Add more products.
+4. Add more coupon codes.
+5. Make a app for deliverers (Deliverer's App).
+6. Make an admin interface from which we can imply stock, price, responses, reviews, ratings, money collected monthly/annually, etc.
+7. Add the credit card/ debit card number of the person to which's bank account the money will go.
+8. Look out for any bugs or unhandled errors. 
+9. Add log in, sign in, log out, as customer, as deliverer, or as admin, features.
+10. Add Google OAuth Consent Screen forcustomer, deliverer, or even admin to log in.
+11. Invoice download feature (bill of items purchased).
+12. Inculcate Return system (If wrong item received, item pufffed/ or in bad condition) for customer and also notification to      deliverer for taking the item being returned.
+13.  Inculcate Location tracking system.
+14. Add a system which can estimate the time of delivery according to how far the customer lives from the shop.
+15. Add a automatic address finder (through pincode to estimate shipping time).
+16. Add a delivery tracking system.
+17. App only applicable for deliveries not too far from the shop. (**IMPORTANT**)
+18. Make the app downloadable from Play Store and applicable from any Browser.
+19. Give each deliverer an Deliverer's ID to log in everytime or receive orders.
+20. Give the deliverer the address of the customer through Google Maps, or any other web application the deliverer have installed on their device.
+21. Also add payment methods to the app like through credit\debit card, Google Pay, Phone Pay, Paytm, SBI, etc., and even Cash on Delivery for customers and the payment method selected by the customer will be reflected to the deliverer.
+22. Customers able to post an review on the app publicly based on their satisfication of the product, like 1, 2, 3, 4, 5 stars and reason for their disappointment or satisfication.
+23. Add an add to cart system for multiple items's shopping ontogether.
+24. Add a search bar for customers tos erach itmes they need.
+25. Inculcate an AI to show customers recommendations to buy products based on their daily shopping and purchases.
+26. Add discount and big offers on any festivals.
+27. The date of publication of the app every year will have the app to give a flat 50% discount on every product.
+28. Make the deliverer's app such that they receive their salary from the app to their bank account from the owner.
+29. Display Developer's email to report any bugs or errors in the app and Owner's phone number for any stock-related issues.
+30. Also make the system such that after returning any item the customer will automatically get the refund straight to their bank account.
+31. Use RazorPay for any payment-related development.
+32. Host a grand, flat 80% discount on the first day of publishing or the app.
+33. Also add an AI for popping the items that are searched, on the screen
+34. Lastly, host .com after completion of building of the app and also make an google developer account to publish the app on Play Store.
