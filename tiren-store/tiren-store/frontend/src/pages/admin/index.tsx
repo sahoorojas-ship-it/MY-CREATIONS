@@ -1,17 +1,5 @@
-declare module 'react/jsx-runtime' {
-  export function jsx(type: any, props: any, key?: any): any;
-  export function jsxs(type: any, props: any, key?: any): any;
-  export function jsxDEV(type: any, props: any, key?: any): any;
-}
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elemName: string]: any;
-    }
-  }
-}
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import { PRODUCTS } from '../../data/mockData';
 
 const STATS = { totalSales: 284500, totalOrders: 1247, totalCustomers: 892, revenue: 284500, pendingOrders: 23, lowStock: 5 };
