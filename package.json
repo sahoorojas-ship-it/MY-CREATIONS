@@ -23,10 +23,15 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "eslint": "^10.7.0",
     "express": "^5.2.1",
+    "jest": "^30.4.2",
     "jsonwebtoken": "^9.0.3",
+    "lodash": "^4.18.1",
     "mongoose": "^9.7.1",
-    "webkit": "^0.0.0"
-  },
-  "devDependencies": {}
+    "react": "^19.2.7",
+    "typescript": "^7.0.2",
+    "webkit": "^0.0.0",
+    "webpack": "^5.108.4"
+  }
 }
